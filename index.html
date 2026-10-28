@@ -81,6 +81,8 @@ input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--accent);
 .title-input{width:100%;border:none;background:transparent;padding:4px 0;font-size:28px;font-weight:700;line-height:1.4;border-radius:4px}
 .title-input:focus{outline:none;box-shadow:0 2px 0 var(--accent)}
 .meta-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;font-size:13px;color:var(--muted);margin-top:4px}
+.save-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ok);font-weight:500}
+.save-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block}
 .head-actions{display:flex;gap:4px}
 .principle{display:flex;gap:12px;align-items:center;padding:12px 16px;border-radius:var(--radius);background:var(--accent-weak);font-size:14px;margin:20px 0 24px}
 .principle strong{color:var(--accent-text);font-weight:600}
@@ -256,7 +258,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
         <li><b>要做的事</b>：有时效的先做，预估时间</li>
         <li><b>复盘</b>：对比用时，想想重来一遍怎么走</li>
       </ol>
-      <p>数据只保存在这个浏览器里，记得定期点「备份」。</p>
+      <p>数据自动实时保存在本设备，换设备前记得点「备份」。</p>
     </div>
   </aside>
   <main class="main">
@@ -268,7 +270,11 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
       <header class="goal-head">
         <div class="title-wrap">
           <input id="goalTitle" class="title-input" aria-label="目标名称" placeholder="给目标起个名字">
-          <div class="meta-line"><input type="date" id="goalDate" class="date-input" aria-label="目标日期"><span id="statusBadge"></span><span id="saved">已自动保存</span></div>
+          <div class="meta-line">
+            <input type="date" id="goalDate" class="date-input" aria-label="目标日期">
+            <span id="statusBadge"></span>
+            <span id="saved" class="save-tag"><i class="save-dot"></i><span>已自动保存</span></span>
+          </div>
         </div>
         <div class="head-actions">
           <button class="btn ghost" id="doneBtn" data-toggle-done>标记完成</button>
@@ -294,15 +300,16 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   <div class="dlg-head"><div id="newTitle">新建目标</div><p>可以从空白开始，也可以套用做过的经验。</p></div>
   <div class="dlg-body choices">
     <button class="choice" data-new-blank><b>空白目标</b><span>从结果开始，一步步填。</span></button>
-    <button class="choice" data-new-vlog><b>用 vlog 经验新建</b><span>5 个方向和做法已填好，附上次用时。</span></button>
+    <button class="choice" data-new-vlog><b>用短视频协作经验新建</b><span>5 个方向和做法已填好，包含预估用时。</span></button>
   </div>
   <div class="dlg-foot"><button class="btn" data-close-new>取消</button></div>
 </dialog>
 <dialog id="backupDlg" aria-labelledby="backupTitle">
-  <div class="dlg-head"><div id="backupTitle">备份</div><p>数据只存在这个浏览器里。换设备、清缓存前，先导出备份。</p></div>
+  <div class="dlg-head"><div id="backupTitle">备份与找回</div><p>数据保存在这个浏览器里。支持导出备份，也支持一键扫描找回历史草稿。</p></div>
   <div class="dlg-body choices">
-    <button class="choice" data-export-backup><b>导出备份</b><span>下载一个备份文件，存到电脑或网盘。</span></button>
-    <button class="choice" data-import-backup><b>导入备份</b><span>选择备份文件，恢复或合并到这里。</span></button>
+    <button class="choice" data-scan-recover><b>🔍 扫描并恢复历史缓存草稿</b><span>意外关闭或丢失？一键扫描所有缓存草稿并还原。</span></button>
+    <button class="choice" data-export-backup><b>导出备份文件</b><span>下载一个备份文件，存到电脑或网盘。</span></button>
+    <button class="choice" data-import-backup><b>导入备份文件</b><span>选择备份文件，恢复或合并到这里。</span></button>
     <p class="muted small" id="backupInfo"></p>
   </div>
   <div class="dlg-foot"><button class="btn" data-close-backup>关闭</button></div>
@@ -355,41 +362,61 @@ const VLOG_DIRS=[
 
 function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function dayLabel(k){if(k===dayKey())return '今天';if(k===dayKey(new Date(Date.now()-864e5)))return '昨天';const a=String(k||'').split('-').map(Number);if(a.length!==3||!a[0])return '未设日期';return (a[0]!==new Date().getFullYear()?a[0]+'年':'')+a[1]+'月'+a[2]+'日';}
+function formatClock(d){d=d||new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');}
+
 function mkTask(name,dirId,urgent,who,est){return {id:uid(),name:name||'',dirId:dirId||'',est:est||'',actual:'',who:who||'我',urgent:!!urgent,done:false};}
 function mkDirs(list){return list.map(([name,goal])=>({id:uid(),name,goal}));}
+
 function blankGoal(title){
-  return {id:uid(),title:title||'新目标',created:Date.now(),date:dayKey(),status:'active',step:0,
+  return {id:uid(),title:title||'新短视频目标',created:Date.now(),date:dayKey(),status:'active',step:0,
     result:{what:'',level:'',when:'',why:''},
     dirs:mkDirs([['',''],['',''],['','']]),enough:false,
     tasks:[mkTask('', '', false, '我', '15')],
     review:{efficiency:'',ai:'',redo:'',feeling:''}};
 }
+
 function seed(){
-  const g1=blankGoal('第 1 期 vlog：观猹大会');
-  g1.record=true;g1.step=3;g1.totals={est:180,act:360,label:'实际含定计划和吃饭'};
-  g1.note='已跑通：计划 3 小时做完，实际从开始到发布约 6 小时（16:30–22:30，含定计划和吃饭），晚了 1.5 小时。拿到投流，礼盒待定。';
-  g1.result={
+  const g1=blankGoal('新短视频 / Vlog 协作');
+  g1.dirs=mkDirs(VLOG_DIRS);
+  const v=g1.dirs;
+  g1.tasks=[
+    mkTask('核实新闻/素材背景',v[0].id,false,'我','10'),
+    mkTask('说观点与结构建议',v[0].id,false,'你','15'),
+    mkTask('写稿，整理成提词器版（约300字）',v[0].id,false,'我','10'),
+    mkTask('截图和整理素材清单',v[1].id,false,'你','10'),
+    mkTask('照提词器录制音频/视频',v[2].id,false,'我','30'),
+    mkTask('ChatCut 剪辑：加字幕插图',v[3].id,false,'你','45'),
+    mkTask('封面、标题、正文（给3个选1个）',v[4].id,false,'我 + 你','20'),
+    mkTask('发布',v[4].id,false,'我','')];
+  g1.status='active';
+  g1.step=0;
+
+  const demo=blankGoal('参考样例：第 1 期 vlog 观猹大会');
+  demo.record=true; demo.step=3; demo.date='2026-10-27'; demo.status='done';
+  demo.totals={est:180,act:360,label:'实际含定计划和吃饭'};
+  demo.note='已跑通样例：计划 3 小时做完，实际约 6 小时。';
+  demo.dirs=mkDirs(VLOG_DIRS);
+  demo.result={
     what:'发一条观猹大会的 vlog，并提交有效返链',
     level:'进前 35 个有效返链，拿到纪念礼盒，同时拿到投流',
     when:'当晚 21:00 前提交，越早越好',
     why:'礼盒先到先得。实际看到有几位博主拖更，先发本身就是优势'};
-  g1.dirs=mkDirs(VLOG_DIRS);g1.enough=true;
-  const v=g1.dirs;
-  g1.tasks=[
-    mkTask('Claude 出初版旁白，补充信息后迭代两三版',v[0].id,false,'我 + 你','30'),
-    mkTask('吃饭时让 Codex 整理、匹配、重命名素材',v[1].id,false,'你','30'),
-    mkTask('剪映配音断句别扭，改成导入换好行的字幕',v[2].id,false,'我 + 你','30'),
-    mkTask('先用剪映剪，后换 ChatCut',v[3].id,false,'你','60'),
-    mkTask('22:30 发布，提交返链',v[4].id,false,'我','30')];
-  g1.tasks.forEach(t=>{t.done=true;});
-  g1.review={
-    efficiency:'配音：不让剪映自动断句，直接导入换好行的字幕。剪辑：剪映和 Codex 连得不好，手动剪很慢；直接用 ChatCut，用代码剪更快也更自然。',
-    ai:'AI 能完成八九成以上的工作：Claude 写稿，Codex 整理素材，剪映配音，ChatCut 剪辑。我只定目标、做判断，遇到问题换方案；只有自己动手更快才动手。',
-    redo:'1. 给 Claude 背景和初始想法，快速出初版，迭代两三版定稿\n2. Codex 按稿子整理、匹配素材并重命名，放在吃饭这类空档\n3. 稿子做成换好行的字幕，导入剪映配音\n4. 直接用 ChatCut 剪，剪映配合\n5. 发布，提交返链',
-    feeling:'第一次做没经验，启动成本很高，全靠自己做可能就放弃了。第一次做，超时正常；配音和剪辑的问题事先想不到。'};
-  g1.date='2026-10-27';g1.status='done';
-  return {goals:[g1],currentId:g1.id};
+  demo.tasks=[
+    mkTask('Claude 出初版旁白',v[0].id,false,'我 + 你','30'),
+    mkTask('整理、匹配、重命名素材',v[1].id,false,'你','30'),
+    mkTask('换好行的字幕导入剪映配音',v[2].id,false,'我 + 你','30'),
+    mkTask('ChatCut 剪辑',v[3].id,false,'你','60'),
+    mkTask('发布并提交返链',v[4].id,false,'我','30')];
+  demo.tasks.forEach(t=>{t.done=true;});
+  demo.review={
+    efficiency:'配音：直接导入换好行的字幕。剪辑：直接用 ChatCut 更快更自然。',
+    ai:'AI 负责八九成执行，我负责做判断定目标。',
+    redo:'1. Claude 写稿 -> 2. 匹配素材 -> 3. 剪映配音 -> 4. ChatCut剪辑 -> 5. 发布',
+    feeling:'第一次做超时正常，配音和剪辑的问题事先想不到。'};
+
+  return {goals:[g1, demo], currentId:g1.id};
 }
+
 function vlogTemplate(){
   const g=blankGoal('新短视频 / Vlog 协作');
   g.note='经验：AI 负责执行，你负责判断。说观点/素材由 AI(你) 配合整理，写稿提词、录制自己做，剪辑交给 ChatCut。';
@@ -406,42 +433,108 @@ function vlogTemplate(){
     mkTask('发布',v[4].id,false,'我','')];
   return g;
 }
+
 function normalize(s){
   s.goals=s.goals.filter(g=>g&&g.id);
-  if(!s.goals.length)s.goals.push(blankGoal());
+  if(!s.goals.length){
+    const ng = blankGoal('新短视频 / Vlog 协作');
+    s.goals.push(ng);
+    s.currentId = ng.id;
+  }
   s.goals.forEach(g=>{
-    if(!g.date)g.date=dayKey(new Date(g.created||Date.now()));
-    if(!g.status)g.status=g.record?'done':'active';
-    g.result=Object.assign({what:'',level:'',when:'',why:''},g.result||{});
-    g.review=Object.assign({efficiency:'',ai:'',redo:'',feeling:''},g.review||{});
-    g.dirs=Array.isArray(g.dirs)?g.dirs:[];g.tasks=Array.isArray(g.tasks)?g.tasks:[];g.step=+g.step||0;
+    if(!g.date) g.date=dayKey(new Date(g.created||Date.now()));
+    if(!g.status) g.status = g.record ? 'done' : 'active';
+    g.result = Object.assign({what:'',level:'',when:'',why:''},g.result||{});
+    g.review = Object.assign({efficiency:'',ai:'',redo:'',feeling:''},g.review||{});
+    g.dirs = Array.isArray(g.dirs)?g.dirs:[];
+    g.tasks = Array.isArray(g.tasks)?g.tasks:[];
+    g.step = (g.step !== undefined && g.step !== null) ? +g.step : 0;
     g.tasks.forEach(t=>{
       if(t.who==='AI')t.who='你';
       if(t.who==='我 + AI')t.who='我 + 你';
       if(!t.who)t.who='我';
     });
   });
-  const t=dayKey(),todays=s.goals.filter(g=>g.date===t&&g.status!=='done').sort((a,b)=>b.created-a.created);
-  if(todays.length&&!todays.some(g=>g.id===s.currentId))s.currentId=todays[0].id;
-  if(!s.goals.some(g=>g.id===s.currentId))s.currentId=s.goals[0].id;
-  const c=s.goals.find(g=>g.id===s.currentId);if(c&&c.status==='done')s.showDone=true;
+
+  // 严格保留用户当前正在编辑的目标，绝对不强行切走
+  const hasCurrent = s.goals.some(g=>g.id===s.currentId);
+  if(!hasCurrent){
+    const active = s.goals.filter(g=>g.status!=='done');
+    s.currentId = active.length ? active[0].id : s.goals[0].id;
+  }
+
+  const c=s.goals.find(g=>g.id===s.currentId);
+  if(c&&c.status==='done')s.showDone=true;
   return s;
 }
+
 function load(){return normalize(loadRaw());}
+
 function loadRaw(){
-  try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Array.isArray(s.goals)&&s.goals.length)return s;}catch(e){}
-  const fresh=seed();
-  try{const o=JSON.parse(localStorage.getItem(OLD_KEY)||'null');
-    if(o&&Array.isArray(o.goals)&&o.goals.length){const rec=fresh.goals.find(x=>x.record);const kept=o.goals.filter(x=>x.title!=='复盘第 1 期 vlog：观猹大会');return {goals:kept.concat([rec]),currentId:rec.id};}
+  // 1. 尝试主 LocalStorage
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(s&&Array.isArray(s.goals)&&s.goals.length)return s;
   }catch(e){}
+
+  // 2. 尝试备用镜像 LocalStorage
+  try{
+    const b=JSON.parse(localStorage.getItem(KEY+'_backup')||'null');
+    if(b&&Array.isArray(b.goals)&&b.goals.length)return b;
+  }catch(e){}
+
+  // 3. 尝试 SessionStorage 缓存
+  try{
+    const sess=JSON.parse(sessionStorage.getItem(KEY)||'null');
+    if(sess&&Array.isArray(sess.goals)&&sess.goals.length)return sess;
+  }catch(e){}
+
+  // 4. 尝试旧版本数据迁移
+  const fresh=seed();
+  try{
+    const o=JSON.parse(localStorage.getItem(OLD_KEY)||'null');
+    if(o&&Array.isArray(o.goals)&&o.goals.length){
+      const rec=fresh.goals.find(x=>x.record);
+      const kept=o.goals.filter(x=>x.title!=='复盘第 1 期 vlog：观猹大会');
+      return {goals:kept.concat([rec]),currentId:kept[0]?kept[0].id:rec.id};
+    }
+  }catch(e){}
+
   return fresh;
 }
-let state=load(),saveTimer,toastTimer;
-function save(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(state));setSaved('已自动保存');}catch(e){setSaved('当前环境无法保存');}},300);
+
+let state=load(), toastTimer;
+
+// 同步即时保存，杜绝异步 debounce 导致浏览器关闭时丢失数据
+function saveNow(){
+  try{
+    const json = JSON.stringify(state);
+    localStorage.setItem(KEY, json);
+    localStorage.setItem(KEY+'_backup', json);
+    sessionStorage.setItem(KEY, json);
+    setSaved('● 已实时保存 '+formatClock());
+  }catch(e){
+    setSaved('⚠️ 无法保存（可能在隐身模式）');
+  }
 }
-function setSaved(t){const el=$('#saved');if(el)el.textContent=t;}
+function save(){
+  saveNow();
+}
+
+// 页面关闭、切后台、隐藏时强制执行一次持久化保存
+window.addEventListener('beforeunload', ()=>{ try{saveNow();}catch(e){} });
+window.addEventListener('pagehide', ()=>{ try{saveNow();}catch(e){} });
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden'){ try{saveNow();}catch(e){} }
+});
+
+function setSaved(t){
+  const el=$('#saved');
+  if(el){
+    el.innerHTML='<i class="save-dot"></i><span>'+esc(t)+'</span>';
+  }
+}
+
 const cur=()=>state.goals.find(g=>g.id===state.currentId)||state.goals[0];
 const num=v=>{const n=parseFloat(v);return isFinite(n)&&n>0?n:0;};
 function fmt(m){m=Math.round(m);if(!m)return '0 分钟';const h=Math.floor(m/60),r=m%60;return h?(h+' 小时'+(r?' '+r+' 分':'')):r+' 分钟';}
@@ -531,7 +624,7 @@ function taskCard(g,t,i){
     +'</div>'
     +'<div class="quick-sec">'
     +'<span class="sec-tag">时间:</span>'
-    +TIME_PRESETS.map(p=>'<button type="button" class="pill-btn'+(estVal===p?' active':'')+'" data-set-est="'+p+'">'+p+'分</button>').join('')
+    +TIME_PRESETS.map(p=>'<button type="button" class="pill-btn'+(estVal===p?' active':'')+'" data-set-est="' + p + '">' + p + '分</button>').join('')
     +'<span class="time-custom-wrap"><input type="number" min="0" step="5" class="time-custom-input" data-t="est" placeholder="其他" value="'+(isCustom?esc(t.est):'')+'"><em>分</em></span>'
     +'</div>'
     +'<button type="button" class="more-toggle" data-toggle-more="'+t.id+'">'+(t._more?'收起 ▴':'更多 ▾')+'</button>'
@@ -589,7 +682,7 @@ function compareHTML(g){
       +'<div class="bar-line"><span><i class="bar act" style="width:'+(a/max*100)+'%"></i></span><span>实际 '+(a?fmt(a):'—')+'</span></div></div></div>';
   if(!est&&!act&&g.totals){const e=g.totals.est,a=g.totals.act;return '<div class="compare-head"><div><b>预估 vs 实际</b><div class="muted small">实际是预估的 '+(a/e).toFixed(1)+' 倍（'+esc(g.totals.label)+'）</div></div>'+legend(e,a)+'</div>'+row('整体',e,a,Math.max(e,a,1));}
   if(!est&&!act)return '<div class="compare-empty"><b>预估 vs 实际</b><p class="muted">在「要做的事」里点选预估和实际用时，这里会自动对比，看出哪一步最超时。</p><button class="btn" data-goto="2">去填用时</button></div>';
-  
+
   const valid=new Set(namedDirs(g).map(d=>d.id));
   let groups=[];
   if(namedDirs(g).length>0){
@@ -691,6 +784,53 @@ async function copyExport(){
   catch(e){ta.select();try{document.execCommand('copy');toast('已复制');}catch(_){toast('请手动全选复制');}}
 }
 
+// 扫描所有本地缓存恢复草稿
+function scanRecover(){
+  const found=[];
+  const keys=[KEY, KEY+'_backup', OLD_KEY, 'goal-method-v2', 'goal-method-v1', 'goal-method-draft'];
+  for(let i=0; i<localStorage.length; i++){
+    const k=localStorage.key(i);
+    if(k && (k.includes('goal') || k.includes('method')) && !keys.includes(k)){
+      keys.push(k);
+    }
+  }
+  keys.forEach(k=>{
+    try{
+      const raw = localStorage.getItem(k) || sessionStorage.getItem(k);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      const list = Array.isArray(data) ? data : (data.goals || []);
+      list.forEach(g=>{
+        if(g && g.id && g.title && !found.some(x=>x.id===g.id)){
+          found.push(g);
+        }
+      });
+    }catch(e){}
+  });
+
+  if(!found.length){
+    toast('未扫描到其他可恢复的草稿数据');
+    return;
+  }
+
+  let added=0;
+  found.forEach(fg=>{
+    const idx = state.goals.findIndex(x=>x.id===fg.id);
+    if(idx > -1){
+      state.goals[idx] = fg;
+    } else {
+      state.goals.unshift(fg);
+      added++;
+    }
+  });
+
+  normalize(state);
+  saveNow();
+  renderAll();
+  $('#backupDlg').close();
+  toast('已扫描恢复 '+ (added > 0 ? added + ' 个目标草稿' : '所有本地数据'));
+}
+
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   const g=cur(),ds=b.dataset;
@@ -718,6 +858,7 @@ document.addEventListener('click',e=>{
     save();renderAll();toast(g.status==='done'?(needReview?'已完成，记得复盘':'已完成'):'已重新打开');return;
   }
   if('backup' in ds){updateBackupInfo();const d=$('#backupDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');return;}
+  if('scanRecover' in ds){scanRecover();return;}
   if('exportBackup' in ds){
     const data=JSON.stringify({app:'goal-method',version:2,exportedAt:new Date().toISOString(),goals:state.goals},null,2);
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='目标备份-'+dayKey()+'.json';
@@ -788,6 +929,7 @@ document.addEventListener('input',e=>{
     }
   }
 });
+
 document.addEventListener('change',e=>{
   const el=e.target,g=cur();
   if(el.id==='goalSelect'){state.currentId=el.value;save();renderAll();return;}
@@ -816,6 +958,7 @@ document.addEventListener('change',e=>{
     save();updateComputed();
   }
 });
+
 function updateBackupInfo(){const el=$('#backupInfo');if(el)el.textContent=state.lastBackup?'上次备份：'+dayLabel(dayKey(new Date(state.lastBackup))):'还没有备份过。';}
 document.addEventListener('toggle',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('done-group'))state.showDone=t.open;},true);
 window.addEventListener('resize',()=>document.querySelectorAll('#panel textarea').forEach(autosize));
