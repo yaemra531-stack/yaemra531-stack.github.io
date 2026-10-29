@@ -242,6 +242,68 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   .summary{gap:12px 20px}
   .panel-nav .btn{padding:0 12px}
 }
+
+/* Review Cards & Markdown Enhancements */
+.review-header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.review-header-actions{display:flex;gap:6px;align-items:center}
+.review-card{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);padding:16px 18px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s}
+.review-card:hover{border-color:var(--border-strong)}
+.review-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.review-title-wrap{display:flex;flex-direction:column;gap:2px}
+.review-mode-switch{display:inline-flex;padding:2px;background:var(--surface-2);border-radius:6px;gap:2px;flex-shrink:0}
+.mode-btn{all:unset;box-sizing:border-box;font-size:12px;padding:3px 9px;border-radius:4px;cursor:pointer;color:var(--muted);user-select:none;transition:background .15s,color .15s}
+.mode-btn:hover{color:var(--text)}
+.mode-btn.active{background:var(--bg);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* Markdown Preview Display */
+.md-preview{border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);padding:14px 16px;position:relative;cursor:pointer;transition:border-color .15s,background .15s;font-size:14.5px;line-height:1.75;min-height:48px}
+.md-preview:hover{border-color:var(--accent);background:var(--bg)}
+.md-preview:hover .md-click-hint{opacity:1}
+.md-click-hint{position:absolute;right:10px;bottom:8px;font-size:11px;color:var(--accent-text);background:var(--surface-2);padding:2px 8px;border-radius:4px;opacity:0;transition:opacity .2s;pointer-events:none}
+.md-empty{color:var(--faint);font-style:italic}
+
+.md-list{margin:6px 0;padding-left:0;list-style:none}
+.md-ol{counter-reset:ol-count}
+.md-ol>li{counter-increment:ol-count;display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.md-ol>li::before{content:counter(ol-count);flex:none;width:20px;height:20px;border-radius:50%;background:var(--surface-2);color:var(--accent-text);font-size:11px;font-weight:700;display:inline-grid;place-items:center;border:1px solid var(--border);margin-top:2px}
+.md-ul>li{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.md-ul>li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;margin-top:9px}
+
+.md-key{color:var(--text);font-weight:600;background:var(--accent-weak);padding:1px 5px;border-radius:4px;margin-right:2px}
+.md-arrow{display:inline-flex;align-items:center;padding:0 4px;font-weight:700;color:var(--accent);user-select:none}
+.md-p{margin:6px 0}
+.md-blockquote{border-left:3px solid var(--accent);margin:8px 0;padding:6px 12px;background:var(--accent-weak);color:var(--text);border-radius:0 var(--radius) var(--radius) 0;font-size:14px}
+.md-inline-code{background:var(--surface-2);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;border:1px solid var(--border)}
+.md-pre{background:var(--surface-2);padding:10px 14px;border-radius:var(--radius);overflow-x:auto;border:1px solid var(--border);font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.md-checkbox{font-family:monospace;margin-right:4px}
+.md-checkbox.checked{color:var(--ok)}
+.md-link{color:var(--accent);text-decoration:none}
+.md-link:hover{text-decoration:underline}
+
+/* Image in Markdown */
+.md-img-card{display:inline-block;margin:8px 4px 8px 0;max-width:100%}
+.md-img-card img{max-width:100%;max-height:280px;border-radius:6px;border:1px solid var(--border);box-shadow:0 3px 12px rgba(0,0,0,.08);cursor:zoom-in;display:block;transition:transform .15s}
+.md-img-card img:hover{transform:scale(1.015);border-color:var(--accent)}
+.md-img-alt{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+
+/* Review Edit Box & Toolbar */
+.review-edit-box{display:flex;flex-direction:column;gap:6px}
+.review-textarea{width:100%;min-height:96px;font-size:14.5px;line-height:1.6;padding:10px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);transition:border-color .15s,background .15s}
+.review-textarea:focus{background:var(--bg);border-color:var(--accent);outline:none}
+.md-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 2px}
+.md-tools{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.tool-btn{all:unset;box-sizing:border-box;font-size:12px;padding:3px 8px;border-radius:4px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--muted);transition:all .15s}
+.tool-btn:hover{background:var(--surface-2);color:var(--text);border-color:var(--border-strong)}
+.tool-tip{font-size:11px;color:var(--faint);margin-left:4px}
+
+/* Image Zoom Lightbox Modal */
+.img-modal{border:none;border-radius:12px;padding:0;background:transparent;max-width:92vw;max-height:92vh;box-shadow:none;overflow:visible}
+.img-modal::backdrop{background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
+.img-modal-content{display:flex;flex-direction:column;align-items:center;position:relative}
+.img-modal-head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(25,25,25,.88);color:#fff;border-radius:8px 8px 0 0}
+.img-modal-body{background:#111;display:flex;justify-content:center;align-items:center;padding:6px;border-radius:0 0 8px 8px;max-height:80vh;overflow:auto}
+.img-modal-body img{max-width:88vw;max-height:78vh;object-fit:contain;border-radius:4px}
+}
 </style>
 </head>
 <body>
@@ -324,12 +386,24 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
     <button class="btn primary" data-do-batch>一键添加事项</button>
   </div>
 </dialog>
+<dialog id="imgDlg" class="img-modal" aria-label="截图放大预览">
+  <div class="img-modal-content">
+    <div class="img-modal-head">
+      <span class="small">截图预览 · 点击任意处或按 Esc 关闭</span>
+      <button class="icon-btn" data-close-img aria-label="关闭">×</button>
+    </div>
+    <div class="img-modal-body">
+      <img id="imgDlgFull" src="" alt="放大截图预览">
+    </div>
+  </div>
+</dialog>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
 const KEY='goal-method-v2',OLD_KEY='goal-method-v1';
+const reviewModes={};
 const uid=()=>Math.random().toString(36).slice(2,10);
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -584,6 +658,151 @@ function renderStepper(){
 function field(scope,key,label,hint,val,ph){
   return '<label class="field"><span class="field-label">'+label+'<span class="field-hint">'+hint+'</span></span><textarea rows="1" data-scope="'+scope+'" data-key="'+key+'" placeholder="'+esc(ph)+'">'+esc(val)+'</textarea></label>';
 }
+
+function zoomImage(src){
+  const d=$('#imgDlg');if(!d)return;
+  $('#imgDlgFull').src=src;
+  if(d.showModal)d.showModal();else d.setAttribute('open','');
+}
+
+function compressImage(file,maxDim,quality){
+  maxDim=maxDim||1200;quality=quality||0.82;
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxDim||h>maxDim){
+          if(w>h){h=Math.round((h*maxDim)/w);w=maxDim;}
+          else{w=Math.round((w*maxDim)/h);h=maxDim;}
+        }
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        let res=canvas.toDataURL('image/webp',quality);
+        if(!res.startsWith('data:image/webp')){res=canvas.toDataURL('image/jpeg',quality);}
+        resolve(res);
+      };
+      img.onerror=reject;
+      img.src=ev.target.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function parseInline(str){
+  return str
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<span class="md-img-card"><img src="$2" alt="$1" /><span class="md-img-alt">$1</span></span>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener" class="md-link">$1</a>')
+    .replace(/`([^`]+)`/g,'<code class="md-inline-code">$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/~~([^~]+)~~/g,'<del>$1</del>')
+    .replace(/(-&gt;|->|→)/g,'<span class="md-arrow">→</span>');
+}
+
+function parseMarkdown(src){
+  if(!src||!src.trim()) return '<div class="md-empty">点击此处填写，支持 Markdown 列表、加粗、箭头与直接 Cmd+V 粘贴截图...</div>';
+  const lines=esc(src).split('\n');
+  const out=[];
+  let inList=null;
+
+  function closeList(){
+    if(inList){out.push('</'+inList+'>');inList=null;}
+  }
+
+  for(let i=0;i<lines.length;i++){
+    const raw=lines[i];
+    const trimmed=raw.trim();
+    if(!trimmed){closeList();continue;}
+
+    const olMatch=trimmed.match(/^(\d+)[.\u3001]\s*(.*)$/);
+    if(olMatch){
+      if(inList!=='ol'){closeList();out.push('<ol class="md-list md-ol">');inList='ol';}
+      let content=parseInline(olMatch[2]);
+      content=content.replace(/^([^：:\n]{2,25}[：:])\s*/,'<strong class="md-key">$1</strong> ');
+      out.push('<li>'+content+'</li>');
+      continue;
+    }
+
+    const ulMatch=trimmed.match(/^[-*•]\s*(.*)$/);
+    if(ulMatch){
+      if(inList!=='ul'){closeList();out.push('<ul class="md-list md-ul">');inList='ul';}
+      let content=parseInline(ulMatch[1]);
+      if(/^\[ \]\s*/.test(content)){
+        content='<span class="md-checkbox">☐</span> '+content.replace(/^\[ \]\s*/,'');
+      }else if(/^\[[xX]\]\s*/.test(content)){
+        content='<span class="md-checkbox checked">☑</span> '+content.replace(/^\[[xX]\]\s*/,'');
+      }
+      content=content.replace(/^([^：:\n]{2,25}[：:])\s*/,'<strong class="md-key">$1</strong> ');
+      out.push('<li>'+content+'</li>');
+      continue;
+    }
+
+    const bqMatch=trimmed.match(/^&gt;\s*(.*)$/);
+    if(bqMatch){
+      closeList();
+      out.push('<blockquote class="md-blockquote">'+parseInline(bqMatch[1])+'</blockquote>');
+      continue;
+    }
+
+    const hMatch=trimmed.match(/^(#{1,3})\s*(.*)$/);
+    if(hMatch){
+      closeList();
+      const level=hMatch[1].length;
+      out.push('<h'+(level+2)+' class="md-heading">'+parseInline(hMatch[2])+'</h'+(level+2)+'>');
+      continue;
+    }
+
+    closeList();
+    let pContent=parseInline(trimmed);
+    if(/^([^：:\n]{2,25}[：:])\s*/.test(pContent)){
+      pContent=pContent.replace(/^([^：:\n]{2,25}[：:])\s*/,'<strong class="md-key">$1</strong> ');
+    }
+    out.push('<p class="md-p">'+pContent+'</p>');
+  }
+  closeList();
+  return out.join('\n');
+}
+
+function reviewCard(g,k,label,hint,val,ph){
+  const mode=reviewModes[k]||((val&&val.trim())?'preview':'edit');
+  const isPreview=mode==='preview';
+  return '<div class="review-card" data-rkey="'+k+'">'
+    +'<div class="review-card-head">'
+    +'<div class="review-title-wrap">'
+    +'<span class="field-label">'+label+'</span>'
+    +'<span class="field-hint">'+hint+'</span>'
+    +'</div>'
+    +'<div class="review-mode-switch">'
+    +'<button type="button" class="mode-btn'+(isPreview?' active':'')+'" data-set-rmode="preview" data-rk="'+k+'">👁️ 预览</button>'
+    +'<button type="button" class="mode-btn'+(!isPreview?' active':'')+'" data-set-rmode="edit" data-rk="'+k+'">✏️ 编辑</button>'
+    +'</div>'
+    +'</div>'
+    +(isPreview
+      ?('<div class="md-preview md-content" data-rk="'+k+'" title="点击直接进入编辑">'
+        +parseMarkdown(val||'')
+        +'<div class="md-click-hint">点击任意处编辑 ✏️</div>'
+        +'</div>')
+      :('<div class="review-edit-box">'
+        +'<textarea rows="1" class="review-textarea" data-scope="review" data-key="'+k+'" placeholder="'+esc(ph||'支持 Markdown 列表、加粗、箭头，直接按 Cmd+V 粘贴截图...')+'">'+esc(val)+'</textarea>'
+        +'<div class="md-toolbar">'
+        +'<div class="md-tools">'
+        +'<button type="button" class="tool-btn" data-ins="num" data-rk="'+k+'">1. 序号</button>'
+        +'<button type="button" class="tool-btn" data-ins="bullet" data-rk="'+k+'">• 列表</button>'
+        +'<button type="button" class="tool-btn" data-ins="bold" data-rk="'+k+'">**加粗**</button>'
+        +'<button type="button" class="tool-btn" data-ins="arrow" data-rk="'+k+'">→ 箭头</button>'
+        +'<span class="tool-tip">截图直接 Cmd+V 粘贴</span>'
+        +'</div>'
+        +'<button type="button" class="btn small primary" data-set-rmode="preview" data-rk="'+k+'">完成排版 (Cmd+↵)</button>'
+        +'</div>'
+        +'</div>')
+    )
+    +'</div>';
+}
 function reminder(g){return '<div class="reminder"><span class="reminder-label">结果</span><span>'+(g.result.what?esc(g.result.what):'<span class="muted">还没写结果，建议先回到第 1 步</span>')+'</span></div>';}
 
 function taskSummary(g){
@@ -732,7 +951,15 @@ function renderPanel(){
       +'<button class="btn primary" data-add-task>+ 添加一件事</button>';
   }
   if(s===3){
-    h+='<div class="card compare" id="compare">'+compareHTML(g)+'</div><div class="fields">'+REVIEW_Q.map(([k,l,hint,ph])=>field('review',k,l,hint,g.review[k],ph)).join('')+'</div>';
+    h+='<div class="card compare" id="compare">'+compareHTML(g)+'</div>'
+      +'<div class="review-header-bar">'
+      +'<div><b>深度复盘与提效资产</b><div class="muted small">已支持 Markdown 实时排版，直接按 Cmd+V 粘贴截图</div></div>'
+      +'<div class="review-header-actions">'
+      +'<button type="button" class="btn small ghost" data-toggle-all-review="preview">✨ 全部预览</button>'
+      +'<button type="button" class="btn small ghost" data-toggle-all-review="edit">✏️ 全部编辑</button>'
+      +'</div>'
+      +'</div>'
+      +'<div class="fields">'+REVIEW_Q.map(([k,l,hint,ph])=>reviewCard(g,k,l,hint,g.review[k],ph)).join('')+'</div>';
   }
   if(g.note)h='<div class="note"><span class="reminder-label">经验</span><span>'+esc(g.note)+'</span></div>'+h;
   P.innerHTML=h;
@@ -832,8 +1059,75 @@ function scanRecover(){
 }
 
 document.addEventListener('click',e=>{
+  const mdPrev=e.target.closest('.md-preview');
+  if(mdPrev&&!e.target.closest('a')&&!e.target.closest('img')&&!e.target.closest('button')){
+    const rk=mdPrev.dataset.rk;
+    if(rk){
+      reviewModes[rk]='edit';
+      renderPanel();
+      const ta=$('textarea[data-scope="review"][data-key="'+rk+'"]');
+      if(ta){ta.focus();ta.selectionStart=ta.selectionEnd=ta.value.length;autosize(ta);}
+      return;
+    }
+  }
+
+  if(e.target.tagName==='IMG'&&e.target.closest('.md-img-card')){
+    zoomImage(e.target.src);
+    return;
+  }
+
+  if(e.target.tagName==='DIALOG'&&e.target.id==='imgDlg'){
+    e.target.close();
+    return;
+  }
+
   const b=e.target.closest('button');if(!b)return;
   const g=cur(),ds=b.dataset;
+  if('setRmode' in ds){
+    const rk=ds.rk, mode=ds.setRmode;
+    reviewModes[rk]=mode;
+    renderPanel();
+    if(mode==='edit'){
+      const ta=$('textarea[data-scope="review"][data-key="'+rk+'"]');
+      if(ta){ta.focus();autosize(ta);}
+    }
+    return;
+  }
+  if('toggleAllReview' in ds){
+    const mode=ds.toggleAllReview;
+    REVIEW_Q.forEach(([k])=>{reviewModes[k]=mode;});
+    renderPanel();
+    toast(mode==='preview'?'已全部切换为 Markdown 排版预览':'已全部切换为编辑模式');
+    return;
+  }
+  if('closeImg' in ds){
+    const d=$('#imgDlg');if(d)d.close();
+    return;
+  }
+  if('ins' in ds){
+    const rk=ds.rk, type=ds.ins;
+    const ta=$('textarea[data-scope="review"][data-key="'+rk+'"]');
+    if(ta){
+      let insert='';
+      const start=ta.selectionStart||ta.value.length;
+      const end=ta.selectionEnd||ta.value.length;
+      const sel=ta.value.slice(start,end);
+      if(type==='num') insert=(start>0&&ta.value[start-1]!=='\n'?'\n':'')+'1. ';
+      else if(type==='bullet') insert=(start>0&&ta.value[start-1]!=='\n'?'\n':'')+'- ';
+      else if(type==='bold') insert=sel?'**'+sel+'**':'**重点**';
+      else if(type==='arrow') insert=' -> ';
+      if(type==='bold'&&sel){
+        ta.value=ta.value.slice(0,start)+insert+ta.value.slice(end);
+        ta.selectionStart=start;ta.selectionEnd=start+insert.length;
+      }else{
+        ta.value=ta.value.slice(0,start)+insert+ta.value.slice(end);
+        ta.selectionStart=ta.selectionEnd=start+insert.length;
+      }
+      ta.dispatchEvent(new Event('input',{bubbles:true}));
+      ta.focus();
+    }
+    return;
+  }
   if(ds.goal){state.currentId=ds.goal;save();renderAll();return;}
   if(ds.step!==undefined){goStep(+ds.step);return;}
   if(ds.goto!==undefined){goStep(+ds.goto);window.scrollTo({top:0,behavior:'smooth'});return;}
@@ -956,6 +1250,52 @@ document.addEventListener('change',e=>{
     t[el.dataset.t]=el.type==='checkbox'?el.checked:el.value;
     if(el.dataset.t==='done')tEl.classList.toggle('is-done',el.checked);
     save();updateComputed();
+  }
+});
+
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){
+    const ta=e.target;
+    if(ta&&ta.dataset&&ta.dataset.scope==='review'){
+      e.preventDefault();
+      const k=ta.dataset.key;
+      reviewModes[k]='preview';
+      renderPanel();
+      toast('✨ 已完成排版，切换为 Markdown 预览');
+    }
+  }
+});
+
+document.addEventListener('paste',async e=>{
+  const ta=e.target;
+  if(!ta||ta.dataset.scope!=='review')return;
+  const items=(e.clipboardData||window.clipboardData)?.items;
+  if(!items)return;
+  let imgItem=null;
+  for(let item of items){
+    if(item.type&&item.type.startsWith('image/')){
+      imgItem=item;
+      break;
+    }
+  }
+  if(!imgItem)return;
+  e.preventDefault();
+  const file=imgItem.getAsFile();
+  if(!file)return;
+
+  toast('正在处理截图并压缩...');
+  try{
+    const dataUrl=await compressImage(file,1200,0.82);
+    const start=ta.selectionStart||ta.value.length;
+    const end=ta.selectionEnd||ta.value.length;
+    const insert=(start>0&&ta.value[start-1]!=='\n'?'\n':'')+'![截图]('+dataUrl+')\n';
+    ta.value=ta.value.slice(0,start)+insert+ta.value.slice(end);
+    ta.selectionStart=ta.selectionEnd=start+insert.length;
+    ta.dispatchEvent(new Event('input',{bubbles:true}));
+    toast('✅ 截图已粘贴，切换预览即可查看效果');
+  }catch(err){
+    console.error(err);
+    toast('⚠️ 截图粘贴失败，请重试');
   }
 });
 
