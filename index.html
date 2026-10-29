@@ -376,6 +376,16 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   </div>
   <div class="dlg-foot"><button class="btn" data-close-backup>关闭</button></div>
 </dialog>
+<dialog id="batchDirDlg" aria-labelledby="batchDirTitle">
+  <div class="dlg-head"><div id="batchDirTitle">📋 批量粘贴方向清单</div><p>直接粘贴 AI 输出或整理好的方向列表，自动识别方向名称与小目标说明：</p></div>
+  <div class="dlg-body">
+    <textarea id="batchDirText" placeholder="直接粘贴方向列表，例如：&#10;1. 新闻讲准：只用一手来源核实过的数字；先做一张事实卡，一次核完。&#10;2. 观点锐，门槛低：先把新闻说清，再换一个别人没说过的角度。&#10;3. 开头和结尾：前 3 秒先引起情绪，1 秒内交代前提。&#10;4. 写稿让 AI 多干：观点 3 选 1 -> 钩子 5 选 1。"></textarea>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn" data-close-batch-dir>取消</button>
+    <button class="btn primary" data-do-batch-dir>一键添加方向</button>
+  </div>
+</dialog>
 <dialog id="batchDlg" aria-labelledby="batchTitle">
   <div class="dlg-head"><div id="batchTitle">📋 批量粘贴生成事项</div><p>支持粘贴数字序号或清单（如 ChatGPT / Claude 输出），自动提取谁做与时间：</p></div>
   <div class="dlg-body">
@@ -614,8 +624,8 @@ const num=v=>{const n=parseFloat(v);return isFinite(n)&&n>0?n:0;};
 function fmt(m){m=Math.round(m);if(!m)return '0 分钟';const h=Math.floor(m/60),r=m%60;return h?(h+' 小时'+(r?' '+r+' 分':'')):r+' 分钟';}
 const named=g=>g.tasks.filter(t=>t.name.trim());
 const namedDirs=g=>g.dirs.filter(d=>d.name.trim());
-const dirOk=g=>{const n=namedDirs(g).length;return n>=3&&n<=5;};
-function dirCountText(g){const n=namedDirs(g).length;if(n<3)return '还差 '+(3-n)+' 个（建议 3–5 个）';if(n>5)return '超过 5 个，考虑合并';return n+' 个方向 ✓';}
+const dirOk=g=>{const n=namedDirs(g).length;return n>=3&&n<=7;};
+function dirCountText(g){const n=namedDirs(g).length;if(n<3)return '还差 '+(3-n)+' 个（建议 3–5 个）';if(n>7)return n+' 个方向（超过 7 个，建议精炼）';if(n>5)return n+' 个方向（建议 3–5 个）✓';return n+' 个方向 ✓';}
 function progress(g){
   const r=RESULT_Q.filter(([k])=>(g.result[k]||'').trim()).length;
   const dn=namedDirs(g).length;
@@ -856,6 +866,40 @@ function taskCard(g,t,i){
     +'</div>';
 }
 
+function parseBatchDirs(text){
+  const lines=text.split('\n');
+  const dirs=[];
+  for(let rawLine of lines){
+    let line=rawLine.trim();
+    if(!line)continue;
+    line=line.replace(/\*\*/g,'').replace(/`/g,'').trim();
+    const hasListPrefix=/^([0-9]+[.\u3001]|\([0-9]+\)|[-*•])\s*/.test(line);
+    const cleanLine=line.replace(/^([0-9]+[.\u3001]|\([0-9]+\)|[-*•])\s*/,'').trim();
+    if(!cleanLine)continue;
+
+    let name='', goal='';
+    const colonIdx=cleanLine.search(/[：:]/);
+    const dashIdx=cleanLine.search(/\s+[-—–]\s+/);
+
+    if(colonIdx>0 && colonIdx<=25){
+      name=cleanLine.slice(0,colonIdx).trim();
+      goal=cleanLine.slice(colonIdx+1).trim();
+    }else if(dashIdx>0 && dashIdx<=25){
+      name=cleanLine.slice(0,dashIdx).trim();
+      goal=cleanLine.slice(dashIdx).replace(/^[-—–\s]+/,'').trim();
+    }else if(hasListPrefix){
+      name=cleanLine;
+    }else{
+      continue;
+    }
+
+    if(name){
+      dirs.push({name,goal});
+    }
+  }
+  return dirs;
+}
+
 function parseBatchTasks(text){
   const lines=text.split('\n');
   const tasks=[];
@@ -935,7 +979,13 @@ function renderPanel(){
       +'<input class="input dir-name" data-d="name" value="'+esc(d.name)+'" placeholder="方向名称" aria-label="方向 '+(i+1)+' 名称">'
       +'<textarea rows="1" class="dir-goal" data-d="goal" placeholder="小目标：这个方向做到什么程度" aria-label="方向 '+(i+1)+' 小目标">'+esc(d.goal)+'</textarea>'
       +'<button class="icon-btn" data-del-dir="'+d.id+'" aria-label="删除方向 '+(i+1)+'">×</button></div>').join('')+'</div>'
-      +'<div class="row-between"><button class="btn" data-add-dir'+(g.dirs.length>=5?' disabled':'')+'>+ 添加方向</button><span id="dirCount" class="pill '+(dirOk(g)?'ok':'warn')+'">'+dirCountText(g)+'</span></div>'
+      +'<div class="row-between">'
+      +'<div class="toolbar-actions">'
+      +'<button class="btn" data-add-dir'+(g.dirs.length>=10?' disabled':'')+'>+ 添加方向</button>'
+      +'<button class="btn ghost" data-batch-dirs>📋 批量粘贴方向清单</button>'
+      +'</div>'
+      +'<span id="dirCount" class="pill '+(dirOk(g)?'ok':'warn')+'">'+dirCountText(g)+'</span>'
+      +'</div>'
       +'<label class="check-card"><input type="checkbox" data-enough'+(g.enough?' checked':'')+'><span><b>这些方向加起来，够达到结果吗？</b><br><span class="muted small">逐个看一遍：这些都做到了，结果就能达到，再勾上。</span></span></label>';
   }
   if(s===2){
@@ -1131,7 +1181,7 @@ document.addEventListener('click',e=>{
   if(ds.goal){state.currentId=ds.goal;save();renderAll();return;}
   if(ds.step!==undefined){goStep(+ds.step);return;}
   if(ds.goto!==undefined){goStep(+ds.goto);window.scrollTo({top:0,behavior:'smooth'});return;}
-  if('addDir' in ds){if(g.dirs.length<5){g.dirs.push({id:uid(),name:'',goal:''});save();renderPanel();focusLast('.dir-name');}return;}
+  if('addDir' in ds){if(g.dirs.length<10){g.dirs.push({id:uid(),name:'',goal:''});save();renderPanel();focusLast('.dir-name');}return;}
   if(ds.delDir){g.dirs=g.dirs.filter(d=>d.id!==ds.delDir);g.tasks.forEach(t=>{if(t.dirId===ds.delDir)t.dirId='';});save();renderPanel();updateComputed();return;}
   if('addTask' in ds){g.tasks.push(mkTask('', '', false, '我', '15'));save();renderPanel();updateComputed();focusLast('.task-name');return;}
   if(ds.delTask){g.tasks=g.tasks.filter(t=>t.id!==ds.delTask);save();renderPanel();updateComputed();return;}
@@ -1188,6 +1238,29 @@ document.addEventListener('click',e=>{
   if('toggleMore' in ds){
     const t=g.tasks.find(x=>x.id===ds.toggleMore);
     if(t){t._more=!t._more;renderPanel();}
+    return;
+  }
+  if('batchDirs' in ds){
+    $('#batchDirText').value='';
+    const d=$('#batchDirDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');
+    return;
+  }
+  if('closeBatchDir' in ds){$('#batchDirDlg').close();return;}
+  if('doBatchDir' in ds){
+    const txt=$('#batchDirText').value;
+    const parsed=parseBatchDirs(txt);
+    if(!parsed.length){toast('请粘贴包含方向的文字');return;}
+    const hasExisting=g.dirs.some(d=>d.name.trim()||d.goal.trim());
+    let replace=true;
+    if(hasExisting){
+      replace=confirm('当前已有填写过的方向，是否覆盖替换？\n点「确定」覆盖替换，点「取消」追加到后面');
+    }
+    if(replace){
+      g.dirs=parsed.map(d=>({id:uid(),name:d.name,goal:d.goal}));
+    }else{
+      parsed.forEach(d=>g.dirs.push({id:uid(),name:d.name,goal:d.goal}));
+    }
+    save();updateComputed();renderPanel();$('#batchDirDlg').close();toast('已成功生成 '+parsed.length+' 个方向');
     return;
   }
   if('batchTasks' in ds){
