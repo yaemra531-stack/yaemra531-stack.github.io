@@ -156,7 +156,8 @@ input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--accent);
 .time-custom-wrap em{font-style:normal;font-size:11px;color:var(--muted)}
 .more-toggle{all:unset;box-sizing:border-box;margin-left:auto;font-size:12px;color:var(--faint);cursor:pointer;padding:4px 8px;border-radius:4px;user-select:none}
 .more-toggle:hover{color:var(--text);background:var(--surface-2)}
-.task-more-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-left:64px;padding-top:6px;border-top:1px dashed var(--border);font-size:13px;color:var(--muted)}
+.task-more-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-left:42px;padding-top:6px;border-top:1px dashed var(--border);font-size:13px;color:var(--muted)}
+.owner-expand,.time-expand{padding-left:42px}
 
 .meta{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .meta select{width:auto;max-width:180px;min-height:32px;height:32px;padding:4px 8px;font-size:12px;color:var(--text);border-radius:6px}
@@ -304,13 +305,205 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .img-modal-body{background:#111;display:flex;justify-content:center;align-items:center;padding:6px;border-radius:0 0 8px 8px;max-height:80vh;overflow:auto}
 .img-modal-body img{max-width:88vw;max-height:78vh;object-fit:contain;border-radius:4px}
 }
+
+/* Owner tags */
+.owner-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;line-height:1.4;white-space:nowrap;border:1px solid transparent;vertical-align:middle}
+.owner-tag.empty{display:none}
+.owner-情报员{background:var(--accent-weak);color:var(--accent-text);border-color:transparent}
+.owner-总编导{background:var(--purple-weak);color:var(--purple);border-color:transparent}
+.owner-核查实测员{background:var(--warn-weak);color:var(--warn);border-color:transparent}
+.owner-制片{background:var(--ok-weak);color:var(--ok);border-color:transparent}
+.owner-外部工具{background:rgba(14,116,144,.12);color:#0E7490;border-color:transparent}
+.owner-我{background:var(--surface-2);color:var(--text);border-color:var(--border)}
+@media (prefers-color-scheme: dark){
+  .owner-外部工具{background:rgba(34,211,238,.14);color:#67E8F9}
+}
+.pill-btn.owner-pill.active.owner-情报员{background:var(--accent);border-color:var(--accent);color:#fff}
+.pill-btn.owner-pill.active.owner-总编导{background:var(--purple);border-color:var(--purple);color:#fff}
+.pill-btn.owner-pill.active.owner-核查实测员{background:var(--warn);border-color:var(--warn);color:#fff}
+.pill-btn.owner-pill.active.owner-制片{background:var(--ok);border-color:var(--ok);color:#fff}
+.pill-btn.owner-pill.active.owner-外部工具{background:#0E7490;border-color:#0E7490;color:#fff}
+.pill-btn.owner-pill.active.owner-我{background:var(--text);border-color:var(--text);color:var(--bg)}
+.task-top .owner-tag{margin-top:8px;margin-right:4px}
+
+/* How-to page */
+.nav-howto{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);min-height:44px}
+.nav-howto:hover{background:var(--surface-2);color:var(--text)}
+.nav-howto[aria-current="true"]{background:var(--bg);box-shadow:0 0 0 1px var(--border);color:var(--text)}
+.nav-howto .nav-ico{width:22px;height:22px;border-radius:6px;background:var(--accent-weak);color:var(--accent-text);display:grid;place-items:center;font-size:12px;font-weight:700}
+.side-sep{height:1px;background:var(--border);margin:4px 0}
+.howto-wrap{display:flex;flex-direction:column;gap:28px}
+.howto-hero h1{font-size:28px;margin:0 0 6px;line-height:1.3}
+.howto-hero p{margin:0;color:var(--muted);font-size:15px}
+.howto-section h2{font-size:18px;margin:0 0 12px}
+.howto-section > .muted{margin:-4px 0 14px;font-size:13px}
+.howto-team{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.howto-card{border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+.howto-card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.howto-card p{margin:0;font-size:14px;color:var(--muted);line-height:1.55}
+.howto-steps{display:flex;flex-direction:column;gap:10px;counter-reset:howto-step}
+.howto-step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:start;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;background:var(--bg)}
+.howto-step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;margin-top:2px}
+.howto-step h3{margin:0 0 4px;font-size:15px;line-height:1.4}
+.howto-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.55}
+.howto-note{padding:12px 16px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);font-size:14px;color:var(--muted)}
+.howto-note code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:var(--surface-2);padding:1px 6px;border-radius:4px;border:1px solid var(--border);color:var(--text)}
+.howto-actions{display:flex;flex-wrap:wrap;gap:8px}
+.app.view-howto .goal-only{display:none}
+.app.view-howto .howto-only{display:block}
+.app:not(.view-howto) .howto-only{display:none}
+.app.view-today .goal-only{display:none}
+.app.view-today .howto-only{display:none}
+.app.view-today .today-only{display:block}
+.app:not(.view-today) .today-only{display:none}
+.howto-panel{padding-bottom:24px}
+@media (max-width:860px){
+  .howto-hero h1{font-size:24px}
+  .app.view-goal .mobile-howto, .app:not(.view-howto):not(.view-today) .mobile-howto{display:inline-flex !important}
+  .app:not(.view-howto):not(.view-today) #mobileToday{display:inline-flex !important}
+  #mobileToday{display:none}
+  .app.view-howto .howto-only, .app.view-today .today-only, .app.view-howto .howto-only.today-only, .app.view-today .howto-only.today-only{display:inline-flex !important}
+}
+.mobile-howto{display:none}
+@media (max-width:640px){
+  .howto-step{grid-template-columns:28px minmax(0,1fr);padding:12px}
+  .howto-team{grid-template-columns:minmax(0,1fr)}
+  .owner-pills .pill-btn{padding:3px 7px;font-size:11px}
+}
+
+
+/* Today route */
+.nav-today{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);min-height:44px}
+.nav-today:hover{background:var(--surface-2);color:var(--text)}
+.nav-today[aria-current="true"]{background:var(--bg);box-shadow:0 0 0 1px var(--border);color:var(--text)}
+.nav-today .nav-ico{width:22px;height:22px;border-radius:6px;background:var(--ok-weak);color:var(--ok);display:grid;place-items:center;font-size:12px;font-weight:700}
+.today-wrap{display:flex;flex-direction:column;gap:20px}
+.today-hero h1{font-size:26px;margin:0 0 6px;line-height:1.3}
+.today-hero p{margin:0;color:var(--muted);font-size:14px}
+.today-list{display:flex;flex-direction:column;gap:8px}
+.today-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;background:var(--bg);min-height:52px}
+.today-row.is-done{opacity:.72;background:var(--surface)}
+.today-row.is-done .today-main{text-decoration:line-through;color:var(--muted)}
+.today-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px;font-size:14px;line-height:1.45;min-width:0}
+.today-main .phrase{font-weight:500;color:var(--text)}
+.today-main .action{color:var(--muted)}
+.today-actions{display:flex;gap:6px;flex-shrink:0}
+.today-actions .btn{min-height:34px;padding:0 10px;font-size:12px}
+.today-strip{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:0 0 20px;background:var(--surface)}
+.today-strip-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.today-strip-head b{font-size:14px}
+.today-strip .today-list{gap:6px}
+.today-strip .today-row{padding:8px 10px;min-height:44px}
+.app.view-today .goal-only{display:none}
+.app.view-today .howto-only{display:none}
+.app.view-today .today-only{display:block}
+.app:not(.view-today) .today-only{display:none}
+.app.view-howto .today-only{display:none}
+.storage-diag{font-size:12px;line-height:1.55;color:var(--muted);white-space:pre-wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:8px;max-height:160px;overflow:auto}
+.origin-warn{padding:10px 12px;border-radius:var(--radius);background:var(--warn-weak);color:var(--warn);font-size:13px;line-height:1.5;margin-bottom:8px}
+
+/* Compact task card */
+.task-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding-left:64px}
+.task-meta-line{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.owner-chip-btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.owner-chip-btn .owner-tag{margin:0}
+.owner-chip-btn .chip-caret{font-size:10px;color:var(--faint)}
+.owner-empty-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px dashed var(--border-strong);color:var(--muted)}
+.owner-expand{display:flex;flex-wrap:wrap;gap:4px;width:100%;padding:6px 0 2px}
+.time-chip-btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;min-height:28px;border-radius:999px;border:1px solid var(--border-strong);font-size:12px;color:var(--muted);background:var(--bg)}
+.time-chip-btn:hover{background:var(--surface-2);color:var(--text)}
+.time-expand{display:flex;flex-wrap:wrap;align-items:center;gap:4px;width:100%;padding:4px 0}
+/* Quiet redesign */
+.principle-line{margin:10px 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
+.menu{position:relative;flex:none}
+.menu-btn{color:var(--muted);font-weight:700;letter-spacing:1px;width:40px}
+.menu-btn:hover{color:var(--text)}
+.menu-pop{position:absolute;right:0;top:42px;min-width:168px;background:var(--bg);border:1px solid var(--border);border-radius:10px;box-shadow:0 10px 28px rgba(15,15,15,.10);padding:6px;z-index:20;display:flex;flex-direction:column}
+.menu-pop[hidden]{display:none}
+.menu-pop button{all:unset;box-sizing:border-box;cursor:pointer;padding:8px 12px;border-radius:6px;font-size:14px;min-height:36px}
+.menu-pop button:hover{background:var(--surface)}
+.menu-pop button.danger{color:var(--danger)}
+.next-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;background:var(--bg);margin:0 0 16px}
+.next-bar.is-clear{border-left-color:var(--ok)}
+.next-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+.next-kicker{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted)}
+.next-copy b{font-size:15px;font-weight:600;line-height:1.4}
+.next-action{font-size:13px;color:var(--muted)}
+.next-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
+.next-actions .btn{min-height:36px;padding:0 12px}
+.owner-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.owner-dot.owner-情报员{background:#5B8DEF}
+.owner-dot.owner-总编导{background:#8B78D6}
+.owner-dot.owner-核查实测员{background:#C4924A}
+.owner-dot.owner-制片{background:#5E9A78}
+.owner-dot.owner-外部工具{background:#4C9AA8}
+.owner-dot.owner-我{background:#8A8680}
+.owner-情报员,.owner-总编导,.owner-核查实测员,.owner-制片,.owner-外部工具,.owner-我{font-weight:600}
+.meta-link.owner-情报员{color:#3D6FBF}
+.meta-link.owner-总编导{color:#6D5BD0}
+.meta-link.owner-核查实测员{color:#9A6A28}
+.meta-link.owner-制片{color:#3E7A58}
+.meta-link.owner-外部工具{color:#2F7A86}
+.meta-link.owner-我{color:var(--text)}
+.timeline{list-style:none;margin:8px 0 0;padding:0}
+.tl{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;position:relative;padding-bottom:16px}
+.tl:not(:last-child)::before{content:"";position:absolute;left:10px;top:16px;bottom:0;width:1px;background:var(--border)}
+.tl-mark{display:grid;place-items:start center;padding-top:4px;cursor:pointer}
+.tl-mark input{position:absolute;opacity:0;width:18px;height:18px}
+.tl.is-done{opacity:.5}
+.tl.is-done .tl-phrase{text-decoration:line-through}
+.tl.is-now .tl-body{background:var(--surface);border-radius:10px;padding:10px 12px;margin:-6px 0 4px}
+.tl-who{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:2px}
+.tl-who.owner-情报员{color:#3D6FBF;background:none}
+.tl-who.owner-总编导{color:#6D5BD0;background:none}
+.tl-who.owner-核查实测员{color:#9A6A28;background:none}
+.tl-who.owner-制片{color:#3E7A58;background:none}
+.tl-who.owner-外部工具{color:#2F7A86;background:none}
+.tl-who.owner-我{color:var(--text);background:none}
+.tl-phrase{font-size:15px;line-height:1.45}
+.tl-phrase .action{color:var(--muted);font-weight:400}
+.tl.is-now .tl-phrase{font-weight:600}
+.tl .btn{margin-top:8px;min-height:36px}
+.howto-card{border-left:3px solid var(--border-strong)}
+.howto-card.tone-情报员{border-left-color:#5B8DEF}
+.howto-card.tone-总编导{border-left-color:#8B78D6}
+.howto-card.tone-核查实测员{border-left-color:#C4924A}
+.howto-card.tone-制片{border-left-color:#5E9A78}
+.howto-card.tone-外部工具{border-left-color:#4C9AA8}
+.howto-card.tone-我{border-left-color:#8A8680}
+.howto-step-num{background:var(--surface-2);color:var(--muted)}
+.task-idx{display:none}
+.task{padding:8px 12px;gap:2px}
+.task-controls{display:block;padding-left:0}
+.task-meta-line{display:flex;align-items:center;gap:6px;padding:0 0 4px 42px;min-height:28px}
+.meta-link{all:unset;box-sizing:border-box;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);border-radius:4px}
+.meta-link:hover{color:var(--text)}
+.meta-link.faint{font-weight:500;color:var(--faint)}
+.meta-dot{color:var(--faint);font-size:12px}
+.summary{padding:8px 2px;background:transparent;margin-bottom:4px}
+.summary-quiet{font-size:13px;color:var(--muted)}
+.today-strip{border:none;padding:0;margin:0;background:transparent}
+.tl-mark{position:relative}
+@media (max-width:640px){
+  .task{padding:8px 10px;gap:2px}
+  .task-name{font-size:15px;padding:4px 4px;max-height:none}
+  .title-wrap{flex-basis:auto;flex:1}
+  .next-bar{flex-direction:column;align-items:stretch;gap:10px}
+  .next-actions{flex-wrap:wrap}
+  .today-hero h1{font-size:22px}
+  .title-input{font-size:24px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
     <div class="brand"><span class="brand-mark">目</span>目标制定</div>
-    <button class="btn primary block" data-new-goal>+ 新建目标</button>
+    <button class="nav-howto" type="button" data-view="howto" id="navHowto"><span class="nav-ico">怎</span>怎么做</button>
+    <button class="nav-today" type="button" data-view="today" id="navToday"><span class="nav-ico">今</span>今天</button>
+    <div class="side-sep"></div>
+    <button class="btn primary block goal-only" data-new-goal>+ 新建目标</button>
     <nav class="goal-list" id="goalList" aria-label="目标列表"></nav>
     <div class="side-note">
       <b>四步走</b>
@@ -326,9 +519,15 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   <main class="main">
     <div class="main-inner">
       <div class="mobile-bar">
-        <select id="goalSelect" aria-label="切换目标"></select>
-        <button class="btn primary" data-new-goal>+ 新建</button>
+        <select id="goalSelect" class="goal-only" aria-label="切换目标"></select>
+        <button class="btn ghost mobile-howto" type="button" data-view="howto" id="mobileHowto">怎么做</button>
+        <button class="btn ghost" type="button" data-view="today" id="mobileToday">今天</button>
+        <button class="btn ghost howto-only today-only" type="button" data-view="goal" style="display:none">回目标</button>
+        <button class="btn primary goal-only" data-new-goal>+ 新建</button>
       </div>
+      <div class="howto-only howto-panel" id="howtoPanel" hidden></div>
+      <div class="today-only today-panel" id="todayPanel" hidden></div>
+      <div class="goal-only" id="goalWorkspace">
       <header class="goal-head">
         <div class="title-wrap">
           <input id="goalTitle" class="title-input" aria-label="目标名称" placeholder="给目标起个名字">
@@ -338,17 +537,22 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
             <span id="saved" class="save-tag"><i class="save-dot"></i><span>已自动保存</span></span>
           </div>
         </div>
-        <div class="head-actions">
-          <button class="btn ghost" id="doneBtn" data-toggle-done>标记完成</button>
-          <button class="btn ghost" data-export>导出文本</button>
-          <button class="btn ghost" data-backup>备份</button>
-          <button class="btn ghost danger" data-del-goal>删除</button>
+        <div class="menu" id="goalMenu">
+          <button class="icon-btn menu-btn" type="button" data-toggle-menu aria-label="更多操作" aria-expanded="false">···</button>
+          <div class="menu-pop" id="goalMenuPop" hidden>
+            <button type="button" id="doneBtn" data-toggle-done>标记完成</button>
+            <button type="button" data-export>导出文本</button>
+            <button type="button" data-backup>备份</button>
+            <button type="button" class="danger" data-del-goal>删除</button>
+          </div>
         </div>
       </header>
-      <div class="principle"><span class="principle-icon">!</span><span><strong>先做，而不是先找最优解。</strong>遇到问题，再带着具体问题去解决。<br><strong>AI 负责执行，你负责判断。</strong>只有自己动手更快，才自己动手。</span></div>
+      <p class="principle-line">先做，而不是先找最优解。AI 负责执行，你负责判断。</p>
+      <div id="todayStrip" class="today-strip" hidden></div>
       <nav class="stepper" id="stepper" role="tablist" aria-label="四个步骤"></nav>
       <section id="panel" role="tabpanel"></section>
       <footer class="panel-nav" id="panelNav"></footer>
+      </div>
     </div>
   </main>
 </div>
@@ -362,6 +566,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   <div class="dlg-head"><div id="newTitle">新建目标</div><p>可以从空白开始，也可以套用做过的经验。</p></div>
   <div class="dlg-body choices">
     <button class="choice" data-new-blank><b>空白目标</b><span>从结果开始，一步步填。</span></button>
+    <button class="choice" data-new-video><b>视频一期</b><span>多 Agent 工作流模板：结果、6 个方向、按负责人拆好的要做的事。</span></button>
     <button class="choice" data-new-vlog><b>用短视频协作经验新建</b><span>5 个方向和做法已填好，包含预估用时。</span></button>
   </div>
   <div class="dlg-foot"><button class="btn" data-close-new>取消</button></div>
@@ -369,10 +574,12 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 <dialog id="backupDlg" aria-labelledby="backupTitle">
   <div class="dlg-head"><div id="backupTitle">备份与找回</div><p>数据保存在这个浏览器里。支持导出备份，也支持一键扫描找回历史草稿。</p></div>
   <div class="dlg-body choices">
-    <button class="choice" data-scan-recover><b>🔍 扫描并恢复历史缓存草稿</b><span>意外关闭或丢失？一键扫描所有缓存草稿并还原。</span></button>
+    <div class="origin-warn" id="originWarn"></div>
+    <button class="choice" data-scan-recover><b>🔍 扫描并恢复历史缓存草稿</b><span>扫描本域名下 localStorage / sessionStorage 全部相关键，合并找回（不删旧数据）。</span></button>
     <button class="choice" data-export-backup><b>导出备份文件</b><span>下载一个备份文件，存到电脑或网盘。</span></button>
     <button class="choice" data-import-backup><b>导入备份文件</b><span>选择备份文件，恢复或合并到这里。</span></button>
     <p class="muted small" id="backupInfo"></p>
+    <div class="storage-diag" id="storageDiag"></div>
   </div>
   <div class="dlg-foot"><button class="btn" data-close-backup>关闭</button></div>
 </dialog>
@@ -387,7 +594,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   </div>
 </dialog>
 <dialog id="batchDlg" aria-labelledby="batchTitle">
-  <div class="dlg-head"><div id="batchTitle">📋 批量粘贴生成事项</div><p>支持粘贴数字序号或清单（如 ChatGPT / Claude 输出），自动提取谁做与时间：</p></div>
+  <div class="dlg-head"><div id="batchTitle">📋 批量粘贴生成事项</div><p>支持粘贴数字序号或清单（如 ChatGPT / Claude 输出），自动匹配负责人，并提取时间；也可写「（总编导）」：</p></div>
   <div class="dlg-body">
     <textarea id="batchText" placeholder="直接粘贴列表，例如：&#10;1. 核实新闻 (我, 已完成)&#10;2. 说观点 (你, 15 分钟)&#10;3. 写稿，再整理成提词器版 (我, 10 分钟)：约 300 字&#10;4. 截素材 (你, 10 分钟)&#10;5. 照提词器录 (你, 30 分钟)&#10;6. ChatCut 剪辑 (你, 45 分钟)&#10;7. 封面、标题、正文 (20 分钟)&#10;8. 发布"></textarea>
   </div>
@@ -437,6 +644,76 @@ const REVIEW_Q=[
 ];
 const WHO=['我','你','我 + 你'];
 const TIME_PRESETS=[5,10,15,20,30,45,60];
+/** 负责人标签（与 who=我/你 分工字段独立；旧数据无 owner 时不报错） */
+const OWNERS=['情报员','总编导','核查实测员','制片','外部工具','我'];
+const OWNER_CLASS={
+  '情报员':'owner-情报员',
+  '总编导':'owner-总编导',
+  '核查实测员':'owner-核查实测员',
+  '制片':'owner-制片',
+  '外部工具':'owner-外部工具',
+  '我':'owner-我'
+};
+/**
+ * 「怎么做」页面文案 —— 改这里即可更新展示内容
+ * 团队角色、每期流水线步骤都写在这个常量里，不改渲染逻辑。
+ */
+const HOWTO_CONTENT={
+  title:'怎么做',
+  subtitle:'多 Agent 工作流：固定 Bot 对话 + 文件交接，按期跑通视频。',
+  teamTitle:'团队（每个都是一个固定的 Grok Bot 对话）',
+  team:[
+    {role:'情报员',desc:'每晚 22:00 自动抓 3 张选题卡 → /workspace/redu/选题/'},
+    {role:'总编导',desc:'我每天主要找它。立项打分、先定收藏卡、观点 3 选 1、钩子 5 选 1、写稿、三步审稿、复盘更新宪法'},
+    {role:'核查实测员',desc:'事实卡 + 手机实测翻车截图'},
+    {role:'制片',desc:'给 Opus 的分镜和动画要求、给 Codex/ChatCut 的剪辑说明、提词卡，盯 21:00'},
+    {role:'外部工具',desc:'Opus 做动画，GPT 做封面和收藏卡，Codex + ChatCut 剪辑（每期开新对话）'},
+    {role:'我',desc:'拍板、出镜录制（20 分钟）、验收、发布'}
+  ],
+  pipelineTitle:'每期怎么跑（按顺序）',
+  pipeline:[
+    {title:'找总编导开期并拍板',detail:'找总编导：「开第 N 期，看今天的选题」→ 我拍板，定收藏卡、观点、钩子'},
+    {title:'核查实测拿事实卡',detail:'找核查实测员：「第 N 期核查」→ 事实卡'},
+    {title:'写稿与三步审稿',detail:'总编导写稿 + 三步审稿 → 定稿'},
+    {title:'制片出分镜与剪辑要求',detail:'找制片：「第 N 期出分镜和剪辑要求」→ 转给 Opus、Codex'},
+    {title:'录制、样片、验收',detail:'我录口播 → 10 秒样片 → 合成 → 完整听一遍 → 手机看一遍'},
+    {title:'发布与次日复盘',detail:'21:00 前发布 → 第二天复盘，挑 1–2 条写进《编导宪法》'}
+  ],
+  fileNote:'所有文件放在 /workspace/redu/第N期/，Bot 之间靠文件交接。'
+};
+/**
+ * 「今天跟谁干什么」路线 —— 改这里即可更新文案与复制语句
+ * phrase 是点「复制这句话」时贴给 Bot 的内容；N 会按当前期数替换
+ */
+const TODAY_ROUTE={
+  title:'今天跟谁干什么',
+  subtitle:'按顺序找人对话。情报员每晚 22:00 自动跑，不列入当日路线。',
+  steps:[
+    {id:'open', owner:'总编导', phrase:'开第 N 期，看今天的选题', action:'→ 拍板，定收藏卡、观点、钩子'},
+    {id:'check', owner:'核查实测员', phrase:'第 N 期核查', action:'→ 事实卡'},
+    {id:'draft', owner:'总编导', phrase:'写稿 + 三步审稿', action:'→ 定稿'},
+    {id:'produce', owner:'制片', phrase:'第 N 期出分镜和剪辑要求', action:'→ 转给 Opus、Codex'},
+    {id:'record', owner:'我', phrase:'录口播、验收、21:00 前发布', action:''},
+    {id:'review', owner:'总编导', phrase:'第二天复盘，更新宪法', action:''}
+  ]
+};
+/** 批量粘贴时按关键词自动匹配负责人（括号里的负责人优先） */
+const OWNER_KEYWORD_RULES=[
+  {owner:'核查实测员', re:/核实|事实卡|实测|截图/},
+  {owner:'总编导', re:/观点|钩子|收藏卡|写稿|审稿|复盘/},
+  {owner:'制片', re:/分镜|剪辑要求|提词卡|进度/},
+  {owner:'外部工具', re:/动画|封面|合成|剪辑|ChatCut|Codex|Opus|GPT/i},
+  {owner:'我', re:/录制|出镜|拍板|发布|验收|手机看|录口播/},
+  {owner:'情报员', re:/选题|新闻|抓/}
+];
+const VIDEO_EPISODE_DIRS=[
+  ['选题对准她','每天选题卡对准她关心的事，不跑偏'],
+  ['新闻讲准','事实卡核完再讲，不用二手数字'],
+  ['文案层层递进','观点 3 选 1、钩子 5 选 1，写稿后三步审'],
+  ['动画有质感','分镜交给制片，动画交给 Opus'],
+  ['声音和发布不出错','口播验收、21:00 前发出'],
+  ['AI 多干并行','情报员/总编导/核查/制片/外部工具并行，我只拍板和出镜']
+];
 const VLOG_DIRS=[
   ['故事和旁白','给 Claude 背景和初始想法，快速出初版，迭代两三版定稿'],
   ['素材','Codex 按稿子分类、匹配素材并重新命名'],
@@ -448,7 +725,7 @@ function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth(
 function dayLabel(k){if(k===dayKey())return '今天';if(k===dayKey(new Date(Date.now()-864e5)))return '昨天';const a=String(k||'').split('-').map(Number);if(a.length!==3||!a[0])return '未设日期';return (a[0]!==new Date().getFullYear()?a[0]+'年':'')+a[1]+'月'+a[2]+'日';}
 function formatClock(d){d=d||new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');}
 
-function mkTask(name,dirId,urgent,who,est){return {id:uid(),name:name||'',dirId:dirId||'',est:est||'',actual:'',who:who||'我',urgent:!!urgent,done:false};}
+function mkTask(name,dirId,urgent,who,est,owner){const t={id:uid(),name:name||'',dirId:dirId||'',est:est||'',actual:'',who:who||'我',urgent:!!urgent,done:false};if(owner)t.owner=owner;return t;}
 function mkDirs(list){return list.map(([name,goal])=>({id:uid(),name,goal}));}
 
 function blankGoal(title){
@@ -518,8 +795,179 @@ function vlogTemplate(){
   return g;
 }
 
+function videoEpisodeTemplate(n){
+  n = n || 'N';
+  const g=blankGoal('第 '+n+' 期视频');
+  g.note='套用「视频一期」：多 Agent 工作流。文件交接目录 /workspace/redu/第'+n+'期/。';
+  g.result={
+    what:'发出第 '+n+' 期视频和一张收藏卡',
+    level:'发了就是 1（发出即完成）',
+    when:'21:00 前',
+    why:'按多 Agent 工作流日更，先跑通再复盘写进《编导宪法》'
+  };
+  g.dirs=mkDirs(VIDEO_EPISODE_DIRS);
+  const v=g.dirs;
+  g.tasks=[
+    mkTask('开第 '+n+' 期：看选题 → 拍板，定收藏卡/观点/钩子',v[0].id,true,'我 + 你','25','总编导'),
+    mkTask('第 '+n+' 期核查 → 事实卡',v[1].id,true,'你','20','核查实测员'),
+    mkTask('写稿 + 三步审稿 → 定稿',v[2].id,false,'你','40','总编导'),
+    mkTask('出分镜和剪辑要求 → 转 Opus/Codex，封面收藏卡',v[3].id,false,'你','50','制片'),
+    mkTask('录口播 → 样片 → 合成 → 听一遍/手机看一遍',v[4].id,true,'我','45','我'),
+    mkTask('21:00 前发布；次日复盘写进《编导宪法》',v[4].id,true,'我','25','我')
+  ];
+  g.enough=true;
+  return g;
+}
+
+function ownerTagHTML(owner){
+  if(!owner)return '';
+  const cls=OWNER_CLASS[owner]||'owner-我';
+  return '<span class="owner-tag '+cls+'" title="负责人">'+esc(owner)+'</span>';
+}
+
+function episodeNumFromGoal(g){
+  const t=(g&&g.title)||'';
+  const m=t.match(/第\s*([0-9]+|[NN]|Ｎ)\s*期/);
+  if(m) return m[1]==='Ｎ'?'N':m[1];
+  const m2=t.match(/(?:ep|EP|期)\s*([0-9]+)/);
+  return m2?m2[1]:'N';
+}
+
+function fillEpisodePhrase(text, n){
+  return String(text||'').replace(/第\s*N\s*期/g,'第 '+n+' 期').replace(/N/g, n);
+}
+
+function whoFromOwner(owner){
+  if(!owner || owner==='我') return '我';
+  return '你';
+}
+
+function matchOwnerFromText(text){
+  const s=String(text||'');
+  // 括号优先：（总编导） / (制片)
+  const allParens=[...s.matchAll(/[(（]([^)）]+)[)）]/g)];
+  for(const m of allParens){
+    const inside=(m[1]||'').trim();
+    const hit=OWNERS.find(o=>inside===o || inside.startsWith(o) || inside.includes(o));
+    if(hit) return hit;
+  }
+  for(const rule of OWNER_KEYWORD_RULES){
+    if(rule.re.test(s)) return rule.owner;
+  }
+  return '';
+}
+
+function applyOwnerToTask(t, owner){
+  if(!owner){ delete t.owner; return t; }
+  t.owner=owner;
+  t.who=whoFromOwner(owner);
+  return t;
+}
+
+function goalRichness(g){
+  if(!g||typeof g!=='object')return -1;
+  let n=0;
+  try{
+    n += JSON.stringify(g).length;
+    n += (Array.isArray(g.tasks)?g.tasks.length:0)*20;
+    n += (Array.isArray(g.dirs)?g.dirs.length:0)*10;
+    if(g.updatedAt) n += 5;
+  }catch(e){}
+  return n;
+}
+
+function extractGoalsPayload(data){
+  if(!data) return {goals:[], currentId:null};
+  if(Array.isArray(data)) return {goals:data.filter(g=>g&&g.id), currentId:null};
+  if(typeof data==='object'){
+    const goals = Array.isArray(data.goals) ? data.goals.filter(g=>g&&g.id) : [];
+    return {goals, currentId:data.currentId||null, showDone:data.showDone, lastBackup:data.lastBackup};
+  }
+  return {goals:[], currentId:null};
+}
+
+function listStorageKeys(){
+  const out=[];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k) out.push({store:'local', key:k, size:(localStorage.getItem(k)||'').length});
+    }
+  }catch(e){}
+  try{
+    for(let i=0;i<sessionStorage.length;i++){
+      const k=sessionStorage.key(i);
+      if(k) out.push({store:'session', key:k, size:(sessionStorage.getItem(k)||'').length});
+    }
+  }catch(e){}
+  return out;
+}
+
+function isRelatedStorageKey(k){
+  if(!k) return false;
+  const s=String(k).toLowerCase();
+  return s.includes('goal') || s.includes('method') || s.includes('backup') || s.includes('draft') || s.includes('vlog') || s.includes('redu');
+}
+
+function readStoreItem(store, key){
+  try{
+    if(store==='local') return localStorage.getItem(key);
+    if(store==='session') return sessionStorage.getItem(key);
+  }catch(e){}
+  return null;
+}
+
+/** 合并多来源目标：同 id 保留更丰富版本，绝不删除已有数据 */
+function mergeGoalLists(baseGoals, incoming, preferIncomingOnTie){
+  const map=new Map();
+  (baseGoals||[]).forEach(g=>{ if(g&&g.id) map.set(g.id,g); });
+  (incoming||[]).forEach(g=>{
+    if(!g||!g.id) return;
+    if(!map.has(g.id)){ map.set(g.id,g); return; }
+    const cur=map.get(g.id);
+    const a=goalRichness(cur), b=goalRichness(g);
+    if(b>a || (preferIncomingOnTie && b===a)) map.set(g.id,g);
+  });
+  return [...map.values()];
+}
+
+function collectAllStoredState(){
+  const keys = listStorageKeys().filter(x=>isRelatedStorageKey(x.key));
+  // 始终包含已知键（即使当前为空）
+  ;[KEY, KEY+'_backup', OLD_KEY, 'goal-method-draft', 'goal-method', 'goal-method-v2', 'goal-method-v1'].forEach(k=>{
+    if(!keys.some(x=>x.key===k && x.store==='local')) keys.push({store:'local', key:k, size:0});
+    if(!keys.some(x=>x.key===k && x.store==='session')) keys.push({store:'session', key:k, size:0});
+  });
+
+  let goals=[];
+  let currentId=null, showDone, lastBackup;
+  const sources=[];
+
+  keys.forEach(({store,key})=>{
+    const raw=readStoreItem(store,key);
+    if(!raw) return;
+    try{
+      const data=JSON.parse(raw);
+      const payload=extractGoalsPayload(data);
+      if(!payload.goals.length) return;
+      sources.push({store, key, count:payload.goals.length});
+      // 主键优先决定 currentId
+      if((key===KEY || key===KEY+'_backup') && store==='local' && payload.currentId && !currentId){
+        currentId=payload.currentId;
+      }
+      if(payload.showDone!=null && showDone==null) showDone=payload.showDone;
+      if(payload.lastBackup!=null && lastBackup==null) lastBackup=payload.lastBackup;
+      goals=mergeGoalLists(goals, payload.goals, key===KEY && store==='local');
+      if(!currentId && payload.currentId) currentId=payload.currentId;
+    }catch(e){}
+  });
+
+  return {goals, currentId, showDone, lastBackup, sources, keysScanned:keys};
+}
+
 function normalize(s){
-  s.goals=s.goals.filter(g=>g&&g.id);
+  if(!s||typeof s!=='object') s={goals:[], currentId:null};
+  s.goals=Array.isArray(s.goals)?s.goals.filter(g=>g&&g.id):[];
   if(!s.goals.length){
     const ng = blankGoal('新短视频 / Vlog 协作');
     s.goals.push(ng);
@@ -533,10 +981,12 @@ function normalize(s){
     g.dirs = Array.isArray(g.dirs)?g.dirs:[];
     g.tasks = Array.isArray(g.tasks)?g.tasks:[];
     g.step = (g.step !== undefined && g.step !== null) ? +g.step : 0;
+    if(!g.routeChecks || typeof g.routeChecks!=='object') g.routeChecks={};
     g.tasks.forEach(t=>{
       if(t.who==='AI')t.who='你';
       if(t.who==='我 + AI')t.who='我 + 你';
       if(!t.who)t.who='我';
+      // owner 可选；旧数据没有该字段时保持 undefined，渲染侧兜底，绝不删除
     });
   });
 
@@ -554,40 +1004,73 @@ function normalize(s){
 
 function load(){return normalize(loadRaw());}
 
+const BUNDLED_GOALS = [{"id":"5odzo0el","title":"第五期","created":1793407397238,"date":"2026-10-31","status":"active","step":0,"result":{"what":"发出第 5 期视频和一张能收藏的卡。发了就是 1，没发就是 0。","level":"只做两件新事：① 选题对准一二线年轻女生，让她觉得「存下来就进步了」，至少踩中一种需求（怕落后、想被看见、显得厉害、想省事、要确定感）；② 多一张能存、能用的卡。其余流程照旧，不追求完美，有瑕疵也发。","when":" 周日（11 月 1 号）21:00 前发布。","why":"衡量的是进步，不是爆不爆。验证从「帮她想清楚」换成「让她存下来」以后，收藏会不会变多。"},"dirs":[{"id":"hyphpet9","name":"选题对准她","goal":"至少踩中一种需求（怕落后 / 想被看见 / 显得厉害 / 想省事 / 要确定感）；一个人、不花钱、一天能做完；最多推荐 3 条，我拍板。"},{"id":"vpq8dw5e","name":"新闻讲准","goal":"只用一手来源核实过的数字；先做事实卡，一次核完，后面不回头查。"},{"id":"exb9mftf","name":"文案层层递进","goal":"现象→原因→本质→你能带走什么（一张卡或一个做法）；全片只下 1 个敢说的判断；最多改 2 轮。"},{"id":"utdbuxb3","name":"动画有质感","goal":"Opus 精做 2–4 处核心动画，Codex 统一风格；画面不放其他平台截图，全部改成字卡。"},{"id":"j7nl4q0a","name":"声音和发布不出错","goal":"导出后完整听一遍；发布前查合规（不劝买会员、话题不堆产品名）；周日 21:00 前发布。"},{"id":"dg47j8f4","name":"AI 多干、并行","goal":"AI 写稿、做动画、剪辑、做卡；我只做判断、录制、验收。"}],"enough":false,"tasks":[{"id":"bbo5re8j","name":"选题对准她：AI 按目标人群需求抓新闻，标需求和成本，最多推荐 3 条，我拍板","dirId":"","est":"15","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"sfthvbql","name":"核实，做事实卡","dirId":"","est":"10","actual":"","who":"你","urgent":false,"done":false},{"id":"ov6zqwsv","name":"观点 3 选 1、钩子 5 选 1，定好那张能存下来的卡放什么","dirId":"","est":"15","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"rr8bhxmx","name":"写稿：按层层递进骨架写全文","dirId":"","est":"20","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"4hikqv42","name":"Gemini Pro 分步审稿：①挑卡壳、脱离观众的地方 ②查层层递进 ③出顺嘴的逐字稿，加动作和表情提示","dirId":"","est":"30","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"4ue32n76","name":"我念一遍，只改卡的句子，定稿","dirId":"","est":"10","actual":"","who":"我","urgent":false,"done":false},{"id":"q401g5dy","name":"Opus 做分镜规划：什么时候放字卡、放什么、什么时候放动画","dirId":"","est":"15","actual":"","who":"你","urgent":false,"done":false},{"id":"s9ua0zes","name":"Opus 做 2–4 处核心动画，输出 HTML","dirId":"","est":"30","actual":"","who":"你","urgent":false,"done":false},{"id":"gfmfg4s8","name":"Codex 按规划做其余画面、渲染 HTML，先剪出来","dirId":"","est":"30","actual":"","who":"你","urgent":false,"done":false},{"id":"p3vxj1yu","name":"录制：拿出来就录，分段录，每段换语调或道具","dirId":"","est":"20","actual":"","who":"我","urgent":false,"done":false},{"id":"yhtvtw65","name":"Codex 做 10 秒样片，我在电脑上预览","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"ugavuclh","name":"ChatCut 剪辑合成、加字幕和声音、导出","dirId":"","est":"40","actual":"","who":"你","urgent":false,"done":false},{"id":"2ms9yyae","name":"Gemini 出声音方案：降噪、音效、人声质感","dirId":"","est":"15","actual":"","who":"你","urgent":false,"done":false},{"id":"gmsm7j0i","name":"导出后完整听一遍，查声音卡顿","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":false},{"id":"ho50eio5","name":"封面、标题、正文、话题，和剪辑同时做","dirId":"","est":"25","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"bl376wws","name":"做那张能收藏的卡（我+你，20 分钟）","dirId":"","est":"","actual":"","who":"我","urgent":false,"done":false},{"id":"5qfxgohu","name":"在手机上从头到尾看一遍","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":false},{"id":"g1fxujtx","name":"21:00 前发布","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":false},{"id":"s7rgo8zg","name":"复盘","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":false}],"review":{"efficiency":"grok\n1. **心态提效（防内耗与防摇摆）**：用《不完美主义》的二进制思维代替结果焦虑 → 发出来就是 1，不因短期没正反馈或看到同行优秀而轻易换方向；每次只专注迭代 1 个具体变量，靠高频出手熬过迷茫期，省掉自我怀疑和来回切换赛道的时间损耗。","ai":"“请将所有代码写在一个独立的单文件 HTML 中，使用 Artifacts 渲染预览，运动曲线要符合 Apple 风格的自然物理缓动（spring/cubic-bezier）”\n\n嗨 Claude！接下来请你做我的「代码生成动画」搭档，先对齐三件事：\n\n1. 我是谁、做什么\n我是自媒体创作者兼动态视觉设计师，把 AI 原理、认知模型、效率工作流等硬核概念做成直观、高审美的动画，录屏用进短视频。我会给你构想、分镜或参考图，你直接写出能跑的前端代码。\n\n2. 交付标准\n- 质感：构图有呼吸感，配色克制高级，必须用自然缓动（绝不匀速），主次分明，默认 9:16 竖屏（除非我指定 16:9 横屏）。\n- 代码：单文件 HTML，双击即跑，外部库用稳定 CDN。不拆文件，不加我没要求的防御逻辑和抽象。时长、速度、颜色、字号集中放顶部，附中文注释。\n- 回复：第一句话说明核心视觉效果和触发方式（点击/空格），然后直接贴完整代码。不逐行解释，不罗列放弃的方案。\n\n3. 验证与迭代\n- 交付前先核验：打开后元素确实在动（无报错、无黑屏），运动中文字和图形不重叠、不溢出。我的验收标准是录屏一镜到底，不卡顿、不穿模。\n- 应对简略初稿：我的初稿可能很简略，缺关键分镜或运动细节时，优先基于你的高审美自行补齐并直接出代码；只有确实无法判断核心方向时，才用大白话问我 1~2 个问题，并顺带给出你的推荐方案。\n\n收到请回一句话确认，我马上发第一个需求。","redo":"1. **核心问题**：基础薄弱期绝不能闭门造车憋大招，而是要从受众真实需求出发，靠高频实战喂出编导判断力。\n2. **先立卡片再写稿**：动笔前先锁死最后那张「让人存了觉得进步的卡」写什么 → 倒推现象、原因和本质，砍掉算不过来的复杂数字，只留一句毒舌大白话。\n3. **借壳上市不妥协**：前 10 秒拿大厂新功能当靶子吐槽排雷（做自己、防判广） → 后 40 秒塞入自己打磨好的底层提问死命令（给兜底、促收藏）。\n4. **快进快出叠代变量**：不追求单期完美，像打比赛一样高频出手 → AI 并行包揽核实、审稿、动画与预剪，我只抓选题、观点和实测槽点，发完立刻看收藏数据进入下一场，在密集实战中猥琐发育。","feeling":"1. **编导与选题大于一切**：剪辑、文案、口音都能靠 AI 拉满，但精准的选题和犀利观点只能靠我自己的编导判断力，我现在的角色是做决策和验收。\n2. **外在质感靠克制**：封面走暗调低饱和 + 冷峻表情 + 2~4 个白/黄粗体大字；内页不放外网杂乱截图，统一用绿/蓝/黄字卡 → 每句 5~10 字敲鼓点、零废话，前 3 秒就立住正经博主的狠劲。\n3. **核心价值是嘴替 + 兜底**：情绪上做嘴替，直接吐槽大厂套路、骂出观众心声；实用上做认知兜底，把复杂技术降维成 3 岁小孩都能抄走的死命令 → 别人制造焦虑，我给确定感。\n4. **用 AI 加速控制变量**：像理科生一样测试赛道、切入角度和封面，每次只改一个变量做对照 → 靠多 Agent 协同提高产能，把别人半年的试错迷茫期压缩到 1 个月跑通。"}},{"id":"iat52gf8","title":"第四期","created":1793319181905,"date":"2026-10-30","status":"active","step":3,"result":{"what":"发出第 4 期视频和配套图文。","level":"按流程把要做的事走完，并在两处质感上看得出进步：\n1. 文案：递进结构（现象→原因→本质→对你），开头抛问题、落点回答它；最多改 3 轮。\n2. 动画：Opus 做 2–4 处核心动画，修好第 3 期的圆框、空白、背景问题。\n同时守住底线：声音不卡顿；封面只留悬念、不剧透；付款和额度开工前处理好。\n","when":"今晚 21:00 前发布。","why":"积累数据，往爆款靠近。大家刷到我，凭什么选我？内容有了，但第一眼太粗糙。\n声音、打光、动画、文案四个差距里，动画和文案能靠 AI 最快补上，这期先补这两项，让第一眼更像成熟、有质感的 AI 博主。\n"},"dirs":[{"id":"ixw65936","name":"新闻讲准","goal":"只用一手来源核实过的数字；先做事实卡，一次核完，后面不回头查。"},{"id":"eeutwlgq","name":"文案层层递进","goal":"现象→原因→本质→对你；开头抛问题、落点回答它；全片只下 1 个敢说的判断；最多改 3 轮。"},{"id":"x2igomsj","name":"动画有质感","goal":"Opus 精做 2–4 处核心动画，Codex 统一风格；修好圆框、空白、背景问题。"},{"id":"wm8pgsxd","name":"声音和发布不出错","goal":"导出后完整听一遍，声音不卡顿；封面只留悬念不剧透，标题负责共鸣；21:00 前发布。"},{"id":"etcdcnfy","name":"AI 多干、并行","goal":"AI 写稿、做动画、剪辑；我只做判断、录制、验收；配套图文发完视频后再做。"}],"enough":false,"tasks":[{"id":"q4l4o770","name":"确认 Claude 订阅和额度，付款最多试 10 分钟","dirId":"","est":"10","actual":"","who":"我","urgent":false,"done":true,"_more":false},{"id":"0xsijkxm","name":"精简 Codex 项目说明","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"8sbfcx9j","name":"选新闻 + 核实，做事实卡","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"ylc5gjst","name":"观点 3 选 1、钩子 5 选 1","dirId":"","est":"15","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"nvcmab8y","name":"写稿：按递进骨架写全文，我念一遍标卡点，最多改 3 轮","dirId":"","est":"40","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"e8hehlwv","name":"Opus 做 2–4 处核心动画，输出 HTML","dirId":"","est":"30","actual":"","who":"你","urgent":false,"done":true},{"id":"gzcqqq28","name":"Codex 开新对话：分镜、截图、其余动画，渲染 Opus 的 HTML，和录制同时做","dirId":"","est":"30","actual":"","who":"你","urgent":false,"done":false},{"id":"7lukqhiu","name":"录制：拿出来就录，分段录","dirId":"","est":"20","actual":"","who":"我","urgent":false,"done":true},{"id":"namzwrui","name":"Codex 做 10 秒样片，我在电脑上预览","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"5bbkimta","name":"ChatCut 剪辑合成、加字幕和声音、导出","dirId":"","est":"40","actual":"","who":"你","urgent":false,"done":true},{"id":"8rmempxt","name":"导出后完整听一遍，查声音卡顿","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":true},{"id":"bl0u602s","name":"封面、标题、正文、话题，和剪辑同时做","dirId":"","est":"25","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"yn4apaa4","name":"在手机上从头到尾看一遍","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":true},{"id":"nwzj74i0","name":"21:00 前发布","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":true},{"id":"vi5z2i9o","name":"配套图文，发完视频后做","dirId":"","est":"20","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"m7k0tl7f","name":"复盘","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true}],"review":{"efficiency":"- 要做的事第 7 条：Opus 先出分镜规划（什么时候放字卡、放什么、什么时候放动画），Codex 照着执行并先剪出来。录制单独做，不和它绑在一起。分工清楚了，就不用来回解释。\n\n- 要做的事第 1、2 条（订阅、精简 Codex 说明）已经解决，下期删掉，少两件事。","ai":"选新闻：AI 按「年轻女生关心 + 一天能做完」，筛 3 条并做事实卡；后续探索用 Grok Bot 自动按目标人群抓取。\n\n写稿与审稿： 新增 Gemini Pro 分三步审稿（每次只执行一步，防改过头）：① 挑出观众听着卡壳、算不过来或脱离普通人的地方；② 检查「现象→原因→本质→第四格」是否层层递进；③ 保留原有比喻和口吻，拆成 5–10 字短句，加上肢体动作和表情提示。\n\n声音质感： 把视频发给 Gemini，让它出降噪、音效点位和提升人声质感的方案，直接按方案执行。\n","redo":"要解决的核心问题： 从受众（小红书 18–34 岁一二线非技术女生）的真实需求出发，把「帮人想清楚的公众号锐评」变成「她存下来觉得自己进步的实用卡片」。第 4 期虽然制作和节奏最满意，但流量停在 148，根源在于「OpenAI 200 美金 Pro 额度」和「多开几家会员」离普通女生太远，存不下来也用不上。\n\n怎么走更高效、进步更大：\n\n选题阶段直接换尺子： 开工前先砍掉离她太远的硬核技术或高消费话题。哪怕热点再大，只要转不出她能直接复用的「省事技巧 / 防落后清单 / 确定感结论」，直接换题。\n\n先做「那张能存的卡」，再倒推口播稿： 动笔写正文前，先把最后要发的那张「收藏卡」写出来。卡立住了，再往前倒推现象、原因和本质，确保最后落点对她真有用，而不是劝普通人去充几百美金会员。\n\n事实卡阶段就合并数字： 核实新闻时，只留 1 个核心数字对比。把「200 刀缩水、三档翻倍、保持不变」这种绕脑子的账在事实卡阶段就化成一句大白话，不带进正文让观众算账。","feeling":"观众不带脑子刷手机： 中段数字一打架，观众算不过来立刻划走；结尾落点太贵（200 美金/月），脱离群众，让人觉得何不食肉糜。\n\n口播节奏是「敲鼓点」： 一句话拆三句说，砍掉注水修饰词，每句 5–10 字，一句一个画面、一句一个情绪。铺垫超 10 秒没包袱必划走；第 4 期每 3–5 秒靠分段语调、换墨镜、变声音来制造变化，实测有效。\n\n从「看下去」转向「存下来 + 记住我」： 前 4 期解决了节奏和看下去的问题，接下来除了把内容做成能存的干货，还要拆解喜欢博主的配色与版式，固定自己的频道视觉风格。\n"}},{"id":"6pkt4l9l","title":"第三期","created":1793232090700,"date":"2026-10-29","status":"active","step":3,"result":{"what":"发出第 3 期视频和配套图文。","level":"按新流程走一遍：写稿最多改 2 轮，先做短样再做全片，同时试一次 Codex 和 ChatCut 的分工。视频也不晃","when":"今晚9点前","why":"积累数据，找出什么有用、什么没用。\n\n每期都是一条数据。这期要验证两件事：用时能不能从 8 小时 40 分压到 3.5 小时左右，以及配套图文能不能带来更多收藏。\n数据照样记录（点赞、收藏、评论、播放、完播率），只当数据，不算成败。"},"dirs":[{"id":"xj9qp2hj","name":"新闻讲准","goal":"只用一手来源核实过的数字；先做一张事实卡，一次核完，后面不再回头查。"},{"id":"fwsi65c2","name":"观点锐，门槛低","goal":"先把新闻说清，再换一个别人没说过的角度；用生活里的例子，加上自己的真实经历；全片只留 1 个对比对象，名字越少越好。"},{"id":"hcaizmcg","name":"开头和结尾","goal":"前 3 秒先引起情绪（好奇、好笑、共鸣、反差），1 秒内交代前提；结尾用开放式提问。"},{"id":"hgo82aw2","name":"写稿让 AI 多干","goal":"观点 3 选 1 → 钩子 5 选 1 → AI 按骨架写全文 → 我念一遍只改卡的句子，最多 2 轮。"},{"id":"rczw72pn","name":"画面稳、不晃","goal":"沿用第 2 期的版式（真人约 30%，动画和截图约 70%，每 2–4 秒切一次，左上角 380px 圆框）；先做 10 秒短样在手机上看，不卡再做全片；不补帧；只精做 1 处核心比喻。"},{"id":"ps8ihhlg","name":"分工和并行","goal":"Codex 出素材，ChatCut 剪辑（等 Codex 回答后再细调）；每期开新对话，只给项目说明、定稿和素材清单；Codex 做素材时，我同时准备录制（固定录制位、先热身、开头最后录）。"},{"id":"5eo5q0ml","name":"配套图文","goal":"一张图看懂三件事：发生了什么、关键数字、我的观点；和视频一起发。"}],"enough":false,"tasks":[{"id":"7tck8jjf","name":"问 Codex 怎么分工，把规则加进项目说明","dirId":"","est":"10","actual":"","who":"我","urgent":false,"done":true},{"id":"f6wlsrtd","name":"选新闻 + 核实，做事实卡","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"3xsb5gx6","name":"观点 3 选 1、钩子 5 选 1","dirId":"","est":"15","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"1q99v8b0","name":"写稿：AI 写全文，我念一遍标卡点，最多改 2 轮","dirId":"","est":"30","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"jbvnx59a","name":"截个人真实画面发给 Codex","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":true},{"id":"6kq0zf2e","name":"Codex 开新对话，做分镜、截图、动画：和录制同时做","dirId":"","est":"30","actual":"","who":"你","urgent":false,"done":true},{"id":"3gfht750","name":"准备 + 录制：固定录制位、先热身、分 4 段录、开头最后录","dirId":"","est":"45","actual":"","who":"我","urgent":false,"done":true},{"id":"m2x9ry1o","name":"10 秒短样，在手机上看，不卡再继续","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"106gewkx","name":"合成全片 + ChatCut 剪辑","dirId":"","est":"40","actual":"","who":"你","urgent":false,"done":true},{"id":"iyftpyqf","name":"封面、标题、正文、话题（我+你，25 分钟）：和剪辑同时做","dirId":"","est":"","actual":"","who":"我","urgent":false,"done":true},{"id":"5upmrbez","name":"配套图文：和剪辑同时做","dirId":"","est":"20","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"j7d2vbvj","name":"在手机上从头到尾看一遍","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":true},{"id":"59jl0f1v","name":"21:00 前发布","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":true},{"id":"0lhovrl8","name":"复盘","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":true}],"review":{"efficiency":"1. **选观点**：凭感觉判断不了 → AI 用「看下去 / 记住我」给 3 个观点打分，我只挑\n2. **写稿**：几个点并排、平铺直叙 → 改成递进骨架（现象→原因→本质→对你），AI 一次写到位，最多改 3 轮\n3. **动画**：额度不够、付款失败、效果不满意撞在一起 → 开工前先解决付款（最多 10 分钟），核心动画只交给 Opus\n4. **录制**：准备花时间多，其实拿起来就能录 → 砍到 20 分钟，不用最后录开头\n5. **样片**：手机来回传 → 改成电脑预览\n6. **截真人画面**：没必要 → 删掉\n7. **声音**：用 Terra 剪完中间卡顿 → 导出后完整听一遍，查帧率和采样率\n8. **发布**：23:30 才发 → 守住 21:00 前\n\n一句话：最花时间的不是执行，是卡在判断和障碍上 → 判断交给打分，障碍开工前清掉\n","ai":"交给 AI\n•\t选新闻、核实、做事实卡\n•\t观点打分排序，出 5 个钩子\n•\t按递进骨架写全文，再对比改前和改后，总结成写稿规则\n•\tOpus：2–4 处核心动画\n•\tCodex：分镜、截图、其余动画、渲染 Opus 的 HTML、在 ChatCut 里剪辑\n•\tCodex：导出后查帧率和采样率，定位声音卡在哪\n•\t精简 Codex 的项目说明\n•\t发布前检查：封面和标题有没有重复，封面有没有剧透\n•\t复盘时整理数据和文字\n留给你\n•\t挑新闻、挑观点、挑钩子（只做选择题）\n•\t念稿时标出卡的地方\n•\t出镜录制\n•\t验收样片和成片（电脑预览，最后在手机上看一遍）\n•\t发布","redo":"**核心问题*：大家刷到我，凭什么选我？内容是有的，但第一眼太粗糙\n\n**差距在四个地方*：声音、打光、动画、文案\n- 都不是不可弥补的，而且都好补\n- 动画和文案 → 现在就能让 AI 补，最快\n- 打光和声音 → 找好博主的画面逆向拆解，用能接受的成本照着做\n\n**如果重来一遍，我会这样走**\n1. 开工前先清障碍：Claude 付款、额度确认好，不在动画环节卡住\n2. 文案用递进骨架：现象→原因→本质→对你，开头抛问题、落点回答它，不再平铺\n3. 动画交给 Opus 精做 2–4 处，Codex 统一风格，修好圆框、空白、背景\n4. 录制拿起来就录，不在准备上耗时间\n5. 导出后完整听一遍，先解决声音卡顿\n6. 封面只留悬念、不剧透，标题负责共鸣\n7. 21:00 前发布\n\n**一句话*：先敬罗衣后敬人 → 让第一眼就像一个成熟、有质感的 AI 博主\n\n","feeling":"1. 看下去：观众 3 秒内会不会觉得「这跟我有关」？\n2. 记住我：这些话是不是只有你能说？也就是有没有你的真实经历和你的立场。\n3.吐槽名字这个方向好：门槛低，人人都能插一句。我先找了几个能用上的梗\n4.难受很正常：额度不够、付款卡住、效果又不满意，三件事撞在一起了。不过你已经做了最关键的判断：这些不是停更的理由，继续推进。\n5.三个差距：声音、打光、动画切换质感\n6.「先敬罗衣后敬人」：别人先看你的穿着和整体感觉，再看你这个人。用在视频上就是：第一眼先像一个成熟的 AI 博主。 这个方向很清楚，三个差距里也是动画最容易靠 AI 补上，明天整理好 Opus 的工作流，就能先拉近这一块。"}},{"id":"fs2fp74v","title":"第二期","created":1793184248298,"date":"2026-10-28","status":"active","step":3,"result":{"what":"发布第 2 期小红书视频：真人出镜口播，锐评一条 AI 新闻（GPT-6.1 Terra）","level":"没有明显问题；力争 5 个赞、5 个收藏、2 条评论；记录每一步用时","when":"2026-10-28 21:00 前发布","why":"以后要做 AI 新闻锐评日更，每天挑一条新闻来说，先完整跑通一遍"},"dirs":[{"id":"hqms5q2o","name":"新闻讲准：只用官方核实过的数字","goal":""},{"id":"90mu2cqj","name":"观点要锐：先把新闻说清，再换一个别人没说过的角度；用生活里的例子，加上自己的真实经历","goal":""},{"id":"zy4cemir","name":"开头和结尾：前 3 秒有反差（最没存在感的模型），结尾抛一个问题，带动评论","goal":""},{"id":"ju4macd0","name":"拍清楚：竖屏口播，照着提词器念，画面亮、声音清楚；加字幕和素材动画，画面参考小宁子；时长 1–2 分钟，手机拍，ChatCut 剪，封面用旧模板","goal":""}],"enough":false,"tasks":[{"id":"21z22f37","name":"✅ 选新闻：GPT-6.1 Terra","dirId":"","est":"5","actual":"","who":"我","urgent":false,"done":false},{"id":"x31a2ee1","name":"✅ 核实一手来源（OpenAI 官方博客、官方 X）","dirId":"","est":"5","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"h9s1m4xn","name":"✅ 定观点、写稿","dirId":"","est":"15","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"1id4nper","name":"⏳ Codex 做动画素材（进行中）","dirId":"","est":"15","actual":"","who":"你","urgent":false,"done":false},{"id":"9wz9uw2u","name":"截图素材：官网标题页、Agents' Last Exam 图、Codex 界面或额度提示、早茶和肠粉的图、新浪那篇「评论区：拉完了」截图素材：官网标题页、Agents' Last Exam 图、Codex 界面或额度提示、早茶和肠粉的图、新浪那篇「评论区：拉完了」","dirId":"","est":"15","actual":"","who":"我","urgent":false,"done":false},{"id":"7l8nh44c","name":"照提词器录 2 遍","dirId":"","est":"15","actual":"","who":"我","urgent":false,"done":false},{"id":"6le5ckbn","name":"ChatCut 剪辑：加字幕，插入动画和截图","dirId":"","est":"15","actual":"","who":"你","urgent":false,"done":false},{"id":"8cy811zd","name":"封面（旧模板）、标题、正文、话题","dirId":"","est":"15","actual":"","who":"我 + 你","urgent":false,"done":false},{"id":"tnzfie02","name":"21:00 前发布","dirId":"","est":"15","actual":"","who":"我","urgent":false,"done":false},{"id":"7dc8rb55","name":"复盘：记下每步用时；发布后看点赞、收藏、评论","dirId":"","est":"10","actual":"","who":"我 + 你","urgent":false,"done":false}],"review":{"efficiency":"1. 写稿：整篇抽卡太慢 → 拆成小判断（观点 3 选 1、钩子 5 选 1），AI 按骨架写，我念一遍只改卡的句子，最多 2 轮。\n2. 动画：做得不慢（初版 11 条约 4 分半），慢在整片反复重做、卡顿没早发现 → 先做 10 秒短样确认，再做全片。\n3. Token：列出的几轮里，初版只占约 3%，其余是返工和长对话反复读历史 → 每期开新对话，只给项目说明、定稿、素材清单。\n4. 录制：准备成本高、开头进不了状态 → 固定录制位，先热身再录，和动画同时进行。","ai":"- 选新闻、核实来源：AI 找，我略看\n- 写稿：AI 出选项和全文，我只做选择、标卡点\n- 截图：AI 找官网图、裁切、高亮\n- 动画、合成、检查：Codex\n- 封面：GPT，抽 2 次\n- 标题、正文、话题：Claude Opus 5.5\n- 复盘：AI 先整理数据和用时，我补判断\n只有我能做：定观点、出镜录制、截个人真实画面、最后在手机上看一遍","redo":"1. 选新闻 + 核实（10 分）：AI 给热门点，我挑一个，AI 核实\n2. 观点 3 选 1、钩子 5 选 1（15 分）\n3. AI 按骨架写全文 → 我念一遍标卡点 → 只改卡的句子，最多 2 轮（30 分）\n4. 定稿后同时开工（约 45 分）：\n   - 我：先截好个人真实画面发给 Codex，再换衣服、开灯、固定机位\n   - Codex：开新对话，做分镜、截图、套模板\n5. 先念一遍开头热身，分 4 段录，开头放最后录\n6. Codex 先做 10 秒短样（真人 + 圆框 + 1 个动画 + 1 次切换），我在手机上看，没问题再做全片\n7. 合成全片，我在手机上从头看到尾\n8. 同时做封面（GPT）、标题正文（Claude）、配套图文\n9. 21:00 前发布，第二天复盘","feeling":"有 Agent 参与的环节都快，慢的是要自己判断或出镜的环节。所以我计划让写稿、录制Agent多参与。动画本身不慢，慢在返工。\nToken 主要花在返工和长对话上。 卡顿是最大的坑，原因到现在还没找到。 Codex 把「能解码」当成「播放流畅」，这是验收方式错了。"}},{"id":"gjuymtuf","title":"第 1 期 vlog：观猹大会","created":1793184194732,"date":"2026-10-27","status":"active","step":3,"result":{"what":"发一条观猹大会的 vlog，并提交有效返链","level":"进前 35 个有效返链，拿到纪念礼盒，同时拿到投流","when":"当晚 21:00 前提交，越早越好","why":"礼盒先到先得。实际看到有几位博主拖更，先发本身就是优势"},"dirs":[{"id":"iu2959vi","name":"故事和旁白","goal":"给 Claude 背景和初始想法，快速出初版，迭代两三版定稿"},{"id":"5k0t0p6g","name":"素材","goal":"Codex 按稿子分类、匹配素材并重新命名"},{"id":"m5gol1la","name":"配音","goal":"换好行的字幕导入剪映配音"},{"id":"jhfwq1f5","name":"剪辑","goal":"ChatCut 剪，剪映配合"},{"id":"fv40bh30","name":"发布和返链","goal":"发布并提交有效返链"}],"enough":true,"tasks":[{"id":"v5frbzfm","name":"Claude 出初版旁白，补充信息后迭代两三版","dirId":"iu2959vi","est":"30","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"vtlj6avz","name":"吃饭时让 Codex 整理、匹配、重命名素材","dirId":"5k0t0p6g","est":"30","actual":"","who":"你","urgent":false,"done":true},{"id":"htb8etvi","name":"剪映配音断句别扭，改成导入换好行的字幕","dirId":"m5gol1la","est":"30","actual":"","who":"我 + 你","urgent":false,"done":true},{"id":"i0v0fldg","name":"先用剪映剪，后换 ChatCut","dirId":"jhfwq1f5","est":"60","actual":"","who":"你","urgent":false,"done":true},{"id":"2e5khhgw","name":"22:30 发布，提交返链","dirId":"fv40bh30","est":"30","actual":"","who":"我","urgent":false,"done":true}],"review":{"efficiency":"配音：不让剪映自动断句，直接导入换好行的字幕。剪辑：剪映和 Codex 连得不好，手动剪很慢；直接用 ChatCut，用代码剪更快也更自然。","ai":"AI 能完成八九成以上的工作：Claude 写稿，Codex 整理素材，剪映配音，ChatCut 剪辑。我只定目标、做判断，遇到问题换方案；只有自己动手更快才动手。","redo":"1. 给 Claude 背景和初始想法，快速出初版，迭代两三版定稿\n2. Codex 按稿子整理、匹配素材并重命名，放在吃饭这类空档\n3. 稿子做成换好行的字幕，导入剪映配音\n4. 直接用 ChatCut 剪，剪映配合\n5. 发布，提交返链","feeling":"第一次做没经验，启动成本很高，全靠自己做可能就放弃了。第一次做，超时正常；配音和剪辑的问题事先想不到。"},"record":true,"totals":{"est":180,"act":360,"label":"实际含定计划和吃饭"},"note":"已跑通：计划 3 小时做完，实际从开始到发布约 6 小时（16:30–22:30，含定计划和吃饭），晚了 1.5 小时。拿到投流，礼盒待定。"}];
+function withBundled(s){
+  const pack = BUNDLED_GOALS;
+  if(!pack || !pack.length) return s;
+  if(!s || !Array.isArray(s.goals)) s = {goals:[], currentId:null};
+  const have = new Set(s.goals.map(g=>g&&g.id));
+  JSON.parse(JSON.stringify(pack)).forEach(g=>{
+    if(g && g.id && !have.has(g.id)) s.goals.push(g);
+  });
+  const bundledIds = new Set(pack.map(g=>g.id));
+  const sampleTitles = new Set(["新短视频 / Vlog 协作","参考样例：第 1 期 vlog 观猹大会"]);
+  if(s.goals.some(g=>bundledIds.has(g.id))){
+    s.goals = s.goals.filter(g=>bundledIds.has(g.id) || !sampleTitles.has(g.title));
+  }
+  if(!s.goals.some(g=>g.id===s.currentId)){
+    const fifth = s.goals.find(g=>g.id==="5odzo0el") || s.goals[0];
+    s.currentId = fifth && fifth.id;
+  }
+  return s;
+}
 function loadRaw(){
-  // 1. 尝试主 LocalStorage
+  // 键名未改：优先读 goal-method-v2，兼容旧键；绝不在日常加载时用旁路键覆盖主键
   try{
     const s=JSON.parse(localStorage.getItem(KEY)||'null');
-    if(s&&Array.isArray(s.goals)&&s.goals.length)return s;
+    if(s&&Array.isArray(s.goals)&&s.goals.length)return withBundled(s);
   }catch(e){}
 
-  // 2. 尝试备用镜像 LocalStorage
   try{
     const b=JSON.parse(localStorage.getItem(KEY+'_backup')||'null');
-    if(b&&Array.isArray(b.goals)&&b.goals.length)return b;
+    if(b&&Array.isArray(b.goals)&&b.goals.length)return withBundled(b);
   }catch(e){}
 
-  // 3. 尝试 SessionStorage 缓存
   try{
     const sess=JSON.parse(sessionStorage.getItem(KEY)||'null');
-    if(sess&&Array.isArray(sess.goals)&&sess.goals.length)return sess;
+    if(sess&&Array.isArray(sess.goals)&&sess.goals.length)return withBundled(sess);
   }catch(e){}
 
-  // 4. 尝试旧版本数据迁移
-  const fresh=seed();
   try{
     const o=JSON.parse(localStorage.getItem(OLD_KEY)||'null');
     if(o&&Array.isArray(o.goals)&&o.goals.length){
-      const rec=fresh.goals.find(x=>x.record);
-      const kept=o.goals.filter(x=>x.title!=='复盘第 1 期 vlog：观猹大会');
-      return {goals:kept.concat([rec]),currentId:kept[0]?kept[0].id:rec.id};
+      // 旧版迁移：保留全部旧目标（不再丢弃用户数据）
+      return withBundled({goals:o.goals.filter(g=>g&&g.id), currentId:o.currentId|| (o.goals[0]&&o.goals[0].id)});
     }
   }catch(e){}
 
-  return fresh;
+  // 主键皆空时，再扫描本域名其它相关键做只读合并恢复
+  const collected=collectAllStoredState();
+  if(collected.goals.length){
+    return withBundled({
+      goals:collected.goals,
+      currentId:collected.currentId||collected.goals[0].id,
+      showDone:collected.showDone,
+      lastBackup:collected.lastBackup
+    });
+  }
+
+  // 仅在本域名完全没有旧数据时，才用种子样例
+  return withBundled(seed());
 }
 
-let state=load(), toastTimer;
+let state=load(), toastTimer, appView='goal';
+// 备份里有、本机还没有的目标，导入后立刻写入本地，避免只停在内存里
+try{
+  const raw=JSON.parse(localStorage.getItem(KEY)||'null');
+  const rawIds=new Set(((raw&&raw.goals)||[]).map(g=>g&&g.id));
+  if(state.goals.some(g=>g&&g.id&&!rawIds.has(g.id))) saveNow();
+}catch(e){}
 
 // 同步即时保存，杜绝异步 debounce 导致浏览器关闭时丢失数据
 function saveNow(){
@@ -825,44 +1308,51 @@ function taskSummary(g){
   if(aiEst) whoSummary.push('你(AI) '+fmt(aiEst));
   if(bothEst) whoSummary.push('协同 '+fmt(bothEst));
   const whoText = whoSummary.length ? '分工预估：' + whoSummary.join(' ｜ ') : '';
+  const ownerMap=new Map();
+  ts.forEach(t=>{if(!t.owner)return;ownerMap.set(t.owner,(ownerMap.get(t.owner)||0)+num(t.est));});
+  const ownerText=[...ownerMap.entries()].map(([o,m])=>o+(m?' '+fmt(m):'')).join(' ｜ ');
 
-  return '<div class="stat"><span>要做的事</span><b>'+ts.length+' 件</b></div>'
-    +'<div class="stat"><span>预估合计</span><b>'+fmt(est)+'</b></div>'
-    +'<div class="stat"><span>已完成</span><b>'+done+'/'+ts.length+'</b></div>'
-    +(whoText?'<div class="summary-note">'+whoText+'</div>':'');
+  return '<span class="summary-quiet">'+ts.length+' 件 · 预估 '+fmt(est)+' · 完成 '+done+'/'+ts.length+'</span>';
 }
 
 function taskCard(g,t,i){
   const estVal = num(t.est);
   const isCustom = t.est !== '' && !TIME_PRESETS.includes(estVal);
   const opts='<option value="">未指定方向</option>'+namedDirs(g).map(d=>'<option value="'+d.id+'"'+(t.dirId===d.id?' selected':'')+'>'+esc(d.name)+'</option>').join('');
-  const who=t.who||'我';
+  const owner=t.owner||'';
+  const ownerOpen=!!t._ownerOpen;
+  const timeOpen=!!t._timeOpen;
+  const ownerPills=OWNERS.map(o=>{
+    const cls=OWNER_CLASS[o]||'';
+    return '<button type="button" class="pill-btn owner-pill '+cls+(owner===o?' active':'')+'" data-set-owner="'+esc(o)+'">'+esc(o)+'</button>';
+  }).join('')+'<button type="button" class="pill-btn'+(owner?'':' active')+'" data-set-owner="">无</button>';
+  const timeLabel = estVal ? (estVal+' 分') : (t.est!==''? (esc(t.est)+' 分') : '时间');
+  const ownerCls = owner ? (OWNER_CLASS[owner]||'') : '';
   return '<div class="task'+(t.done?' is-done':'')+'" data-tid="'+t.id+'">'
     +'<div class="task-top">'
-    +'<span class="task-idx">'+(i+1)+'.</span>'
     +'<label class="done-box" title="完成"><input type="checkbox" data-t="done"'+(t.done?' checked':'')+' aria-label="完成"></label>'
-    +'<textarea rows="1" class="task-name" data-t="name" placeholder="要做什么？例：说观点、写稿、剪辑..." aria-label="事项">'+esc(t.name)+'</textarea>'
+    +'<textarea rows="1" class="task-name" data-t="name" placeholder="要做什么？" aria-label="事项">'+esc(t.name)+'</textarea>'
     +'<button class="icon-btn" data-del-task="'+t.id+'" aria-label="删除这件事">×</button>'
     +'</div>'
     +'<div class="task-controls">'
-    +'<div class="quick-sec">'
-    +'<span class="sec-tag">谁做:</span>'
-    +'<button type="button" class="pill-btn'+(who==='我'?' active':'')+'" data-set-who="我">我</button>'
-    +'<button type="button" class="pill-btn who-you'+(who==='你'?' active':'')+'" data-set-who="你">你 (AI)</button>'
-    +'<button type="button" class="pill-btn who-both'+(who==='我 + 你'?' active':'')+'" data-set-who="我 + 你">我 + 你</button>'
+    +'<div class="task-meta-line">'
+    +'<button type="button" class="meta-link '+ownerCls+'" data-toggle-owner="'+t.id+'">'+esc(owner||'负责人')+'</button>'
+    +'<span class="meta-dot">·</span>'
+    +'<button type="button" class="meta-link" data-toggle-time="'+t.id+'">'+timeLabel+'</button>'
+    +'<span class="meta-dot">·</span>'
+    +'<button type="button" class="meta-link faint" data-toggle-more="'+t.id+'">'+(t._more?'收起':'更多')+'</button>'
     +'</div>'
-    +'<div class="quick-sec">'
-    +'<span class="sec-tag">时间:</span>'
-    +TIME_PRESETS.map(p=>'<button type="button" class="pill-btn'+(estVal===p?' active':'')+'" data-set-est="' + p + '">' + p + '分</button>').join('')
-    +'<span class="time-custom-wrap"><input type="number" min="0" step="5" class="time-custom-input" data-t="est" placeholder="其他" value="'+(isCustom?esc(t.est):'')+'"><em>分</em></span>'
-    +'</div>'
-    +'<button type="button" class="more-toggle" data-toggle-more="'+t.id+'">'+(t._more?'收起 ▴':'更多 ▾')+'</button>'
-    +'</div>'
+    +(ownerOpen?('<div class="owner-expand">'+ownerPills+'</div>'):'')
+    +(timeOpen?('<div class="time-expand">'
+      +TIME_PRESETS.map(p=>'<button type="button" class="pill-btn'+(estVal===p?' active':'')+'" data-set-est="' + p + '">' + p + '分</button>').join('')
+      +'<span class="time-custom-wrap"><input type="number" min="0" step="5" class="time-custom-input" data-t="est" placeholder="其他" value="'+(isCustom?esc(t.est):'')+'"><em>分</em></span>'
+      +'</div>'):'')
     +(t._more?('<div class="task-more-row">'
       +'<label class="meta"><span>对应方向</span><select data-t="dirId">'+opts+'</select></label>'
       +'<label class="meta"><span>实际用时</span><span class="num-wrap"><input type="number" min="0" step="5" inputmode="numeric" data-t="actual" value="'+esc(t.actual)+'" placeholder="—"><em>分钟</em></span></label>'
       +'<label class="chip"><input type="checkbox" data-t="urgent"'+(t.urgent?' checked':'')+'>有时效</label>'
       +'</div>'):'')
+    +'</div>'
     +'</div>';
 }
 
@@ -912,14 +1402,14 @@ function parseBatchTasks(text){
     }
     line=line.replace(/^([0-9]+[.\u3001]|\([-0-9]+\)|[-*•]\s*(\[[ xX]\])?)\s*/,'');
     line=line.replace(/✅/g,'').trim();
-    let who='我', est='';
+    let who='我', est='', owner='';
+    owner = matchOwnerFromText(line);
     const parenMatch=line.match(/[(（]([^)）]+)[)）]/);
     if(parenMatch){
       const inside=parenMatch[1];
       if(/我\s*[\+＋和与]\s*(你|AI)/.test(inside)||/协同/.test(inside)){who='我 + 你';}
       else if(/(你|AI)/.test(inside)){who='你';}
       else if(/我/.test(inside)){who='我';}
-
       const timeMatch=inside.match(/(\d+)\s*(?:分钟|分|m|min)?/);
       if(timeMatch&&!inside.includes('已完成')&&!inside.includes('见下面')){
         est=timeMatch[1];
@@ -931,8 +1421,11 @@ function parseBatchTasks(text){
       const tm=line.match(/(\d+)\s*(?:分钟|分|m|min)\b/);
       if(tm)est=tm[1];
     }
-    tasks.push(mkTask(line||'未命名事项','',false,who,est));
-    if(isDone)tasks[tasks.length-1].done=true;
+    if(!owner) owner = matchOwnerFromText(line);
+    const t=mkTask(line||'未命名事项','',false,who,est,owner||undefined);
+    if(owner) applyOwnerToTask(t, owner);
+    if(isDone) t.done=true;
+    tasks.push(t);
   }
   return tasks;
 }
@@ -991,7 +1484,7 @@ function renderPanel(){
   if(s===2){
     h+='<div class="summary" id="taskSummary">'+taskSummary(g)+'</div>'
       +'<div class="toolbar">'
-      +'<span class="muted small">点击按钮一键选谁做与时间</span>'
+      +'<span class="muted small">点负责人或时间即可修改</span>'
       +'<div class="toolbar-actions">'
       +'<button class="btn ghost" data-batch-tasks>📋 批量粘贴清单</button>'
       +'<button class="btn ghost" data-sort>有时效的排前面</button>'
@@ -1020,7 +1513,126 @@ function renderNav(){
   $('#panelNav').innerHTML=(s>0?'<button class="btn ghost" data-goto="'+(s-1)+'">← '+STEPS[s-1].label+'</button>':'<span></span>')
     +(s<3?'<button class="btn primary" data-goto="'+(s+1)+'">下一步：'+STEPS[s+1].label+' →</button>':'<button class="btn primary" data-export>导出为文本</button>');
 }
-function renderAll(){renderSidebar();renderHead();renderStepper();renderPanel();renderNav();}
+function currentRouteStep(g){
+  if(!g.routeChecks) g.routeChecks={};
+  return TODAY_ROUTE.steps.find(s=>!g.routeChecks[s.id])||null;
+}
+function ownerDotHTML(owner){
+  const cls=OWNER_CLASS[owner]||'';
+  return '<i class="owner-dot '+cls+'" aria-hidden="true"></i>';
+}
+function todayRowsHTML(g){
+  if(!g.routeChecks) g.routeChecks={};
+  const n=episodeNumFromGoal(g);
+  const current=currentRouteStep(g);
+  return '<ol class="timeline">'+TODAY_ROUTE.steps.map(s=>{
+    const done=!!g.routeChecks[s.id];
+    const isNow=current&&current.id===s.id;
+    const phrase=fillEpisodePhrase(s.phrase, n);
+    const action=fillEpisodePhrase(s.action||'', n);
+    const whoCls=OWNER_CLASS[s.owner]||'';
+    return '<li class="tl'+(done?' is-done':'')+(isNow?' is-now':'')+'">'
+      +'<label class="tl-mark" title="完成此步"><input type="checkbox" data-route-check="'+s.id+'"'+(done?' checked':'')+' aria-label="完成此步">'+ownerDotHTML(s.owner)+'</label>'
+      +'<div class="tl-body">'
+      +'<div class="tl-who '+whoCls+'">'+esc(s.owner)+'</div>'
+      +'<div class="tl-phrase">'+esc(phrase)+(action?' <span class="action">'+esc(action)+'</span>':'')+'</div>'
+      +(isNow?'<button type="button" class="btn primary" data-copy-phrase="'+esc(phrase)+'">复制这句话</button>':'')
+      +'</div></li>';
+  }).join('')+'</ol>';
+}
+
+function renderTodayStrip(){
+  const el=$('#todayStrip'); if(!el) return;
+  const g=cur();
+  if(!g.routeChecks) g.routeChecks={};
+  const n=episodeNumFromGoal(g);
+  const step=currentRouteStep(g);
+  const total=TODAY_ROUTE.steps.length;
+  const doneCount=TODAY_ROUTE.steps.filter(s=>g.routeChecks[s.id]).length;
+  el.hidden=false;
+  if(!step){
+    el.innerHTML='<div class="next-bar is-clear"><div class="next-copy"><span class="next-kicker">今天的路线</span><b>这一期的对话都走完了</b></div><button type="button" class="btn ghost" data-view="today">看全部</button></div>';
+    return;
+  }
+  const phrase=fillEpisodePhrase(step.phrase, n);
+  const action=fillEpisodePhrase(step.action||'', n);
+  el.innerHTML='<div class="next-bar">'
+    +'<div class="next-copy">'
+    +'<span class="next-kicker">下一步 '+ownerDotHTML(step.owner)+esc(step.owner)+'</span>'
+    +'<b>「'+esc(phrase)+'」</b>'
+    +(action?'<span class="next-action">'+esc(action)+'</span>':'')
+    +'</div>'
+    +'<div class="next-actions">'
+    +'<button type="button" class="btn primary" data-copy-phrase="'+esc(phrase)+'">复制</button>'
+    +'<button type="button" class="btn" data-route-done="'+step.id+'">这步完成</button>'
+    +'<button type="button" class="btn ghost" data-view="today">'+doneCount+'/'+total+'</button>'
+    +'</div></div>';
+}
+
+function renderToday(){
+  const g=cur();
+  const C=TODAY_ROUTE;
+  const built='<div class="today-wrap">'
+    +'<div class="today-hero"><h1>'+esc(C.title)+'</h1><p>'+esc(C.subtitle)+'</p>'
+    +'<p class="muted small">当前目标：'+esc(g.title||'未命名')+' · 第 '+esc(episodeNumFromGoal(g))+' 期</p></div>'
+    +'<div class="today-list">'+todayRowsHTML(g,false)+'</div>'
+    +'<div class="howto-actions">'
+    +'<button class="btn primary" data-view="goal">回到这一期</button>'
+    +'<button class="btn" data-new-video-from-howto>新建视频一期</button>'
+    +'</div></div>';
+  const el=$('#todayPanel');
+  if(el){el.innerHTML=built;el.hidden=appView!=='today';}
+}
+
+function renderHowto(){
+  const C=HOWTO_CONTENT;
+  const team=C.team.map(m=>'<article class="howto-card tone-'+esc(m.role)+'"><div class="howto-card-top">'+ownerTagHTML(m.role)+'</div><p>'+esc(m.desc)+'</p></article>').join('');
+  const steps=C.pipeline.map((s,i)=>'<div class="howto-step"><div class="howto-step-num">'+(i+1)+'</div><div><h3>'+esc(s.title)+'</h3><p>'+esc(s.detail)+'</p></div></div>').join('');
+  const built='<div class="howto-wrap">'
+    +'<div class="howto-hero"><h1>'+esc(C.title)+'</h1><p>'+esc(C.subtitle)+'</p></div>'
+    +'<section class="howto-section"><h2>'+esc(C.teamTitle)+'</h2><div class="howto-team">'+team+'</div></section>'
+    +'<section class="howto-section"><h2>'+esc(C.pipelineTitle)+'</h2><div class="howto-steps">'+steps+'</div></section>'
+    +'<div class="howto-note">'+esc(C.fileNote).replace('/workspace/redu/第N期/','<code>/workspace/redu/第N期/</code>')+'</div>'
+    +'<div class="howto-actions">'
+    +'<button class="btn primary" data-new-video-from-howto>用「视频一期」模板新建</button>'
+    +'<button class="btn" data-view="goal">回到目标</button>'
+    +'</div></div>';
+  const el=$('#howtoPanel');
+  if(el){el.innerHTML=built;el.hidden=appView!=='howto';}
+}
+function setAppView(view){
+  if(view==='howto'||view==='today'||view==='goal') appView=view;
+  else appView='goal';
+  const root=document.querySelector('.app');
+  if(root){
+    root.classList.toggle('view-howto', appView==='howto');
+    root.classList.toggle('view-today', appView==='today');
+    root.classList.toggle('view-goal', appView==='goal');
+  }
+  const hp=$('#howtoPanel'); if(hp) hp.hidden=appView!=='howto';
+  const tp=$('#todayPanel'); if(tp) tp.hidden=appView!=='today';
+  const gw=$('#goalWorkspace'); if(gw) gw.style.display=appView==='goal'?'':'none';
+  document.querySelectorAll('.goal-only').forEach(el=>{
+    if(appView==='goal') el.style.removeProperty('display');
+    else el.style.display='none';
+  });
+  document.querySelectorAll('.howto-only').forEach(el=>{
+    el.style.display=appView==='howto'?'':'none';
+  });
+  document.querySelectorAll('.today-only').forEach(el=>{
+    el.style.display=appView==='today'?'':'none';
+  });
+  // 共用「回目标」按钮
+  document.querySelectorAll('.howto-only.today-only, button.howto-only.today-only').forEach(el=>{
+    el.style.display=(appView==='howto'||appView==='today')?'':'none';
+  });
+  const navH=$('#navHowto'); if(navH) navH.setAttribute('aria-current', appView==='howto'?'true':'false');
+  const navT=$('#navToday'); if(navT) navT.setAttribute('aria-current', appView==='today'?'true':'false');
+  if(appView==='howto') renderHowto();
+  if(appView==='today') renderToday();
+  if(appView==='goal') renderTodayStrip();
+}
+function renderAll(){renderSidebar();renderHead();renderStepper();renderPanel();renderNav();setAppView(appView);}
 function updateComputed(){
   const g=cur();renderStepper();renderSidebar();
   const ts=$('#taskSummary');if(ts)ts.innerHTML=taskSummary(g);
@@ -1043,6 +1655,7 @@ function toText(g){
   const ts=named(g);
   ts.forEach((t,i)=>{
     const b=[t.who||'我'];
+    if(t.owner)b.push('负责人 '+t.owner);
     if(num(t.est))b.push(t.est+' 分钟');
     if(t.done)b.push('已完成');
     if(num(t.actual))b.push('实际 '+fmt(num(t.actual)));
@@ -1061,51 +1674,63 @@ async function copyExport(){
   catch(e){ta.select();try{document.execCommand('copy');toast('已复制');}catch(_){toast('请手动全选复制');}}
 }
 
-// 扫描所有本地缓存恢复草稿
+// 扫描所有本地缓存恢复草稿（合并，不删旧数据）
 function scanRecover(){
-  const found=[];
-  const keys=[KEY, KEY+'_backup', OLD_KEY, 'goal-method-v2', 'goal-method-v1', 'goal-method-draft'];
-  for(let i=0; i<localStorage.length; i++){
-    const k=localStorage.key(i);
-    if(k && (k.includes('goal') || k.includes('method')) && !keys.includes(k)){
-      keys.push(k);
-    }
-  }
-  keys.forEach(k=>{
-    try{
-      const raw = localStorage.getItem(k) || sessionStorage.getItem(k);
-      if(!raw) return;
-      const data = JSON.parse(raw);
-      const list = Array.isArray(data) ? data : (data.goals || []);
-      list.forEach(g=>{
-        if(g && g.id && g.title && !found.some(x=>x.id===g.id)){
-          found.push(g);
-        }
-      });
-    }catch(e){}
-  });
+  const collected=collectAllStoredState();
+  const found=collected.goals||[];
 
   if(!found.length){
-    toast('未扫描到其他可恢复的草稿数据');
+    const host=location.host||'(本地文件)';
+    toast('本域名（'+host+'）未扫描到草稿。若数据在 github.io，请打开那个网址再点扫描。');
+    updateBackupInfo();
     return;
   }
 
-  let added=0;
-  found.forEach(fg=>{
-    const idx = state.goals.findIndex(x=>x.id===fg.id);
-    if(idx > -1){
-      state.goals[idx] = fg;
-    } else {
-      state.goals.unshift(fg);
-      added++;
-    }
-  });
-
+  const before=state.goals.length;
+  const beforeIds=new Set(state.goals.map(g=>g.id));
+  state.goals=mergeGoalLists(state.goals, found, false);
+  // 不把 current 强行切走
   normalize(state);
   saveNow();
   renderAll();
-  $('#backupDlg').close();
-  toast('已扫描恢复 '+ (added > 0 ? added + ' 个目标草稿' : '所有本地数据'));
+  updateBackupInfo();
+  const added=state.goals.filter(g=>!beforeIds.has(g.id)).length;
+  toast('已合并 '+found.length+' 条缓存目标（新增 '+added+'，当前共 '+state.goals.length+'）。旧数据保留。');
+}
+
+function storageOriginMessage(){
+  const host=location.hostname||'';
+  const proto=location.protocol||'';
+  const isLocal = proto==='file:' || host==='localhost' || host==='127.0.0.1' || host==='[::1]';
+  const isPages = /\.github\.io$/i.test(host);
+  if(isLocal){
+    return '你现在在本地预览（'+proto+'//'+ (host||'file') +'）。浏览器按域名隔离存储：本地的 localStorage 和 https://yaemra531-stack.github.io/ 不是同一份。往期 5 期仍在 github.io 那个网址里，请打开线上页 → 备份 → 导出，再在本地导入；或直接在 github.io 使用。';
+  }
+  if(isPages){
+    return '当前域名：'+host+'。数据保存在此域名下的 localStorage（键名 goal-method-v2，兼容 goal-method-v1）。扫描会合并本域名全部相关键，不会删除旧目标。';
+  }
+  return '当前域名：'+(host||proto)+'。localStorage 按域名隔离；换域名等于换了一份数据。';
+}
+
+function formatStorageDiag(){
+  const keys=listStorageKeys().filter(x=>isRelatedStorageKey(x.key) || x.size>0);
+  const related=keys.filter(x=>isRelatedStorageKey(x.key));
+  const lines=['存储诊断 · 键名未改：'+KEY+' / '+OLD_KEY, '相关键 ' + related.length + ' 个：'];
+  if(!related.length){
+    lines.push('（本域名下没有 goal/method 相关键）');
+  }else{
+    related.sort((a,b)=>b.size-a.size).forEach(x=>{
+      let count='?';
+      try{
+        const raw=readStoreItem(x.store,x.key);
+        const p=extractGoalsPayload(JSON.parse(raw));
+        count=String(p.goals.length);
+      }catch(e){ count='(非目标JSON)'; }
+      lines.push('- ['+x.store+'] '+x.key+' · '+x.size+'B · 目标约 '+count+' 个');
+    });
+  }
+  lines.push('当前内存中目标：'+state.goals.length+' 个');
+  return lines.join('\n');
 }
 
 document.addEventListener('click',e=>{
@@ -1131,8 +1756,22 @@ document.addEventListener('click',e=>{
     return;
   }
 
+  const pop=$('#goalMenuPop');
+  if(pop && !e.target.closest('#goalMenu')) pop.hidden=true;
   const b=e.target.closest('button');if(!b)return;
   const g=cur(),ds=b.dataset;
+  if(b.closest('#goalMenu') && !('toggleMenu' in ds) && pop) pop.hidden=true;
+  if('toggleMenu' in ds){
+    if(pop){pop.hidden=!pop.hidden; b.setAttribute('aria-expanded', pop.hidden?'false':'true');}
+    return;
+  }
+  if('routeDone' in ds){
+    if(!g.routeChecks) g.routeChecks={};
+    g.routeChecks[ds.routeDone]=true;
+    save();
+    if(appView==='today') renderToday(); else renderTodayStrip();
+    return;
+  }
   if('setRmode' in ds){
     const rk=ds.rk, mode=ds.setRmode;
     reviewModes[rk]=mode;
@@ -1178,7 +1817,7 @@ document.addEventListener('click',e=>{
     }
     return;
   }
-  if(ds.goal){state.currentId=ds.goal;save();renderAll();return;}
+  if(ds.goal){state.currentId=ds.goal;appView='goal';save();renderAll();return;}
   if(ds.step!==undefined){goStep(+ds.step);return;}
   if(ds.goto!==undefined){goStep(+ds.goto);window.scrollTo({top:0,behavior:'smooth'});return;}
   if('addDir' in ds){if(g.dirs.length<10){g.dirs.push({id:uid(),name:'',goal:''});save();renderPanel();focusLast('.dir-name');}return;}
@@ -1188,8 +1827,28 @@ document.addEventListener('click',e=>{
   if('sort' in ds){g.tasks.sort((a,b)=>(b.urgent?1:0)-(a.urgent?1:0));save();renderPanel();toast('有时效的已排到前面');return;}
   if('export' in ds){openExport();return;}
   if('newGoal' in ds){const d=$('#newDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');return;}
-  if('newBlank' in ds||'newVlog' in ds){const ng=('newVlog' in ds)?vlogTemplate():blankGoal();$('#newDlg').close();state.goals.unshift(ng);state.currentId=ng.id;save();renderAll();const t=$('#goalTitle');t.focus();t.select();return;}
+  if('newBlank' in ds||'newVlog' in ds||'newVideo' in ds||'newVideoFromHowto' in ds){
+    let ng;
+    const isVideo=('newVideo' in ds)||('newVideoFromHowto' in ds);
+    if(isVideo){
+      ng=videoEpisodeTemplate('N');
+    }else if('newVlog' in ds){
+      ng=vlogTemplate();
+    }else{
+      ng=blankGoal();
+    }
+    const dlg=$('#newDlg'); if(dlg&&dlg.open) dlg.close();
+    appView='goal';
+    state.goals.unshift(ng);state.currentId=ng.id;save();renderAll();
+    const t=$('#goalTitle'); if(t){t.focus();t.select();}
+    if(isVideo){
+      toast('已套用「视频一期」模板，把标题里的 N 改成期数即可');
+      // 顶部已有「今天跟谁干什么」路线条
+    }
+    return;
+  }
   if('closeNew' in ds){$('#newDlg').close();return;}
+  if('view' in ds){setAppView(ds.view); if(ds.view==='goal') window.scrollTo({top:0,behavior:'smooth'}); return;}
   if('delGoal' in ds){
     if(!confirm('删除「'+(g.title||'未命名目标')+'」？删除后无法恢复。'))return;
     state.goals=state.goals.filter(x=>x.id!==g.id);if(!state.goals.length)state.goals.push(blankGoal());
@@ -1223,6 +1882,20 @@ document.addEventListener('click',e=>{
     }
     return;
   }
+  if('setOwner' in ds){
+    const taskEl=b.closest('[data-tid]');
+    if(taskEl){
+      const t=g.tasks.find(x=>x.id===taskEl.dataset.tid);
+      if(t){
+        if(!ds.setOwner){ delete t.owner; /* who 保持不变也可；清空负责人时不改 who */ }
+        else applyOwnerToTask(t, ds.setOwner);
+        t._ownerOpen=false;
+        save();updateComputed();renderPanel();
+        if(appView==='goal') renderTodayStrip();
+      }
+    }
+    return;
+  }
   if('setEst' in ds){
     const taskEl=b.closest('[data-tid]');
     if(taskEl){
@@ -1230,14 +1903,47 @@ document.addEventListener('click',e=>{
       if(t){
         const val=+ds.setEst;
         t.est = (num(t.est)===val) ? '' : String(val);
+        t._timeOpen=false;
         save();updateComputed();renderPanel();
       }
+    }
+    return;
+  }
+  if('toggleOwner' in ds){
+    const t=g.tasks.find(x=>x.id===ds.toggleOwner);
+    if(t){
+      const open=!t._ownerOpen;
+      g.tasks.forEach(x=>{x._ownerOpen=false; x._timeOpen=false;});
+      t._ownerOpen=open;
+      renderPanel();
+    }
+    return;
+  }
+  if('toggleTime' in ds){
+    const t=g.tasks.find(x=>x.id===ds.toggleTime);
+    if(t){
+      const open=!t._timeOpen;
+      g.tasks.forEach(x=>{x._ownerOpen=false; x._timeOpen=false;});
+      t._timeOpen=open;
+      renderPanel();
     }
     return;
   }
   if('toggleMore' in ds){
     const t=g.tasks.find(x=>x.id===ds.toggleMore);
     if(t){t._more=!t._more;renderPanel();}
+    return;
+  }
+  if('copyPhrase' in ds){
+    const text=ds.copyPhrase||'';
+    (async()=>{
+      try{await navigator.clipboard.writeText(text);toast('已复制：'+text);}
+      catch(err){
+        const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');toast('已复制：'+text);}catch(_){toast('复制失败，请手动选中');}
+        ta.remove();
+      }
+    })();
     return;
   }
   if('batchDirs' in ds){
@@ -1317,6 +2023,14 @@ document.addEventListener('change',e=>{
     r.readAsText(f);return;
   }
   if('enough' in el.dataset){g.enough=el.checked;save();return;}
+  if('routeCheck' in el.dataset){
+    if(!g.routeChecks) g.routeChecks={};
+    g.routeChecks[el.dataset.routeCheck]=el.checked;
+    save();
+    if(appView==='today') renderToday();
+    else renderTodayStrip();
+    return;
+  }
   const tEl=el.closest('[data-tid]');
   if(tEl&&el.dataset.t&&(el.type==='checkbox'||el.tagName==='SELECT')){
     const t=g.tasks.find(x=>x.id===tEl.dataset.tid);if(!t)return;
@@ -1372,7 +2086,12 @@ document.addEventListener('paste',async e=>{
   }
 });
 
-function updateBackupInfo(){const el=$('#backupInfo');if(el)el.textContent=state.lastBackup?'上次备份：'+dayLabel(dayKey(new Date(state.lastBackup))):'还没有备份过。';}
+function updateBackupInfo(){
+  const el=$('#backupInfo');
+  if(el) el.textContent=(state.lastBackup?'上次备份：'+dayLabel(dayKey(new Date(state.lastBackup))):'还没有备份过。')+'｜当前 '+state.goals.length+' 个目标｜键 '+KEY;
+  const ow=$('#originWarn'); if(ow) ow.textContent=storageOriginMessage();
+  const dg=$('#storageDiag'); if(dg) dg.textContent=formatStorageDiag();
+}
 document.addEventListener('toggle',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('done-group'))state.showDone=t.open;},true);
 window.addEventListener('resize',()=>document.querySelectorAll('#panel textarea').forEach(autosize));
 renderAll();
