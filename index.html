@@ -561,7 +561,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
             <input type="date" id="goalDate" class="date-input" aria-label="目标日期">
             <span id="statusBadge"></span>
             <span id="saved" class="save-tag"><i class="save-dot"></i><span>已自动保存</span></span>
-            <button type="button" class="btn ghost" id="undoBtnHead" data-undo style="min-height:28px;padding:2px 10px;font-size:12px">撤销</button>
+            <button type="button" class="btn ghost" id="undoBtnHead" data-undo title="Ctrl/Cmd+Z" style="min-height:28px;padding:2px 10px;font-size:12px">撤销</button>
           </div>
         </div>
         <div class="menu" id="goalMenu">
@@ -1731,9 +1731,9 @@ function renderPanel(){
       +'<div class="toolbar">'
       +'<span class="muted small">点负责人或时间即可修改<span class="version-tag">提示词库 '+esc(PROMPT_LIB.version||'?')+'</span></span>'
       +'<div class="toolbar-actions">'
-      +'<button class="btn ghost" data-undo>撤销</button>'+'<button class="btn" data-load-flow>载入标准流程</button>'+'<button class="btn ghost" data-browse-prompts>提示词库</button>'
+      +'<button class="btn" data-load-flow>载入标准流程</button>'
+      +'<button class="btn ghost" data-browse-prompts>提示词库</button>'
       +'<button class="btn ghost" data-batch-tasks>📋 批量粘贴清单</button>'
-      +'<button class="btn ghost" data-sort>有时效的排前面</button>'
       +'</div>'
       +'</div>'
       +'<div class="list">'+g.tasks.map((t,i)=>taskCard(g,t,i)).join('')+'</div>'
@@ -1750,7 +1750,7 @@ function renderPanel(){
       +'</div>'
       +'<div class="fields">'+REVIEW_Q.map(([k,l,hint,ph])=>reviewCard(g,k,l,hint,g.review[k],ph)).join('')+'</div>';
   }
-  if(g.note)h='<div class="note"><span class="reminder-label">经验</span><span>'+esc(g.note)+'</span></div>'+h;
+  // 经验条已隐藏；g.note 仍保留在数据与导出里
   P.innerHTML=h;
   P.querySelectorAll('textarea').forEach(autosize);
 }
@@ -2379,6 +2379,14 @@ document.addEventListener('keydown',e=>{
       renderPanel();
       toast('✨ 已完成排版，切换为 Markdown 预览');
     }
+  }
+  // Ctrl/Cmd+Z 撤销上一步危险操作（输入框里保留系统文字撤销）
+  if((e.metaKey||e.ctrlKey) && !e.shiftKey && (e.key==='z'||e.key==='Z')){
+    const tag=(e.target&&e.target.tagName||'').toLowerCase();
+    const typing = tag==='input'||tag==='textarea'||tag==='select'||(e.target&&e.target.isContentEditable);
+    if(typing) return;
+    e.preventDefault();
+    doUndo();
   }
 });
 
