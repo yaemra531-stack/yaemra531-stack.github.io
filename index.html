@@ -574,7 +574,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
         </div>
       </header>
       <p class="principle-line">先做，而不是先找最优解。AI 负责执行，你负责判断。</p>
-      <div id="todayStrip" class="today-strip" hidden></div>
+      <div id="todayStrip" class="today-strip" hidden aria-hidden="true"></div>
       <nav class="stepper" id="stepper" role="tablist" aria-label="四个步骤"></nav>
       <section id="panel" role="tabpanel"></section>
       <footer class="panel-nav" id="panelNav"></footer>
@@ -1709,31 +1709,10 @@ function todayRowsHTML(g){
 }
 
 function renderTodayStrip(){
+  // 目标页里的「下一步」条已去掉；完整路线仍在「今天跟谁干什么」页
   const el=$('#todayStrip'); if(!el) return;
-  const g=cur();
-  if(!g.routeChecks) g.routeChecks={};
-  const n=episodeNumFromGoal(g);
-  const step=currentRouteStep(g);
-  const total=TODAY_ROUTE.steps.length;
-  const doneCount=TODAY_ROUTE.steps.filter(s=>g.routeChecks[s.id]).length;
-  el.hidden=false;
-  if(!step){
-    el.innerHTML='<div class="next-bar is-clear"><div class="next-copy"><span class="next-kicker">今天的路线</span><b>这一期的对话都走完了</b></div><button type="button" class="btn ghost" data-view="today">看全部</button></div>';
-    return;
-  }
-  const phrase=fillEpisodePhrase(step.phrase, n);
-  const action=fillEpisodePhrase(step.action||'', n);
-  el.innerHTML='<div class="next-bar">'
-    +'<div class="next-copy">'
-    +'<span class="next-kicker">下一步 '+ownerDotHTML(step.owner)+esc(step.owner)+'</span>'
-    +'<b>「'+esc(phrase)+'」</b>'
-    +(action?'<span class="next-action">'+esc(action)+'</span>':'')
-    +'</div>'
-    +'<div class="next-actions">'
-    +'<button type="button" class="btn primary" data-copy-phrase="'+esc(phrase)+'">复制</button>'
-    +'<button type="button" class="btn" data-route-done="'+step.id+'">这步完成</button>'
-    +'<button type="button" class="btn ghost" data-view="today">'+doneCount+'/'+total+'</button>'
-    +'</div></div>';
+  el.hidden=true;
+  el.innerHTML='';
 }
 
 function renderToday(){
