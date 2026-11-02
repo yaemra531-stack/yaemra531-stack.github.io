@@ -332,6 +332,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .prompt-dlg-body textarea{min-height:320px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .prompt-meta{font-size:12px;color:var(--muted)}
 .version-tag{font-size:12px;color:var(--faint);padding:0 8px}
+.btn[data-undo]:disabled{opacity:.45;cursor:not-allowed}
 .time-chip{all:unset;box-sizing:border-box;cursor:pointer;padding:2px 8px;min-height:26px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--muted)}
 .time-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .time-chip:hover{background:var(--surface-2);color:var(--text)}
@@ -560,11 +561,13 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
             <input type="date" id="goalDate" class="date-input" aria-label="目标日期">
             <span id="statusBadge"></span>
             <span id="saved" class="save-tag"><i class="save-dot"></i><span>已自动保存</span></span>
+            <button type="button" class="btn ghost" id="undoBtnHead" data-undo style="min-height:28px;padding:2px 10px;font-size:12px">撤销</button>
           </div>
         </div>
         <div class="menu" id="goalMenu">
           <button class="icon-btn menu-btn" type="button" data-toggle-menu aria-label="更多操作" aria-expanded="false">···</button>
           <div class="menu-pop" id="goalMenuPop" hidden>
+            <button type="button" id="undoBtn" data-undo>撤销</button>
             <button type="button" id="doneBtn" data-toggle-done>标记完成</button>
             <button type="button" data-export>导出文本</button>
             <button type="button" data-export-data>导出数据</button>
@@ -1232,7 +1235,7 @@ function saveNow(){
     localStorage.setItem(KEY, json);
     localStorage.setItem(KEY+'_backup', json);
     sessionStorage.setItem(KEY, json);
-    setSaved('● 已实时保存 '+formatClock());
+    setSaved('● 本机已保存 '+formatClock());
   }catch(e){
     setSaved('⚠️ 无法保存（可能在隐身模式）');
   }
@@ -1241,11 +1244,87 @@ function save(){
   saveNow();
 }
 
+const UNDO_KEY = KEY+'_undo';
+const UNDO_MAX = 20;
+let undoStack = [];
+let applyingRemote = false;
+try{
+  const rawUndo = JSON.parse(localStorage.getItem(UNDO_KEY)||'[]');
+  if(Array.isArray(rawUndo)) undoStack = rawUndo.slice(0, UNDO_MAX);
+}catch(e){ undoStack = []; }
+
+function cloneState(){
+  return JSON.parse(JSON.stringify({goals:state.goals, currentId:state.currentId}));
+}
+function persistUndo(){
+  try{ localStorage.setItem(UNDO_KEY, JSON.stringify(undoStack.slice(0, UNDO_MAX))); }catch(e){}
+  const btn=$('#undoBtn');
+  if(btn){
+    btn.disabled = !undoStack.length;
+    btn.textContent = undoStack.length ? ('撤销 ('+undoStack.length+')') : '撤销';
+  }
+}
+function pushUndo(label){
+  try{
+    undoStack.unshift({at:Date.now(), label:label||'操作', snap:cloneState()});
+    if(undoStack.length>UNDO_MAX) undoStack.length=UNDO_MAX;
+    persistUndo();
+  }catch(e){}
+}
+function doUndo(){
+  if(!undoStack.length){ toast('没有可撤销的操作'); return false; }
+  const item = undoStack.shift();
+  persistUndo();
+  if(!item || !item.snap){ toast('撤销失败'); return false; }
+  state.goals = item.snap.goals||[];
+  state.currentId = item.snap.currentId;
+  normalize(state);
+  saveNow();
+  renderAll();
+  toast('已撤销：'+(item.label||'上一步'));
+  return true;
+}
+
+// 若第六期事项已被标准流程覆盖，自动塞一条可撤销的备份（只做一次）
+(function seedSixthRecovery(){
+  try{
+    const g = (state.goals||[]).find(x=>x&&x.id==='lpf6lxvb');
+    const pack = (BUNDLED_GOALS||[]).find(x=>x&&x.id==='lpf6lxvb');
+    if(!g || !pack || !Array.isArray(g.tasks) || !Array.isArray(pack.tasks)) return;
+    const looksStd = g.tasks.length===STANDARD_FLOW.length && STANDARD_FLOW.every((s,i)=>g.tasks[i] && g.tasks[i].module===s.module && (g.tasks[i].name||'')===s.name);
+    const packDiffers = pack.tasks.length !== g.tasks.length || pack.tasks.some((t,i)=>!g.tasks[i] || t.id!==g.tasks[i].id);
+    if(!looksStd || !packDiffers) return;
+    if(undoStack.some(u=>u && u.label==='恢复第六期备份事项')) return;
+    const snap = cloneState();
+    const gg = (snap.goals||[]).find(x=>x&&x.id==='lpf6lxvb');
+    if(!gg) return;
+    gg.tasks = JSON.parse(JSON.stringify(pack.tasks));
+    undoStack.unshift({at:Date.now(), label:'恢复第六期备份事项', snap});
+    persistUndo();
+  }catch(e){}
+})();
+
 // 页面关闭、切后台、隐藏时强制执行一次持久化保存
 window.addEventListener('beforeunload', ()=>{ try{saveNow();}catch(e){} });
 window.addEventListener('pagehide', ()=>{ try{saveNow();}catch(e){} });
 document.addEventListener('visibilitychange', ()=>{
   if(document.visibilityState==='hidden'){ try{saveNow();}catch(e){} }
+});
+
+// 多标签页同步：别的标签改了 localStorage，这个标签跟着刷新
+window.addEventListener('storage', (ev)=>{
+  if(applyingRemote) return;
+  if(ev.key!==KEY || !ev.newValue) return;
+  try{
+    const incoming = JSON.parse(ev.newValue);
+    if(!incoming || !Array.isArray(incoming.goals)) return;
+    applyingRemote = true;
+    state = incoming;
+    normalize(state);
+    renderAll();
+    setSaved('● 已从其他标签同步 '+formatClock());
+  }catch(e){}
+  finally{ applyingRemote = false; }
 });
 
 function setSaved(t){
@@ -1652,7 +1731,7 @@ function renderPanel(){
       +'<div class="toolbar">'
       +'<span class="muted small">点负责人或时间即可修改<span class="version-tag">提示词库 '+esc(PROMPT_LIB.version||'?')+'</span></span>'
       +'<div class="toolbar-actions">'
-      +'<button class="btn" data-load-flow>载入标准流程</button>'+'<button class="btn ghost" data-browse-prompts>提示词库</button>'
+      +'<button class="btn ghost" data-undo>撤销</button>'+'<button class="btn" data-load-flow>载入标准流程</button>'+'<button class="btn ghost" data-browse-prompts>提示词库</button>'
       +'<button class="btn ghost" data-batch-tasks>📋 批量粘贴清单</button>'
       +'<button class="btn ghost" data-sort>有时效的排前面</button>'
       +'</div>'
@@ -1778,7 +1857,7 @@ function setAppView(view){
   if(appView==='today') renderToday();
   if(appView==='goal') renderTodayStrip();
 }
-function renderAll(){const vv=$('#libVersion'); if(vv) vv.textContent='· 提示词 '+ (PROMPT_LIB.version||'?'); renderSidebar();renderHead();renderStepper();renderPanel();renderNav();setAppView(appView);}
+function renderAll(){const vv=$('#libVersion'); if(vv) vv.textContent='· 提示词 '+ (PROMPT_LIB.version||'?'); renderSidebar();renderHead();renderStepper();renderPanel();renderNav();setAppView(appView);persistUndo();}
 function updateComputed(){
   const g=cur();renderStepper();renderSidebar();
   const ts=$('#taskSummary');if(ts)ts.innerHTML=taskSummary(g);
@@ -1967,9 +2046,9 @@ document.addEventListener('click',e=>{
   if(ds.step!==undefined){goStep(+ds.step);return;}
   if(ds.goto!==undefined){goStep(+ds.goto);window.scrollTo({top:0,behavior:'smooth'});return;}
   if('addDir' in ds){if(g.dirs.length<10){g.dirs.push({id:uid(),name:'',goal:''});save();renderPanel();focusLast('.dir-name');}return;}
-  if(ds.delDir){g.dirs=g.dirs.filter(d=>d.id!==ds.delDir);g.tasks.forEach(t=>{if(t.dirId===ds.delDir)t.dirId='';});save();renderPanel();updateComputed();return;}
+  if(ds.delDir){pushUndo('删除方向');g.dirs=g.dirs.filter(d=>d.id!==ds.delDir);g.tasks.forEach(t=>{if(t.dirId===ds.delDir)t.dirId='';});save();renderPanel();updateComputed();persistUndo();return;}
   if('addTask' in ds){g.tasks.push(mkTask('', '', false, '我', '15'));save();renderPanel();updateComputed();focusLast('.task-name');return;}
-  if(ds.delTask){g.tasks=g.tasks.filter(t=>t.id!==ds.delTask);save();renderPanel();updateComputed();return;}
+  if(ds.delTask){pushUndo('删除事项');g.tasks=g.tasks.filter(t=>t.id!==ds.delTask);save();renderPanel();updateComputed();persistUndo();return;}
   if('sort' in ds){g.tasks.sort((a,b)=>(b.urgent?1:0)-(a.urgent?1:0));save();renderPanel();toast('有时效的已排到前面');return;}
   if('export' in ds){openExport();return;}
   if('newGoal' in ds){const d=$('#newDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');return;}
@@ -1996,9 +2075,10 @@ document.addEventListener('click',e=>{
   if('closeNew' in ds){$('#newDlg').close();return;}
   if('view' in ds){setAppView(ds.view); if(ds.view==='goal') window.scrollTo({top:0,behavior:'smooth'}); return;}
   if('delGoal' in ds){
-    if(!confirm('删除「'+(g.title||'未命名目标')+'」？删除后无法恢复。'))return;
+    if(!confirm('删除「'+(g.title||'未命名目标')+'」？可在撤销里找回。'))return;
+    pushUndo('删除目标');
     state.goals=state.goals.filter(x=>x.id!==g.id);if(!state.goals.length)state.goals.push(blankGoal());
-    state.currentId=state.goals[0].id;save();renderAll();return;
+    state.currentId=state.goals[0].id;save();renderAll();persistUndo();return;
   }
   if('toggleDone' in ds){
     g.status=g.status==='done'?'active':'done';
@@ -2077,14 +2157,21 @@ document.addEventListener('click',e=>{
     }
     return;
   }
+  if('undo' in ds){ doUndo(); return; }
   if('loadFlow' in ds){
     const has=g.tasks.some(t=>(t.name||'').trim());
-    let replace=true;
-    if(has) replace=confirm('载入标准 8 步流程？\n确定=覆盖当前事项；取消=追加到后面');
+    let mode='append'; // append | replace | cancel
+    if(has){
+      const ok = confirm('载入标准 8 步流程会先追加到现有事项后面。\n\n确定=追加（可撤销）\n取消=不改动');
+      if(!ok){ toast('已取消'); return; }
+      const overwrite = confirm('还要覆盖掉现有事项吗？\n\n确定=覆盖（危险，但可点撤销找回）\n取消=只追加，保留你现在的事项');
+      mode = overwrite ? 'replace' : 'append';
+    }
+    pushUndo(mode==='replace'?'载入标准流程（覆盖）':'载入标准流程（追加）');
     const neu=STANDARD_FLOW.map(s=>mkTask(s.name,'',false,'我',s.est,s.owners.slice(),s.module));
-    if(replace) g.tasks=neu; else g.tasks=g.tasks.concat(neu);
-    save();updateComputed();renderPanel();
-    toast('已载入标准流程 '+neu.length+' 步（提示词库 '+PROMPT_LIB.version+'）');
+    if(mode==='replace') g.tasks=neu; else g.tasks=g.tasks.concat(neu);
+    save();updateComputed();renderPanel();persistUndo();
+    toast((mode==='replace'?'已覆盖为':'已追加')+'标准流程 '+neu.length+' 步 · 右上角「撤销」可恢复');
     return;
   }
 
@@ -2201,12 +2288,13 @@ document.addEventListener('click',e=>{
     if(hasExisting){
       replace=confirm('当前已有填写过的方向，是否覆盖替换？\n点「确定」覆盖替换，点「取消」追加到后面');
     }
+    pushUndo(replace?'批量粘贴方向（覆盖）':'批量粘贴方向（追加）');
     if(replace){
       g.dirs=parsed.map(d=>({id:uid(),name:d.name,goal:d.goal}));
     }else{
       parsed.forEach(d=>g.dirs.push({id:uid(),name:d.name,goal:d.goal}));
     }
-    save();updateComputed();renderPanel();$('#batchDirDlg').close();toast('已成功生成 '+parsed.length+' 个方向');
+    save();updateComputed();renderPanel();persistUndo();$('#batchDirDlg').close();toast('已成功生成 '+parsed.length+' 个方向 · 可撤销');
     return;
   }
   if('batchTasks' in ds){
@@ -2219,9 +2307,10 @@ document.addEventListener('click',e=>{
     const txt=$('#batchText').value;
     const newTasks=parseBatchTasks(txt);
     if(!newTasks.length){toast('请粘贴包含事项的文字');return;}
+    pushUndo('批量粘贴事项');
     if(g.tasks.length===1&&!g.tasks[0].name.trim()){g.tasks=newTasks;}
     else{g.tasks=g.tasks.concat(newTasks);}
-    save();updateComputed();renderPanel();$('#batchDlg').close();toast('已生成 '+newTasks.length+' 件要做的事');
+    save();updateComputed();renderPanel();persistUndo();$('#batchDlg').close();toast('已生成 '+newTasks.length+' 件要做的事 · 可撤销');
     return;
   }
 });
