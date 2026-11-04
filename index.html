@@ -838,21 +838,27 @@ function promptForTask(t){
   if(t.promptOverride!=null && t.promptOverride!=='') return t.promptOverride;
   return PROMPT_BY_ID[t.module].prompt || '';
 }
-function ensureTimerFields(t){
-  if(t.timerAccumMs==null){
+const TIMER_KEY = KEY+'_timers';
+let timerMap = {};
+try{ timerMap = JSON.parse(localStorage.getItem(TIMER_KEY)||'{}')||{}; }catch(e){ timerMap={}; }
+function persistTimers(){
+  try{ localStorage.setItem(TIMER_KEY, JSON.stringify(timerMap)); }catch(e){}
+}
+function timerState(t, create){
+  if(!t||!t.id) return {accumMs:0, startedAt:null};
+  if(!timerMap[t.id]){
+    if(!create) return {accumMs: num(t.actual)?Math.round(num(t.actual)*60000):0, startedAt:null};
     const mins = num(t.actual);
-    t.timerAccumMs = mins ? Math.round(mins*60000) : 0;
+    timerMap[t.id] = {accumMs: mins?Math.round(mins*60000):0, startedAt:null};
   }
-  if(t.timerStartedAt!=null && typeof t.timerStartedAt!=='number'){
-    t.timerStartedAt = +t.timerStartedAt || null;
-  }
+  return timerMap[t.id];
 }
 function taskElapsedMs(t){
-  ensureTimerFields(t);
-  return (t.timerAccumMs||0) + (t.timerStartedAt ? (Date.now()-t.timerStartedAt) : 0);
+  const st = timerState(t, false);
+  return (st.accumMs||0) + (st.startedAt ? (Date.now()-st.startedAt) : 0);
 }
 function fmtElapsed(ms){
-  ms = Math.max(0, ms|0);
+  ms = Math.max(0, Math.floor(Number(ms)||0));
   const s = Math.floor(ms/1000);
   const m = Math.floor(s/60), r = s%60;
   if(m>=60){
@@ -862,27 +868,33 @@ function fmtElapsed(ms){
   return m+':'+String(r).padStart(2,'0');
 }
 function flushTimer(t){
-  ensureTimerFields(t);
-  if(t.timerStartedAt){
-    t.timerAccumMs = (t.timerAccumMs||0) + (Date.now()-t.timerStartedAt);
-    t.timerStartedAt = null;
+  const st = timerState(t, true);
+  if(st.startedAt){
+    st.accumMs = (st.accumMs||0) + (Date.now()-st.startedAt);
+    st.startedAt = null;
   }
-  t.actual = String(Math.max(0, Math.round((t.timerAccumMs||0)/60000)));
+  const ms = Math.max(0, st.accumMs||0);
+  t.actual = ms<=0 ? '' : String(Math.max(1, Math.round(ms/60000)));
+  persistTimers();
 }
 function pauseAllTimers(exceptId){
   const g=cur(); if(!g) return;
   (g.tasks||[]).forEach(x=>{
-    if(!x) return;
+    if(!x||!x.id) return;
     if(exceptId && x.id===exceptId) return;
-    if(x.timerStartedAt) flushTimer(x);
+    if(timerMap[x.id] && timerMap[x.id].startedAt) flushTimer(x);
   });
 }
 function startTimer(t){
-  ensureTimerFields(t);
   pauseAllTimers(t.id);
-  if(!t.timerStartedAt) t.timerStartedAt = Date.now();
+  const st = timerState(t, true);
+  if(!st.startedAt) st.startedAt = Date.now();
+  persistTimers();
 }
 function pauseTimer(t){ flushTimer(t); }
+function isTimerRunning(t){
+  return !!(t && t.id && timerMap[t.id] && timerMap[t.id].startedAt);
+}
 
 function mkDirs(list){return list.map(([name,goal])=>({id:uid(),name,goal}));}
 
@@ -1339,14 +1351,13 @@ setInterval(function tickTimers(){
     if(!g || appView!=='goal' || g.step!==2) return;
     let dirty=false;
     (g.tasks||[]).forEach(t=>{
-      if(!t || !t.timerStartedAt) return;
+      if(!isTimerRunning(t)) return;
       const el=document.querySelector('[data-timer-display="'+t.id+'"]');
       if(el) el.textContent=fmtElapsed(taskElapsedMs(t));
       dirty=true;
     });
-    // 周期性落盘，避免刷新丢秒数
     if(dirty && (!tickTimers._lastSave || Date.now()-tickTimers._lastSave>15000)){
-      (g.tasks||[]).forEach(t=>{ if(t&&t.timerStartedAt){ /* keep running */ }});
+      persistTimers();
       saveNow();
       tickTimers._lastSave=Date.now();
     }
@@ -1620,7 +1631,6 @@ function taskSummary(g){
 }
 
 function taskCard(g,t,i){
-  ensureTimerFields(t);
   const estVal = num(t.est);
   const isCustom = t.est !== '' && !TIME_PRESETS.includes(estVal);
   const owners=taskOwners(t);
@@ -1634,7 +1644,7 @@ function taskCard(g,t,i){
   const tags=owners.map(o=>ownerTagHTML(o)).join('') || '<span class="owner-empty-chip">负责人</span>';
   const timeChips=TIME_PRESETS.map(p=>'<button type="button" class="time-chip'+(estVal===p?' active':'')+'" data-set-est="'+p+'">'+p+'分</button>').join('');
   const hasModule=!!(t.module && PROMPT_BY_ID[t.module]);
-  const running=!!t.timerStartedAt;
+  const running=isTimerRunning(t);
   const elapsed=fmtElapsed(taskElapsedMs(t));
   const hasActual=taskElapsedMs(t)>0 || num(t.actual)>0;
   return '<div class="task'+(t.done?' is-done':'')+(running?' is-timing':'')+'" data-tid="'+t.id+'">'
@@ -1651,7 +1661,7 @@ function taskCard(g,t,i){
     +'<button type="button" class="meta-link" data-toggle-time="'+t.id+'">'+(estVal?estVal+' 分':(t.est!==''?esc(t.est)+' 分':'预估'))+'</button>'
     +'<span class="meta-dot">·</span>'
     +'<button type="button" class="timer-btn'+(running?' is-on':'')+'" data-toggle-timer="'+t.id+'" aria-label="'+(running?'暂停计时':'开始计时')+'">'
-    +(running?'暂停':'开始')
+    +(running?'暂停 ':'开始 ')
     +'<span class="timer-display" data-timer-display="'+t.id+'">'+(hasActual||running?elapsed:'0:00')+'</span>'
     +'</button>'
     +(hasModule?'<span class="meta-dot">·</span><button type="button" class="meta-link" data-open-prompt="'+t.id+'">提示词</button>':'')
@@ -2323,7 +2333,7 @@ document.addEventListener('click',e=>{
     const t=g.tasks.find(x=>x.id===ds.toggleTimer);
     if(t){
       if(t.done){ toast('已完成的事项不用再计时'); return; }
-      if(t.timerStartedAt){ pauseTimer(t); toast('已暂停 · 实计 '+fmt(num(t.actual)||Math.round(taskElapsedMs(t)/60000))); }
+      if(isTimerRunning(t)){ pauseTimer(t); toast('已暂停 · 实计 '+fmt(num(t.actual)||Math.round(taskElapsedMs(t)/60000))); }
       else { startTimer(t); toast('开始计时'); }
       save();updateComputed();renderPanel();
     }
