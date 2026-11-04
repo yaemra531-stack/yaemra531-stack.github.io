@@ -1343,29 +1343,6 @@ function doUndo(){
   normalize(state);
   saveNow();
   renderAll();
-
-// 计时中每秒刷新显示（不全页重绘）
-setInterval(function tickTimers(){
-  try{
-    if(appView!=='goal') return;
-    let dirty=false;
-    Object.keys(timerMap).forEach(id=>{
-      const st=timerMap[id];
-      if(!st || !st.startedAt) return;
-      const el=document.querySelector('[data-timer-display="'+id+'"]');
-      if(el){
-        const ms=(st.accumMs||0)+(Date.now()-st.startedAt);
-        el.textContent=fmtElapsed(ms);
-      }
-      dirty=true;
-    });
-    if(dirty && (!tickTimers._lastSave || Date.now()-tickTimers._lastSave>15000)){
-      persistTimers();
-      tickTimers._lastSave=Date.now();
-    }
-  }catch(e){}
-}, 1000);
-
   toast('已撤销：'+(item.label||'上一步'));
   return true;
 }
@@ -2535,6 +2512,29 @@ function updateBackupInfo(){
 }
 document.addEventListener('toggle',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('done-group'))state.showDone=t.open;},true);
 window.addEventListener('resize',()=>document.querySelectorAll('#panel textarea').forEach(autosize));
+
+// 计时中每秒刷新显示（不全页重绘）
+setInterval(function tickTimers(){
+  try{
+    if(appView!=='goal') return;
+    let dirty=false;
+    Object.keys(timerMap).forEach(id=>{
+      const st=timerMap[id];
+      if(!st || !st.startedAt) return;
+      const el=document.querySelector('[data-timer-display="'+id+'"]');
+      if(el){
+        const ms=(st.accumMs||0)+(Date.now()-st.startedAt);
+        el.textContent=fmtElapsed(ms);
+      }
+      dirty=true;
+    });
+    if(dirty && (!tickTimers._lastSave || Date.now()-tickTimers._lastSave>15000)){
+      persistTimers();
+      tickTimers._lastSave=Date.now();
+    }
+  }catch(e){}
+}, 1000);
+
 renderAll();
 })();
 </script>
