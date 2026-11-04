@@ -1347,18 +1347,20 @@ function doUndo(){
 // 计时中每秒刷新显示（不全页重绘）
 setInterval(function tickTimers(){
   try{
-    const g=cur();
-    if(!g || appView!=='goal' || g.step!==2) return;
+    if(appView!=='goal') return;
     let dirty=false;
-    (g.tasks||[]).forEach(t=>{
-      if(!isTimerRunning(t)) return;
-      const el=document.querySelector('[data-timer-display="'+t.id+'"]');
-      if(el) el.textContent=fmtElapsed(taskElapsedMs(t));
+    Object.keys(timerMap).forEach(id=>{
+      const st=timerMap[id];
+      if(!st || !st.startedAt) return;
+      const el=document.querySelector('[data-timer-display="'+id+'"]');
+      if(el){
+        const ms=(st.accumMs||0)+(Date.now()-st.startedAt);
+        el.textContent=fmtElapsed(ms);
+      }
       dirty=true;
     });
     if(dirty && (!tickTimers._lastSave || Date.now()-tickTimers._lastSave>15000)){
       persistTimers();
-      saveNow();
       tickTimers._lastSave=Date.now();
     }
   }catch(e){}
