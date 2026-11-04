@@ -333,6 +333,10 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .prompt-meta{font-size:12px;color:var(--muted)}
 .version-tag{font-size:12px;color:var(--faint);padding:0 8px}
 .btn[data-undo]:disabled{opacity:.45;cursor:not-allowed}
+.timer-btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:2px 8px;min-height:26px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--muted)}
+.timer-btn:hover{background:var(--surface-2);color:var(--text)}
+.timer-btn.is-on{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:var(--ok);font-weight:600}
+.timer-display{font-variant-numeric:tabular-nums;min-width:2.5em}
 .time-chip{all:unset;box-sizing:border-box;cursor:pointer;padding:2px 8px;min-height:26px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--muted)}
 .time-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .time-chip:hover{background:var(--surface-2);color:var(--text)}
@@ -536,7 +540,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
       <ol>
         <li><b>结果</b>：要达到什么、到什么程度、什么时候、为什么</li>
         <li><b>方向</b>：3–5 个，加起来要够</li>
-        <li><b>要做的事</b>：有时效的先做，预估时间</li>
+        <li><b>要做的事</b>：预估时间，开始/暂停记实际用时</li>
         <li><b>复盘</b>：对比用时，想想重来一遍怎么走</li>
       </ol>
       <p>数据自动实时保存在本设备，换设备前记得点「备份」。</p>
@@ -679,7 +683,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const STEPS=[
   {label:'结果',intro:'先想清楚终点：要达到什么、到什么程度、什么时候、为什么。四个问题都有答案，再去找方向。'},
   {label:'方向',intro:'从哪几个方面做，才能达到结果？3–5 个就够，加起来要够；每个方向写一个小目标。'},
-  {label:'要做的事',intro:'先列出要做的事，点选谁来做与时间，有时效的先做。常规时间直接点选即可。'},
+  {label:'要做的事',intro:'列出要做的事，点选负责人和预估时间；用「开始 / 暂停」记实际用时，勾选完成会自动停表。'},
   {label:'复盘',intro:'做完回来看：预估和实际差多少？哪里能提效、哪些能交给 AI？如果重来一遍，会怎么走？'}
 ];
 const RESULT_Q=[
@@ -834,6 +838,52 @@ function promptForTask(t){
   if(t.promptOverride!=null && t.promptOverride!=='') return t.promptOverride;
   return PROMPT_BY_ID[t.module].prompt || '';
 }
+function ensureTimerFields(t){
+  if(t.timerAccumMs==null){
+    const mins = num(t.actual);
+    t.timerAccumMs = mins ? Math.round(mins*60000) : 0;
+  }
+  if(t.timerStartedAt!=null && typeof t.timerStartedAt!=='number'){
+    t.timerStartedAt = +t.timerStartedAt || null;
+  }
+}
+function taskElapsedMs(t){
+  ensureTimerFields(t);
+  return (t.timerAccumMs||0) + (t.timerStartedAt ? (Date.now()-t.timerStartedAt) : 0);
+}
+function fmtElapsed(ms){
+  ms = Math.max(0, ms|0);
+  const s = Math.floor(ms/1000);
+  const m = Math.floor(s/60), r = s%60;
+  if(m>=60){
+    const h=Math.floor(m/60);
+    return h+':'+String(m%60).padStart(2,'0')+':'+String(r).padStart(2,'0');
+  }
+  return m+':'+String(r).padStart(2,'0');
+}
+function flushTimer(t){
+  ensureTimerFields(t);
+  if(t.timerStartedAt){
+    t.timerAccumMs = (t.timerAccumMs||0) + (Date.now()-t.timerStartedAt);
+    t.timerStartedAt = null;
+  }
+  t.actual = String(Math.max(0, Math.round((t.timerAccumMs||0)/60000)));
+}
+function pauseAllTimers(exceptId){
+  const g=cur(); if(!g) return;
+  (g.tasks||[]).forEach(x=>{
+    if(!x) return;
+    if(exceptId && x.id===exceptId) return;
+    if(x.timerStartedAt) flushTimer(x);
+  });
+}
+function startTimer(t){
+  ensureTimerFields(t);
+  pauseAllTimers(t.id);
+  if(!t.timerStartedAt) t.timerStartedAt = Date.now();
+}
+function pauseTimer(t){ flushTimer(t); }
+
 function mkDirs(list){return list.map(([name,goal])=>({id:uid(),name,goal}));}
 
 function blankGoal(title){
@@ -1281,6 +1331,28 @@ function doUndo(){
   normalize(state);
   saveNow();
   renderAll();
+
+// 计时中每秒刷新显示（不全页重绘）
+setInterval(function tickTimers(){
+  try{
+    const g=cur();
+    if(!g || appView!=='goal' || g.step!==2) return;
+    let dirty=false;
+    (g.tasks||[]).forEach(t=>{
+      if(!t || !t.timerStartedAt) return;
+      const el=document.querySelector('[data-timer-display="'+t.id+'"]');
+      if(el) el.textContent=fmtElapsed(taskElapsedMs(t));
+      dirty=true;
+    });
+    // 周期性落盘，避免刷新丢秒数
+    if(dirty && (!tickTimers._lastSave || Date.now()-tickTimers._lastSave>15000)){
+      (g.tasks||[]).forEach(t=>{ if(t&&t.timerStartedAt){ /* keep running */ }});
+      saveNow();
+      tickTimers._lastSave=Date.now();
+    }
+  }catch(e){}
+}, 1000);
+
   toast('已撤销：'+(item.label||'上一步'));
   return true;
 }
@@ -1548,9 +1620,9 @@ function taskSummary(g){
 }
 
 function taskCard(g,t,i){
+  ensureTimerFields(t);
   const estVal = num(t.est);
   const isCustom = t.est !== '' && !TIME_PRESETS.includes(estVal);
-  const opts='<option value="">未指定方向</option>'+namedDirs(g).map(d=>'<option value="'+d.id+'"'+(t.dirId===d.id?' selected':'')+'>'+esc(d.name)+'</option>').join('');
   const owners=taskOwners(t);
   const ownerOpen=!!t._ownerOpen;
   const timeOpen=!!t._timeOpen;
@@ -1562,9 +1634,12 @@ function taskCard(g,t,i){
   const tags=owners.map(o=>ownerTagHTML(o)).join('') || '<span class="owner-empty-chip">负责人</span>';
   const timeChips=TIME_PRESETS.map(p=>'<button type="button" class="time-chip'+(estVal===p?' active':'')+'" data-set-est="'+p+'">'+p+'分</button>').join('');
   const hasModule=!!(t.module && PROMPT_BY_ID[t.module]);
-  return '<div class="task'+(t.done?' is-done':'')+'" data-tid="'+t.id+'">'
+  const running=!!t.timerStartedAt;
+  const elapsed=fmtElapsed(taskElapsedMs(t));
+  const hasActual=taskElapsedMs(t)>0 || num(t.actual)>0;
+  return '<div class="task'+(t.done?' is-done':'')+(running?' is-timing':'')+'" data-tid="'+t.id+'">'
     +'<div class="task-top">'
-    +'<label class="done-box" title="完成"><input type="checkbox" data-t="done"'+(t.done?' checked':'')+' aria-label="完成"></label>'
+    +'<label class="done-box" title="完成（勾选会自动停表）"><input type="checkbox" data-t="done"'+(t.done?' checked':'')+' aria-label="完成"></label>'
     +'<textarea rows="1" class="task-name" data-t="name" placeholder="要做什么？" aria-label="事项">'+esc(t.name)+'</textarea>'
     +'<button class="icon-btn" data-del-task="'+t.id+'" aria-label="删除这件事">×</button>'
     +'</div>'
@@ -1573,20 +1648,18 @@ function taskCard(g,t,i){
     +'<button type="button" class="owner-chip-btn" data-toggle-owner="'+t.id+'" aria-label="更换负责人"><span class="owner-tags">'+tags+'</span><span class="chip-caret">'+(ownerOpen?'▴':'▾')+'</span></button>'
     +(t.ownerNote?'<span class="muted small">'+esc(t.ownerNote)+'</span>':'')
     +'<span class="meta-dot">·</span>'
-    +'<button type="button" class="meta-link" data-toggle-time="'+t.id+'">'+(estVal?estVal+' 分':(t.est!==''?esc(t.est)+' 分':'时间'))+'</button>'
+    +'<button type="button" class="meta-link" data-toggle-time="'+t.id+'">'+(estVal?estVal+' 分':(t.est!==''?esc(t.est)+' 分':'预估'))+'</button>'
     +'<span class="meta-dot">·</span>'
-    +'<button type="button" class="meta-link faint" data-toggle-more="'+t.id+'">'+(t._more?'收起':'更多')+'</button>'
+    +'<button type="button" class="timer-btn'+(running?' is-on':'')+'" data-toggle-timer="'+t.id+'" aria-label="'+(running?'暂停计时':'开始计时')+'">'
+    +(running?'暂停':'开始')
+    +'<span class="timer-display" data-timer-display="'+t.id+'">'+(hasActual||running?elapsed:'0:00')+'</span>'
+    +'</button>'
     +(hasModule?'<span class="meta-dot">·</span><button type="button" class="meta-link" data-open-prompt="'+t.id+'">提示词</button>':'')
+    +(t.module?'<span class="meta-dot">·</span><span class="muted small">'+esc(t.module)+'</span>':'')
     +'</div>'
     +(ownerOpen?('<div class="owner-expand">'+ownerPills+'</div>'):'')
     +(timeOpen?('<div class="time-expand">'+timeChips
       +'<span class="time-custom-wrap"><input type="number" min="0" step="5" class="time-custom-input" data-t="est" placeholder="其他" value="'+(isCustom?esc(t.est):'')+'"><em>分</em></span>'
-      +'</div>'):'')
-    +(t._more?('<div class="task-more-row">'
-      +'<label class="meta"><span>对应方向</span><select data-t="dirId">'+opts+'</select></label>'
-      +'<label class="meta"><span>实际用时</span><span class="num-wrap"><input type="number" min="0" step="5" inputmode="numeric" data-t="actual" value="'+esc(t.actual)+'" placeholder="—"><em>分钟</em></span></label>'
-      +'<label class="chip"><input type="checkbox" data-t="urgent"'+(t.urgent?' checked':'')+'>有时效</label>'
-      +(t.module?'<span class="muted small">模块 '+esc(t.module)+'</span>':'')
       +'</div>'):'')
     +'</div>'
     +'</div>';
@@ -2246,6 +2319,16 @@ document.addEventListener('click',e=>{
     }
     return;
   }
+  if('toggleTimer' in ds){
+    const t=g.tasks.find(x=>x.id===ds.toggleTimer);
+    if(t){
+      if(t.done){ toast('已完成的事项不用再计时'); return; }
+      if(t.timerStartedAt){ pauseTimer(t); toast('已暂停 · 实计 '+fmt(num(t.actual)||Math.round(taskElapsedMs(t)/60000))); }
+      else { startTimer(t); toast('开始计时'); }
+      save();updateComputed();renderPanel();
+    }
+    return;
+  }
   if('toggleTime' in ds){
     const t=g.tasks.find(x=>x.id===ds.toggleTime);
     if(t){
@@ -2363,8 +2446,17 @@ document.addEventListener('change',e=>{
   const tEl=el.closest('[data-tid]');
   if(tEl&&el.dataset.t&&(el.type==='checkbox'||el.tagName==='SELECT')){
     const t=g.tasks.find(x=>x.id===tEl.dataset.tid);if(!t)return;
+    if(el.dataset.t==='done'){
+      t.done = !!el.checked;
+      if(t.done){
+        flushTimer(t); // 勾选完成 = 停表并写入实际分钟
+        toast(num(t.actual)?'完成 · 实计 '+fmt(num(t.actual)):'已完成');
+      }
+      tEl.classList.toggle('is-done',t.done);
+      save();updateComputed();renderPanel();
+      return;
+    }
     t[el.dataset.t]=el.type==='checkbox'?el.checked:el.value;
-    if(el.dataset.t==='done')tEl.classList.toggle('is-done',el.checked);
     save();updateComputed();
   }
 });
