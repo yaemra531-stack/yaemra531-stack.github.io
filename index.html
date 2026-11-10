@@ -644,6 +644,21 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
     <button class="btn primary" data-do-batch>一键添加事项</button>
   </div>
 </dialog>
+<dialog id="batchReviewDlg" aria-labelledby="batchReviewTitle">
+  <div class="dlg-head">
+    <div id="batchReviewTitle">📋 批量粘贴复盘</div>
+    <p>直接粘贴 AI 输出或整理好的复盘内容，自动识别提效、AI 协作、重来路线与感受：</p>
+  </div>
+  <div class="dlg-body">
+    <textarea id="batchReviewText" placeholder="直接粘贴复盘内容，例如：&#10;1. 哪里可以提效：配音直接导入换好行的字幕，剪辑直接用 ChatCut 更快更自然。&#10;2. 哪些可以交给 AI：AI 负责八九成执行，我负责做判断定目标。&#10;3. 如果重来一遍，我会怎么走：1. Claude 写稿 -> 2. 匹配素材 -> 3. 剪映配音 -> 4. ChatCut剪辑 -> 5. 发布&#10;4. 感受：第一次做超时正常，配音和剪辑的问题事先想不到。&#10;&#10;（也支持无序号、Markdown 列表或多段纯文本）"></textarea>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn" data-close-batch-review>取消</button>
+    <button class="btn ghost" data-paste-clipboard-review title="直接读取系统剪贴板">📋 粘贴剪贴板</button>
+    <button class="btn ghost" data-copy-cur-review-in-dlg title="将当前已填写的复盘填入上方文本框方便查看与复制">载入当前复盘</button>
+    <button class="btn primary" data-do-batch-review>一键填充复盘</button>
+  </div>
+</dialog>
 <dialog id="imgDlg" class="img-modal" aria-label="截图放大预览">
   <div class="img-modal-content">
     <div class="img-modal-head">
@@ -692,7 +707,7 @@ const STEPS=[
   {label:'结果',intro:'先想清楚终点：要达到什么、到什么程度、什么时候、为什么。四个问题都有答案，再去找方向。'},
   {label:'方向',intro:'从哪几个方面做，才能达到结果？3–5 个就够，加起来要够；每个方向写一个小目标。'},
   {label:'要做的事',intro:'列出要做的事，点选负责人和预估时间；用「开始 / 暂停」记实际用时，勾选完成会自动停表。'},
-  {label:'复盘',intro:'做完回来看：预估和实际差多少？哪里能提效、哪些能交给 AI？如果重来一遍，会怎么走？'}
+  {label:'复盘',intro:'做完回来看：哪里能提效、哪些能交给 AI？如果重来一遍，会怎么走？'}
 ];
 const RESULT_Q=[
   ['what','要达到什么？','做完后看得见的结果','例：发布第 2 期小红书视频'],
@@ -1852,37 +1867,108 @@ function parseBatchTasks(text){
   return tasks;
 }
 
-function compareHTML(g){
-  const ts=named(g),est=ts.reduce((a,t)=>a+num(t.est),0),act=ts.reduce((a,t)=>a+num(t.actual),0);
-  const legend=(e,a)=>'<div class="legend"><span><i class="lg est"></i>预估 '+fmt(e)+'</span><span><i class="lg act"></i>实际 '+fmt(a)+'</span></div>';
-  const row=(name,e,a,max)=>'<div class="compare-row"><span class="compare-name">'+esc(name)+'</span><div class="bars">'
-      +'<div class="bar-line"><span><i class="bar est" style="width:'+(e/max*100)+'%"></i></span><span>预估 '+(e?fmt(e):'—')+'</span></div>'
-      +'<div class="bar-line"><span><i class="bar act" style="width:'+(a/max*100)+'%"></i></span><span>实际 '+(a?fmt(a):'—')+'</span></div></div></div>';
-  if(!est&&!act&&g.totals){const e=g.totals.est,a=g.totals.act;return '<div class="compare-head"><div><b>预估 vs 实际</b><div class="muted small">实际是预估的 '+(a/e).toFixed(1)+' 倍（'+esc(g.totals.label)+'）</div></div>'+legend(e,a)+'</div>'+row('整体',e,a,Math.max(e,a,1));}
-  if(!est&&!act)return '<div class="compare-empty"><b>预估 vs 实际</b><p class="muted">在「要做的事」里点选预估和实际用时，这里会自动对比，看出哪一步最超时。</p><button class="btn" data-goto="2">去填用时</button></div>';
+function parseBatchReview(text){
+  const res = { efficiency: '', ai: '', redo: '', feeling: '' };
+  if(!text || !text.trim()) return res;
 
-  const valid=new Set(namedDirs(g).map(d=>d.id));
-  let groups=[];
-  if(namedDirs(g).length>0){
-    groups=namedDirs(g).map(d=>({name:d.name,id:d.id})).concat([{name:'通用',id:''}]).map(x=>{
-      const list=ts.filter(t=>x.id?t.dirId===x.id:!valid.has(t.dirId));
-      return {name:x.name,est:list.reduce((a,t)=>a+num(t.est),0),act:list.reduce((a,t)=>a+num(t.actual),0)};
-    }).filter(x=>x.est||x.act);
-  } else {
-    groups=['我','你','我 + 你'].map(w=>{
-      const list=ts.filter(t=>t.who===w);
-      const name = w==='你'?'你 (AI)':w;
-      return {name,est:list.reduce((a,t)=>a+num(t.est),0),act:list.reduce((a,t)=>a+num(t.actual),0)};
-    }).filter(x=>x.est||x.act);
+  const raw = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = raw.split('\n');
+
+  const patterns = [
+    {
+      key: 'efficiency',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:1[.\u3001]\s*)?(?:哪里可以提效|哪里能提效|如何提效|提效分析|提效点|提效空间|提效|效率改进|哪一步最花时间(?:[，,\s]+下次怎么更快)?|下次怎么更快)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:1[.\u3001]\s*)?(?:哪里可以提效|哪里能提效|如何提效|提效分析|提效点|提效空间|提效|效率改进|哪一步最花时间(?:[，,\s]+下次怎么更快)?|下次怎么更快)[？?]?(?:\s*哪一步最花时间，下次怎么更快)?(?:\*\*)?$/i
+    },
+    {
+      key: 'ai',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:2[.\u3001]\s*)?(?:哪些可以交给\s*AI|哪些能交给\s*AI|交给\s*AI|交给人工智能|AI\s*替代|AI\s*协同|工具替代|哪些事\s*AI\s*能做)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:2[.\u3001]\s*)?(?:哪些可以交给\s*AI|哪些能交给\s*AI|交给\s*AI|交给人工智能|AI\s*替代|AI\s*协同|工具替代|哪些事\s*AI\s*能做)[？?]?(?:\s*哪些事 AI 能做，或者用现成工具就行)?(?:\*\*)?$/i
+    },
+    {
+      key: 'redo',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:3[.\u3001]\s*)?(?:如果重来(?:一遍)?(?:[，,\s]+(?:我(?:会)?怎么走|路线))?|重来一遍|重走路线|重做路径|重来时的路线|下次怎么走|我会怎么走)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:3[.\u3001]\s*)?(?:如果重来(?:一遍)?(?:[，,\s]+(?:我(?:会)?怎么走|路线))?|重来一遍|重走路线|重做路径|重来时的路线|下次怎么走|我会怎么走)[？?]?(?:\s*按顺序写下重来时的路线)?(?:\*\*)?$/i
+    },
+    {
+      key: 'feeling',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:4[.\u3001]\s*)?(?:做的时候的感受|个人感受|做后感受|感受与反思|心得体会|感受(?:（可选）|\(可选\))?|心得|反思)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:4[.\u3001]\s*)?(?:做的时候的感受|个人感受|做后感受|感受与反思|心得体会|感受(?:（可选）|\(可选\))?|心得|反思)[？?]?(?:\s*卡住、顺利、意外的地方)?(?:\*\*)?$/i
+    }
+  ];
+
+  let currentKey = null;
+  let matchedAny = false;
+
+  for(let i = 0; i < lines.length; i++){
+    let line = lines[i].trim();
+    if(!line){
+      if(currentKey && res[currentKey] && !res[currentKey].endsWith('\n')) res[currentKey] += '\n';
+      continue;
+    }
+
+    let foundPure = null;
+    for(const p of patterns){
+      if(p.pureLabelRegex.test(line)){
+        foundPure = p.key;
+        break;
+      }
+    }
+    if(foundPure){
+      currentKey = foundPure;
+      matchedAny = true;
+      continue;
+    }
+
+    let foundKey = null;
+    let content = '';
+    for(const p of patterns){
+      if(p.regex.test(line)){
+        foundKey = p.key;
+        content = line.replace(p.regex, '').replace(/^[:：\s—–-]+/, '').trim();
+        break;
+      }
+    }
+
+    if(foundKey){
+      currentKey = foundKey;
+      matchedAny = true;
+      res[currentKey] = content;
+    } else if(currentKey){
+      res[currentKey] = res[currentKey] ? (res[currentKey].trimEnd() + '\n' + line) : line;
+    }
   }
-  const max=Math.max(1,...groups.map(x=>Math.max(x.est,x.act)));
-  let line='';
-  if(est&&act){const r=act/est;line=r>=1.05?'实际是预估的 '+r.toFixed(1)+' 倍':(r<=0.95?'比预估少用了 '+fmt(est-act):'和预估基本一致');}
-  else line=act?'还没填预估时间':'还没填实际用时';
-  const worst=groups.filter(x=>x.est&&x.act&&x.act>x.est).sort((a,b)=>(b.act-b.est)-(a.act-a.est))[0];
-  if(worst)line+='；超时最多：'+esc(worst.name)+'（多了 '+fmt(worst.act-worst.est)+'）';
-  return '<div class="compare-head"><div><b>预估 vs 实际</b><div class="muted small">'+line+'</div></div>'+legend(est,act)+'</div>'
-    +groups.map(x=>row(x.name,x.est,x.act,max)).join('');
+
+  for(const k in res){
+    res[k] = res[k].trim();
+  }
+
+  if(!matchedAny){
+    const nonEmpties = lines.map(l => l.trim().replace(/^([0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*/, '').trim()).filter(Boolean);
+    if(nonEmpties.length >= 1){
+      const keys = ['efficiency', 'ai', 'redo', 'feeling'];
+      for(let i = 0; i < Math.min(nonEmpties.length, 4); i++){
+        res[keys[i]] = nonEmpties[i];
+      }
+    }
+  }
+
+  return res;
+}
+
+function formatReviewText(g){
+  const r = g.review || {};
+  return REVIEW_Q.map(([k,l])=>{
+    const title = l.replace(/[？?（可选）]/g, '');
+    const val = (r[k] || '').trim();
+    return '- **' + title + '**：' + (val || '（未填）');
+  }).join('\n');
+}
+
+function copyReview(g){
+  const hasVal = REVIEW_Q.some(([k])=>(g.review[k]||'').trim());
+  if(!hasVal){ toast('当前复盘内容尚未填写'); return; }
+  copyTextToClipboard(formatReviewText(g), '✅ 已复制复盘内容到剪贴板！');
 }
 function autosize(el){el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px';}
 function renderPanel(){
@@ -1929,10 +2015,11 @@ function renderPanel(){
       +'<button class="btn primary" data-add-task>+ 添加一件事</button>';
   }
   if(s===3){
-    h+='<div class="card compare" id="compare">'+compareHTML(g)+'</div>'
-      +'<div class="review-header-bar">'
+    h+='<div class="review-header-bar">'
       +'<div><b>深度复盘与提效资产</b><div class="muted small">已支持 Markdown 实时排版，直接按 Cmd+V 粘贴截图</div></div>'
       +'<div class="review-header-actions">'
+      +'<button type="button" class="btn ghost" data-batch-review>📋 批量粘贴复盘</button>'
+      +'<button type="button" class="btn ghost" data-copy-review title="一键复制所有复盘内容">📄 复制复盘</button>'
       +'<button type="button" class="btn small ghost" data-toggle-all-review="preview">✨ 全部预览</button>'
       +'<button type="button" class="btn small ghost" data-toggle-all-review="edit">✏️ 全部编辑</button>'
       +'</div>'
@@ -2050,7 +2137,6 @@ function renderAll(){const vv=$('#libVersion'); if(vv) vv.textContent='· 提示
 function updateComputed(){
   const g=cur();renderStepper();renderSidebar();
   const ts=$('#taskSummary');if(ts)ts.innerHTML=taskSummary(g);
-  const c=$('#compare');if(c)c.innerHTML=compareHTML(g);
   const dc=$('#dirCount');if(dc){dc.textContent=dirCountText(g);dc.className='pill '+(dirOk(g)?'ok':'warn');}
 }
 function goStep(i){cur().step=i;save();renderStepper();renderPanel();renderNav();}
@@ -2569,6 +2655,51 @@ document.addEventListener('click',e=>{
     save();updateComputed();renderPanel();persistUndo();$('#batchDlg').close();toast('已生成 '+newTasks.length+' 件要做的事 · 可撤销');
     return;
   }
+  if('batchReview' in ds){
+    $('#batchReviewText').value='';
+    const d=$('#batchReviewDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');
+    return;
+  }
+  if('closeBatchReview' in ds){$('#batchReviewDlg').close();return;}
+  if('pasteClipboardReview' in ds){
+    if(navigator.clipboard && navigator.clipboard.readText){
+      navigator.clipboard.readText().then(text=>{
+        if(text){$('#batchReviewText').value=text;toast('已从剪贴板粘贴');}
+        else{toast('剪贴板中没有文本内容');}
+      }).catch(()=>{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');});
+    }else{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');}
+    return;
+  }
+  if('copyCurReviewInDlg' in ds){
+    const curTxt=formatReviewText(g);
+    $('#batchReviewText').value=curTxt;
+    toast('已载入当前复盘，可直接编辑或全选复制');
+    return;
+  }
+  if('doBatchReview' in ds){
+    const txt=$('#batchReviewText').value;
+    const parsed=parseBatchReview(txt);
+    const hasAny=Boolean(parsed.efficiency||parsed.ai||parsed.redo||parsed.feeling);
+    if(!hasAny){toast('未能识别到复盘内容，请粘贴文本');return;}
+    const hasExisting=REVIEW_Q.some(([k])=>(g.review[k]||'').trim());
+    let replace=true;
+    if(hasExisting){
+      replace=confirm('当前已有填写过的复盘，是否覆盖替换？\n点「确定」覆盖替换，点「取消」仅填补未填项');
+    }
+    pushUndo(replace?'批量粘贴复盘（覆盖）':'批量粘贴复盘（填补）');
+    let filledCount=0;
+    REVIEW_Q.forEach(([k])=>{
+      if(replace){
+        if(parsed[k] !== undefined && parsed[k] !== '') { g.review[k]=parsed[k]; filledCount++; }
+      }else{
+        if(!g.review[k].trim() && parsed[k]){ g.review[k]=parsed[k]; filledCount++; }
+      }
+    });
+    save();updateComputed();renderPanel();persistUndo();$('#batchReviewDlg').close();
+    toast('已成功填入 '+filledCount+' 项复盘内容 · 可撤销');
+    return;
+  }
+  if('copyReview' in ds){copyReview(g);return;}
 });
 
 document.addEventListener('input',e=>{
