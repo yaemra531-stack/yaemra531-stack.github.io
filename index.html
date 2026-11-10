@@ -595,15 +595,6 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   <div class="dlg-body"><textarea id="exportText" readonly aria-label="导出内容"></textarea></div>
   <div class="dlg-foot"><button class="btn" data-close>关闭</button><button class="btn primary" data-copy>复制</button></div>
 </dialog>
-<dialog id="newDlg" aria-labelledby="newTitle">
-  <div class="dlg-head"><div id="newTitle">新建目标</div><p>可以从空白开始，也可以套用做过的经验。</p></div>
-  <div class="dlg-body choices">
-    <button class="choice" data-new-blank><b>空白目标</b><span>从结果开始，一步步填。</span></button>
-    <button class="choice" data-new-video><b>视频一期</b><span>多 Agent 工作流模板：结果、6 个方向、按负责人拆好的要做的事。</span></button>
-    <button class="choice" data-new-vlog><b>用短视频协作经验新建</b><span>5 个方向和做法已填好，包含预估用时。</span></button>
-  </div>
-  <div class="dlg-foot"><button class="btn" data-close-new>取消</button></div>
-</dialog>
 <dialog id="backupDlg" aria-labelledby="backupTitle">
   <div class="dlg-head"><div id="backupTitle">备份与找回</div><p>数据保存在这个浏览器里。支持导出备份，也支持一键扫描找回历史草稿。</p></div>
   <div class="dlg-body choices">
@@ -797,14 +788,6 @@ const OWNER_KEYWORD_RULES=[
   {owner:'GPT', re:/封面|GPT/},
   {owner:'我', re:/录制|出镜|拍板|发布|验收|手机看|录口播/}
 ];
-const VIDEO_EPISODE_DIRS=[
-  ['选题对准她','每天选题卡对准她关心的事，不跑偏'],
-  ['新闻讲准','事实卡核完再讲，不用二手数字'],
-  ['文案层层递进','观点 3 选 1、钩子 5 选 1，写稿后三步审'],
-  ['动画有质感','分镜交给制片，动画交给 Opus'],
-  ['声音和发布不出错','口播验收、21:00 前发出'],
-  ['AI 多干并行','情报员/总编导/核查/制片/外部工具并行，我只拍板和出镜']
-];
 const VLOG_DIRS=[
   ['故事和旁白','给 Claude 背景和初始想法，快速出初版，迭代两三版定稿'],
   ['素材','Codex 按稿子分类、匹配素材并重新命名'],
@@ -963,47 +946,6 @@ function seed(){
     feeling:'第一次做超时正常，配音和剪辑的问题事先想不到。'};
 
   return {goals:[g1, demo], currentId:g1.id};
-}
-
-function vlogTemplate(){
-  const g=blankGoal('新短视频 / Vlog 协作');
-  g.note='经验：AI 负责执行，你负责判断。说观点/素材由 AI(你) 配合整理，写稿提词、录制自己做，剪辑交给 ChatCut。';
-  g.dirs=mkDirs(VLOG_DIRS);
-  const v=g.dirs;
-  g.tasks=[
-    mkTask('核实新闻/素材背景',v[0].id,false,'我','10'),
-    mkTask('说观点与结构建议',v[0].id,false,'你','15'),
-    mkTask('写稿，整理成提词器版（约300字）',v[0].id,false,'我','10'),
-    mkTask('截图和整理素材清单',v[1].id,false,'你','10'),
-    mkTask('照提词器录制音频/视频',v[2].id,false,'我','30'),
-    mkTask('ChatCut 剪辑：加字幕插图',v[3].id,false,'你','45'),
-    mkTask('封面、标题、正文（给3个选1个）',v[4].id,false,'我 + 你','20'),
-    mkTask('发布',v[4].id,false,'我','')];
-  return g;
-}
-
-function videoEpisodeTemplate(n){
-  n = n || 'N';
-  const g=blankGoal('第 '+n+' 期视频');
-  g.note='套用「视频一期」：多 Agent 工作流。文件交接目录 /workspace/redu/第'+n+'期/。';
-  g.result={
-    what:'发出第 '+n+' 期视频和一张收藏卡',
-    level:'发了就是 1（发出即完成）',
-    when:'21:00 前',
-    why:'按多 Agent 工作流日更，先跑通再复盘写进《编导宪法》'
-  };
-  g.dirs=mkDirs(VIDEO_EPISODE_DIRS);
-  const v=g.dirs;
-  g.tasks=[
-    mkTask('开第 '+n+' 期：看选题 → 拍板，定收藏卡/观点/钩子',v[0].id,true,'我 + 你','25','总编导'),
-    mkTask('第 '+n+' 期核查 → 事实卡',v[1].id,true,'你','20','核查实测员'),
-    mkTask('写稿 + 三步审稿 → 定稿',v[2].id,false,'你','40','总编导'),
-    mkTask('出分镜和剪辑要求 → 转 Opus/Codex，封面收藏卡',v[3].id,false,'你','50','制片'),
-    mkTask('录口播 → 样片 → 合成 → 听一遍/手机看一遍',v[4].id,true,'我','45','我'),
-    mkTask('21:00 前发布；次日复盘写进《编导宪法》',v[4].id,true,'我','25','我')
-  ];
-  g.enough=true;
-  return g;
 }
 
 function ownerTagHTML(owner){
@@ -2050,7 +1992,7 @@ function renderToday(){
     +'<div class="today-list">'+todayRowsHTML(g,false)+'</div>'
     +'<div class="howto-actions">'
     +'<button class="btn primary" data-view="goal">回到这一期</button>'
-    +'<button class="btn" data-new-video-from-howto>新建视频一期</button>'
+    +'<button class="btn" data-new-goal>+ 新建目标</button>'
     +'</div></div>';
   const el=$('#todayPanel');
   if(el){el.innerHTML=built;el.hidden=appView!=='today';}
@@ -2066,7 +2008,7 @@ function renderHowto(){
     +'<section class="howto-section"><h2>'+esc(C.pipelineTitle)+'</h2><div class="howto-steps">'+steps+'</div></section>'
     +'<div class="howto-note">'+esc(C.fileNote).replace('/workspace/redu/第N期/','<code>/workspace/redu/第N期/</code>')+'</div>'
     +'<div class="howto-actions">'
-    +'<button class="btn primary" data-new-video-from-howto>用「视频一期」模板新建</button>'
+    +'<button class="btn primary" data-new-goal>+ 新建目标</button>'
     +'<button class="btn" data-view="goal">回到目标</button>'
     +'</div></div>';
   const el=$('#howtoPanel');
@@ -2298,28 +2240,20 @@ document.addEventListener('click',e=>{
   if(ds.delTask){pushUndo('删除事项');g.tasks=g.tasks.filter(t=>t.id!==ds.delTask);save();renderPanel();updateComputed();persistUndo();return;}
   if('sort' in ds){g.tasks.sort((a,b)=>(b.urgent?1:0)-(a.urgent?1:0));save();renderPanel();toast('有时效的已排到前面');return;}
   if('export' in ds){openExport();return;}
-  if('newGoal' in ds){const d=$('#newDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');return;}
-  if('newBlank' in ds||'newVlog' in ds||'newVideo' in ds||'newVideoFromHowto' in ds){
-    let ng;
-    const isVideo=('newVideo' in ds)||('newVideoFromHowto' in ds);
-    if(isVideo){
-      ng=videoEpisodeTemplate('N');
-    }else if('newVlog' in ds){
-      ng=vlogTemplate();
-    }else{
-      ng=blankGoal();
-    }
-    const dlg=$('#newDlg'); if(dlg&&dlg.open) dlg.close();
+  if('newGoal' in ds || 'newBlank' in ds || 'newVideo' in ds || 'newVideoFromHowto' in ds){
+    pushUndo('新建目标');
+    const ng=blankGoal();
     appView='goal';
-    state.goals.unshift(ng);state.currentId=ng.id;save();renderAll();
-    const t=$('#goalTitle'); if(t){t.focus();t.select();}
-    if(isVideo){
-      toast('已套用「视频一期」模板，把标题里的 N 改成期数即可');
-      // 顶部已有「今天跟谁干什么」路线条
-    }
+    state.goals.unshift(ng);
+    state.currentId=ng.id;
+    save();
+    renderAll();
+    persistUndo();
+    const t=$('#goalTitle');
+    if(t){t.focus();t.select();}
+    toast('已新建空白目标 · 可直接填写');
     return;
   }
-  if('closeNew' in ds){$('#newDlg').close();return;}
   if('view' in ds){setAppView(ds.view); if(ds.view==='goal') window.scrollTo({top:0,behavior:'smooth'}); return;}
   if('delGoal' in ds){
     if(!confirm('删除「'+(g.title||'未命名目标')+'」？可在撤销里找回。'))return;
