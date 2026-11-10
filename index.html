@@ -328,94 +328,18 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .pill-btn.owner-pill.active.owner-GPT{background:#0E7490;border-color:#0E7490;color:#fff}
 .pill-btn.owner-pill.active.owner-ChatCut{background:#BE185D;border-color:#BE185D;color:#fff}
 .owner-tags{display:inline-flex;gap:4px;flex-wrap:wrap;align-items:center}
-.prompt-dlg-body{display:flex;flex-direction:column;gap:10px}
-.prompt-dlg-body textarea{min-height:320px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-.prompt-meta{font-size:12px;color:var(--muted)}
 .version-tag{font-size:12px;color:var(--faint);padding:0 8px}
 .btn[data-undo]:disabled{opacity:.45;cursor:not-allowed}
-.timer-btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:2px 8px;min-height:26px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--muted)}
-.timer-btn:hover{background:var(--surface-2);color:var(--text)}
-.timer-btn.is-on{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:var(--ok);font-weight:600}
-.timer-display{font-variant-numeric:tabular-nums;min-width:2.5em}
 .time-chip{all:unset;box-sizing:border-box;cursor:pointer;padding:2px 8px;min-height:26px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--muted)}
 .time-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .time-chip:hover{background:var(--surface-2);color:var(--text)}
 .time-chip.active:hover{background:var(--accent);color:#fff}
 .task-top .owner-tag{margin-top:8px;margin-right:4px}
 
-/* How-to page */
-.nav-howto{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);min-height:44px}
-.nav-howto:hover{background:var(--surface-2);color:var(--text)}
-.nav-howto[aria-current="true"]{background:var(--bg);box-shadow:0 0 0 1px var(--border);color:var(--text)}
-.nav-howto .nav-ico{width:22px;height:22px;border-radius:6px;background:var(--accent-weak);color:var(--accent-text);display:grid;place-items:center;font-size:12px;font-weight:700}
 .side-sep{height:1px;background:var(--border);margin:4px 0}
-.howto-wrap{display:flex;flex-direction:column;gap:28px}
-.howto-hero h1{font-size:28px;margin:0 0 6px;line-height:1.3}
-.howto-hero p{margin:0;color:var(--muted);font-size:15px}
-.howto-section h2{font-size:18px;margin:0 0 12px}
-.howto-section > .muted{margin:-4px 0 14px;font-size:13px}
-.howto-team{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
-.howto-card{border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
-.howto-card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.howto-card p{margin:0;font-size:14px;color:var(--muted);line-height:1.55}
-.howto-steps{display:flex;flex-direction:column;gap:10px;counter-reset:howto-step}
-.howto-step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:start;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;background:var(--bg)}
-.howto-step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;margin-top:2px}
-.howto-step h3{margin:0 0 4px;font-size:15px;line-height:1.4}
-.howto-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.55}
-.howto-note{padding:12px 16px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);font-size:14px;color:var(--muted)}
-.howto-note code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:var(--surface-2);padding:1px 6px;border-radius:4px;border:1px solid var(--border);color:var(--text)}
-.howto-actions{display:flex;flex-wrap:wrap;gap:8px}
-.app.view-howto .goal-only{display:none}
-.app.view-howto .howto-only{display:block}
-.app:not(.view-howto) .howto-only{display:none}
-.app.view-today .goal-only{display:none}
-.app.view-today .howto-only{display:none}
-.app.view-today .today-only{display:block}
-.app:not(.view-today) .today-only{display:none}
-.howto-panel{padding-bottom:24px}
-@media (max-width:860px){
-  .howto-hero h1{font-size:24px}
-  .app.view-goal .mobile-howto, .app:not(.view-howto):not(.view-today) .mobile-howto{display:inline-flex !important}
-  .app:not(.view-howto):not(.view-today) #mobileToday{display:inline-flex !important}
-  #mobileToday{display:none}
-  .app.view-howto .howto-only, .app.view-today .today-only, .app.view-howto .howto-only.today-only, .app.view-today .howto-only.today-only{display:inline-flex !important}
-}
-.mobile-howto{display:none}
 @media (max-width:640px){
-  .howto-step{grid-template-columns:28px minmax(0,1fr);padding:12px}
-  .howto-team{grid-template-columns:minmax(0,1fr)}
   .owner-pills .pill-btn{padding:3px 7px;font-size:11px}
 }
-
-
-/* Today route */
-.nav-today{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);min-height:44px}
-.nav-today:hover{background:var(--surface-2);color:var(--text)}
-.nav-today[aria-current="true"]{background:var(--bg);box-shadow:0 0 0 1px var(--border);color:var(--text)}
-.nav-today .nav-ico{width:22px;height:22px;border-radius:6px;background:var(--ok-weak);color:var(--ok);display:grid;place-items:center;font-size:12px;font-weight:700}
-.today-wrap{display:flex;flex-direction:column;gap:20px}
-.today-hero h1{font-size:26px;margin:0 0 6px;line-height:1.3}
-.today-hero p{margin:0;color:var(--muted);font-size:14px}
-.today-list{display:flex;flex-direction:column;gap:8px}
-.today-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;background:var(--bg);min-height:52px}
-.today-row.is-done{opacity:.72;background:var(--surface)}
-.today-row.is-done .today-main{text-decoration:line-through;color:var(--muted)}
-.today-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px;font-size:14px;line-height:1.45;min-width:0}
-.today-main .phrase{font-weight:500;color:var(--text)}
-.today-main .action{color:var(--muted)}
-.today-actions{display:flex;gap:6px;flex-shrink:0}
-.today-actions .btn{min-height:34px;padding:0 10px;font-size:12px}
-.today-strip{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:0 0 20px;background:var(--surface)}
-.today-strip-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.today-strip-head b{font-size:14px}
-.today-strip .today-list{gap:6px}
-.today-strip .today-row{padding:8px 10px;min-height:44px}
-.app.view-today .goal-only{display:none}
-.app.view-today .howto-only{display:none}
-.app.view-today .today-only{display:block}
-.app:not(.view-today) .today-only{display:none}
-.app.view-howto .today-only{display:none}
 .storage-diag{font-size:12px;line-height:1.55;color:var(--muted);white-space:pre-wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:8px;max-height:160px;overflow:auto}
 .origin-warn{padding:10px 12px;border-radius:var(--radius);background:var(--warn-weak);color:var(--warn);font-size:13px;line-height:1.5;margin-bottom:8px}
 
@@ -453,14 +377,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .menu-pop button{all:unset;box-sizing:border-box;cursor:pointer;padding:8px 12px;border-radius:6px;font-size:14px;min-height:36px}
 .menu-pop button:hover{background:var(--surface)}
 .menu-pop button.danger{color:var(--danger)}
-.next-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;background:var(--bg);margin:0 0 16px}
-.next-bar.is-clear{border-left-color:var(--ok)}
-.next-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
-.next-kicker{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted)}
-.next-copy b{font-size:15px;font-weight:600;line-height:1.4}
-.next-action{font-size:13px;color:var(--muted)}
-.next-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
-.next-actions .btn{min-height:36px;padding:0 12px}
+
 .owner-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
 .owner-dot.owner-情报员{background:#5B8DEF}
 .owner-dot.owner-总编导{background:#8B78D6}
@@ -475,33 +392,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .meta-link.owner-制片{color:#3E7A58}
 .meta-link.owner-外部工具{color:#2F7A86}
 .meta-link.owner-我{color:var(--text)}
-.timeline{list-style:none;margin:8px 0 0;padding:0}
-.tl{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;position:relative;padding-bottom:16px}
-.tl:not(:last-child)::before{content:"";position:absolute;left:10px;top:16px;bottom:0;width:1px;background:var(--border)}
-.tl-mark{display:grid;place-items:start center;padding-top:4px;cursor:pointer}
-.tl-mark input{position:absolute;opacity:0;width:18px;height:18px}
-.tl.is-done{opacity:.5}
-.tl.is-done .tl-phrase{text-decoration:line-through}
-.tl.is-now .tl-body{background:var(--surface);border-radius:10px;padding:10px 12px;margin:-6px 0 4px}
-.tl-who{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:2px}
-.tl-who.owner-情报员{color:#3D6FBF;background:none}
-.tl-who.owner-总编导{color:#6D5BD0;background:none}
-.tl-who.owner-核查实测员{color:#9A6A28;background:none}
-.tl-who.owner-制片{color:#3E7A58;background:none}
-.tl-who.owner-外部工具{color:#2F7A86;background:none}
-.tl-who.owner-我{color:var(--text);background:none}
-.tl-phrase{font-size:15px;line-height:1.45}
-.tl-phrase .action{color:var(--muted);font-weight:400}
-.tl.is-now .tl-phrase{font-weight:600}
-.tl .btn{margin-top:8px;min-height:36px}
-.howto-card{border-left:3px solid var(--border-strong)}
-.howto-card.tone-情报员{border-left-color:#5B8DEF}
-.howto-card.tone-总编导{border-left-color:#8B78D6}
-.howto-card.tone-核查实测员{border-left-color:#C4924A}
-.howto-card.tone-制片{border-left-color:#5E9A78}
-.howto-card.tone-外部工具{border-left-color:#4C9AA8}
-.howto-card.tone-我{border-left-color:#8A8680}
-.howto-step-num{background:var(--surface-2);color:var(--muted)}
+
 .task-idx{display:none}
 .task{padding:8px 12px;gap:2px}
 .task-controls{display:block;padding-left:0}
@@ -512,15 +403,12 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 .meta-dot{color:var(--faint);font-size:12px}
 .summary{padding:8px 2px;background:transparent;margin-bottom:4px}
 .summary-quiet{font-size:13px;color:var(--muted)}
-.today-strip{border:none;padding:0;margin:0;background:transparent}
-.tl-mark{position:relative}
+
 @media (max-width:640px){
   .task{padding:8px 10px;gap:2px}
   .task-name{font-size:15px;padding:4px 4px;max-height:none}
   .title-wrap{flex-basis:auto;flex:1}
-  .next-bar{flex-direction:column;align-items:stretch;gap:10px}
-  .next-actions{flex-wrap:wrap}
-  .today-hero h1{font-size:22px}
+
   .title-input{font-size:24px}
 }
 
@@ -529,19 +417,17 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="brand"><span class="brand-mark">目</span>目标制定 <span class="version-tag" id="libVersion"></span></div>
-    <button class="nav-howto" type="button" data-view="howto" id="navHowto"><span class="nav-ico">怎</span>怎么做</button>
-    <button class="nav-today" type="button" data-view="today" id="navToday"><span class="nav-ico">今</span>今天</button>
+    <div class="brand"><span class="brand-mark">目</span>目标制定</div>
     <div class="side-sep"></div>
-    <button class="btn primary block goal-only" data-new-goal>+ 新建目标</button>
+    <button class="btn primary block" data-new-goal>+ 新建目标</button>
     <nav class="goal-list" id="goalList" aria-label="目标列表"></nav>
     <div class="side-note">
       <b>四步走</b>
       <ol>
         <li><b>结果</b>：要达到什么、到什么程度、什么时候、为什么</li>
         <li><b>方向</b>：3–5 个，加起来要够</li>
-        <li><b>要做的事</b>：预估时间，开始/暂停记实际用时</li>
-        <li><b>复盘</b>：对比用时，想想重来一遍怎么走</li>
+        <li><b>要做的事</b>：列出落地动作，分配预估时间</li>
+        <li><b>复盘</b>：总结提效与 AI 协作，想想重来一遍怎么走</li>
       </ol>
       <p>数据自动实时保存在本设备，换设备前记得点「备份」。</p>
     </div>
@@ -549,15 +435,10 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   <main class="main">
     <div class="main-inner">
       <div class="mobile-bar">
-        <select id="goalSelect" class="goal-only" aria-label="切换目标"></select>
-        <button class="btn ghost mobile-howto" type="button" data-view="howto" id="mobileHowto">怎么做</button>
-        <button class="btn ghost" type="button" data-view="today" id="mobileToday">今天</button>
-        <button class="btn ghost howto-only today-only" type="button" data-view="goal" style="display:none">回目标</button>
-        <button class="btn primary goal-only" data-new-goal>+ 新建</button>
+        <select id="goalSelect" aria-label="切换目标"></select>
+        <button class="btn primary" data-new-goal>+ 新建</button>
       </div>
-      <div class="howto-only howto-panel" id="howtoPanel" hidden></div>
-      <div class="today-only today-panel" id="todayPanel" hidden></div>
-      <div class="goal-only" id="goalWorkspace">
+      <div id="goalWorkspace">
       <header class="goal-head">
         <div class="title-wrap">
           <input id="goalTitle" class="title-input" aria-label="目标名称" placeholder="给目标起个名字">
@@ -571,17 +452,14 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
         <div class="menu" id="goalMenu">
           <button class="icon-btn menu-btn" type="button" data-toggle-menu aria-label="更多操作" aria-expanded="false">···</button>
           <div class="menu-pop" id="goalMenuPop" hidden>
-            <button type="button" id="undoBtn" data-undo>撤销</button>
             <button type="button" id="doneBtn" data-toggle-done>标记完成</button>
             <button type="button" data-export>导出文本</button>
-            <button type="button" data-export-data>导出数据</button>
-            <button type="button" data-backup>备份</button>
+            <button type="button" data-backup>备份与恢复</button>
             <button type="button" class="danger" data-del-goal>删除</button>
           </div>
         </div>
       </header>
       <p class="principle-line">先做，而不是先找最优解。AI 负责执行，你负责判断。</p>
-      <div id="todayStrip" class="today-strip" hidden aria-hidden="true"></div>
       <nav class="stepper" id="stepper" role="tablist" aria-label="四个步骤"></nav>
       <section id="panel" role="tabpanel"></section>
       <footer class="panel-nav" id="panelNav"></footer>
@@ -672,30 +550,9 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
 </dialog>
 
 
-<dialog id="promptLibDlg" aria-labelledby="promptLibTitle">
-  <div class="dlg-head"><div id="promptLibTitle">提示词库</div><p class="muted small">点模块打开全文（Markdown），可复制；绑定到某条任务后，任务旁会出现「提示词」按钮。</p></div>
-  <div class="dlg-body" id="promptLibList"></div>
-  <div class="dlg-foot"><button class="btn" data-close-prompt-lib>关闭</button></div>
-</dialog>
-
-<dialog id="promptDlg" aria-labelledby="promptTitle">
-  <div class="dlg-head"><div id="promptTitle">提示词</div><p id="promptSub" class="muted small"></p></div>
-  <div class="dlg-body prompt-dlg-body">
-    <div class="prompt-meta" id="promptMeta"></div>
-    <textarea id="promptText" aria-label="提示词 Markdown"></textarea>
-  </div>
-  <div class="dlg-foot">
-    <button class="btn" data-close-prompt>关闭</button>
-    <button class="btn" data-reset-prompt>恢复默认</button>
-    <button class="btn" data-save-prompt>保存</button>
-    <button class="btn primary" data-copy-prompt>复制</button>
-  </div>
-</dialog>
-
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="prompts.js"></script>
 <script>
 (function(){
 const KEY='goal-method-v2',OLD_KEY='goal-method-v1';
@@ -706,7 +563,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const STEPS=[
   {label:'结果',intro:'先想清楚终点：要达到什么、到什么程度、什么时候、为什么。四个问题都有答案，再去找方向。'},
   {label:'方向',intro:'从哪几个方面做，才能达到结果？3–5 个就够，加起来要够；每个方向写一个小目标。'},
-  {label:'要做的事',intro:'列出要做的事，点选负责人和预估时间；用「开始 / 暂停」记实际用时，勾选完成会自动停表。'},
+  {label:'要做的事',intro:'列出要做的事，点选负责人和预估时间。'},
   {label:'复盘',intro:'做完回来看：哪里能提效、哪些能交给 AI？如果重来一遍，会怎么走？'}
 ];
 const RESULT_Q=[
@@ -738,61 +595,7 @@ const OWNER_MIGRATE={
   '情报员':'Bot','总编导':'Bot','核查实测员':'Bot','制片':'Bot',
   '外部工具':'Opus','你':'Bot','我 + 你':'Bot','AI':'Bot','我 + AI':'Bot'
 };
-const PROMPT_LIB=(typeof window!=='undefined' && window.PROMPTS) ? window.PROMPTS : {version:'?',modules:[]};
-const PROMPT_BY_ID=Object.fromEntries((PROMPT_LIB.modules||[]).map(m=>[m.id,m]));
-const STANDARD_FLOW=[
-  {module:'M01',name:'抓题：30 条候选',owners:['Bot'],est:'15'},
-  {module:'M02',name:'选题：审核包 → Argon 复选 → 我拍板',owners:['Bot','Argon','我'],est:'15'},
-  {module:'M03',name:'核实：做事实卡',owners:['Bot'],est:'15'},
-  {module:'M04',name:'观点 3 选 1、钩子 5 选 1',owners:['Opus','我'],est:'15'},
-  {module:'M05',name:'写稿：现象→原因→本质→对你',owners:['Opus'],est:'25'},
-  {module:'M06',name:'审稿：三步，最多 3 轮，出提词器版',owners:['Argon','我'],est:'25'},
-  {module:'M07',name:'动画：2–4 处 HTML',owners:['Opus'],est:'25'},
-  {module:'M08',name:'之后：分镜、剪辑、包装、图文',owners:['Codex','ChatCut','GPT'],est:'25'}
-];
-/**
- * 「怎么做」页面文案 —— 改这里即可更新展示内容
- * 团队角色、每期流水线步骤都写在这个常量里，不改渲染逻辑。
- */
-const HOWTO_CONTENT={
-  title:'怎么做',
-  subtitle:'多 Agent 工作流：固定 Bot 对话 + 文件交接，按期跑通视频。',
-  teamTitle:'团队（每个都是一个固定的 Grok Bot 对话）',
-  team:[
-    {role:'情报员',desc:'每晚 22:00 自动抓 3 张选题卡 → /workspace/redu/选题/'},
-    {role:'总编导',desc:'我每天主要找它。立项打分、先定收藏卡、观点 3 选 1、钩子 5 选 1、写稿、三步审稿、复盘更新宪法'},
-    {role:'核查实测员',desc:'事实卡 + 手机实测翻车截图'},
-    {role:'制片',desc:'给 Opus 的分镜和动画要求、给 Codex/ChatCut 的剪辑说明、提词卡，盯 21:00'},
-    {role:'外部工具',desc:'Opus 做动画，GPT 做封面和收藏卡，Codex + ChatCut 剪辑（每期开新对话）'},
-    {role:'我',desc:'拍板、出镜录制（20 分钟）、验收、发布'}
-  ],
-  pipelineTitle:'每期怎么跑（按顺序）',
-  pipeline:[
-    {title:'找总编导开期并拍板',detail:'找总编导：「开第 N 期，看今天的选题」→ 我拍板，定收藏卡、观点、钩子'},
-    {title:'核查实测拿事实卡',detail:'找核查实测员：「第 N 期核查」→ 事实卡'},
-    {title:'写稿与三步审稿',detail:'总编导写稿 + 三步审稿 → 定稿'},
-    {title:'制片出分镜与剪辑要求',detail:'找制片：「第 N 期出分镜和剪辑要求」→ 转给 Opus、Codex'},
-    {title:'录制、样片、验收',detail:'我录口播 → 10 秒样片 → 合成 → 完整听一遍 → 手机看一遍'},
-    {title:'发布与次日复盘',detail:'21:00 前发布 → 第二天复盘，挑 1–2 条写进《编导宪法》'}
-  ],
-  fileNote:'所有文件放在 /workspace/redu/第N期/，Bot 之间靠文件交接。'
-};
-/**
- * 「今天跟谁干什么」路线 —— 改这里即可更新文案与复制语句
- * phrase 是点「复制这句话」时贴给 Bot 的内容；N 会按当前期数替换
- */
-const TODAY_ROUTE={
-  title:'今天跟谁干什么',
-  subtitle:'按顺序找人对话。情报员每晚 22:00 自动跑，不列入当日路线。',
-  steps:[
-    {id:'open', owner:'总编导', phrase:'开第 N 期，看今天的选题', action:'→ 拍板，定收藏卡、观点、钩子'},
-    {id:'check', owner:'核查实测员', phrase:'第 N 期核查', action:'→ 事实卡'},
-    {id:'draft', owner:'总编导', phrase:'写稿 + 三步审稿', action:'→ 定稿'},
-    {id:'produce', owner:'制片', phrase:'第 N 期出分镜和剪辑要求', action:'→ 转给 Opus、Codex'},
-    {id:'record', owner:'我', phrase:'录口播、验收、21:00 前发布', action:''},
-    {id:'review', owner:'总编导', phrase:'第二天复盘，更新宪法', action:''}
-  ]
-};
+
 /** 批量粘贴时按关键词自动匹配负责人（括号里的负责人优先） */
 const OWNER_KEYWORD_RULES=[
   {owner:'Bot', re:/核实|事实卡|实测|截图|选题|新闻|抓|审稿包|审核包/},
@@ -814,11 +617,9 @@ function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth(
 function dayLabel(k){if(k===dayKey())return '今天';if(k===dayKey(new Date(Date.now()-864e5)))return '昨天';const a=String(k||'').split('-').map(Number);if(a.length!==3||!a[0])return '未设日期';return (a[0]!==new Date().getFullYear()?a[0]+'年':'')+a[1]+'月'+a[2]+'日';}
 function formatClock(d){d=d||new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');}
 
-function mkTask(name,dirId,urgent,who,est,owner,module){
+function mkTask(name,dirId,urgent,who,est,owner){
   const owners = normalizeOwners(owner, who);
-  const t={id:uid(),name:name||'',dirId:dirId||'',est:est||'',actual:'',who:who||'我',owners:owners,urgent:!!urgent,done:false};
-  if(module) t.module=module;
-  return t;
+  return {id:uid(),name:name||'',dirId:dirId||'',est:est||'',who:who||'我',owners:owners,urgent:!!urgent,done:false};
 }
 function normalizeOwners(owner, who){
   let list=[];
@@ -847,68 +648,6 @@ function normalizeOwners(owner, who){
 function taskOwners(t){
   if(Array.isArray(t.owners) && t.owners.length) return t.owners;
   return normalizeOwners(t.owner, t.who);
-}
-function promptForTask(t){
-  if(!t || !t.module || !PROMPT_BY_ID[t.module]) return '';
-  if(t.promptOverride!=null && t.promptOverride!=='') return t.promptOverride;
-  return PROMPT_BY_ID[t.module].prompt || '';
-}
-const TIMER_KEY = KEY+'_timers';
-let timerMap = {};
-try{ timerMap = JSON.parse(localStorage.getItem(TIMER_KEY)||'{}')||{}; }catch(e){ timerMap={}; }
-function persistTimers(){
-  try{ localStorage.setItem(TIMER_KEY, JSON.stringify(timerMap)); }catch(e){}
-}
-function timerState(t, create){
-  if(!t||!t.id) return {accumMs:0, startedAt:null};
-  if(!timerMap[t.id]){
-    if(!create) return {accumMs: num(t.actual)?Math.round(num(t.actual)*60000):0, startedAt:null};
-    const mins = num(t.actual);
-    timerMap[t.id] = {accumMs: mins?Math.round(mins*60000):0, startedAt:null};
-  }
-  return timerMap[t.id];
-}
-function taskElapsedMs(t){
-  const st = timerState(t, false);
-  return (st.accumMs||0) + (st.startedAt ? (Date.now()-st.startedAt) : 0);
-}
-function fmtElapsed(ms){
-  ms = Math.max(0, Math.floor(Number(ms)||0));
-  const s = Math.floor(ms/1000);
-  const m = Math.floor(s/60), r = s%60;
-  if(m>=60){
-    const h=Math.floor(m/60);
-    return h+':'+String(m%60).padStart(2,'0')+':'+String(r).padStart(2,'0');
-  }
-  return m+':'+String(r).padStart(2,'0');
-}
-function flushTimer(t){
-  const st = timerState(t, true);
-  if(st.startedAt){
-    st.accumMs = (st.accumMs||0) + (Date.now()-st.startedAt);
-    st.startedAt = null;
-  }
-  const ms = Math.max(0, st.accumMs||0);
-  t.actual = ms<=0 ? '' : String(Math.max(1, Math.round(ms/60000)));
-  persistTimers();
-}
-function pauseAllTimers(exceptId){
-  const g=cur(); if(!g) return;
-  (g.tasks||[]).forEach(x=>{
-    if(!x||!x.id) return;
-    if(exceptId && x.id===exceptId) return;
-    if(timerMap[x.id] && timerMap[x.id].startedAt) flushTimer(x);
-  });
-}
-function startTimer(t){
-  pauseAllTimers(t.id);
-  const st = timerState(t, true);
-  if(!st.startedAt) st.startedAt = Date.now();
-  persistTimers();
-}
-function pauseTimer(t){ flushTimer(t); }
-function isTimerRunning(t){
-  return !!(t && t.id && timerMap[t.id] && timerMap[t.id].startedAt);
 }
 
 function mkDirs(list){return list.map(([name,goal])=>({id:uid(),name,goal}));}
@@ -969,17 +708,7 @@ function ownerTagHTML(owner){
   return '<span class="owner-tag '+cls+'" title="负责人">'+esc(owner)+'</span>';
 }
 
-function episodeNumFromGoal(g){
-  const t=(g&&g.title)||'';
-  const m=t.match(/第\s*([0-9]+|[NN]|Ｎ)\s*期/);
-  if(m) return m[1]==='Ｎ'?'N':m[1];
-  const m2=t.match(/(?:ep|EP|期)\s*([0-9]+)/);
-  return m2?m2[1]:'N';
-}
 
-function fillEpisodePhrase(text, n){
-  return String(text||'').replace(/第\s*N\s*期/g,'第 '+n+' 期').replace(/\bN\b/g, n);
-}
 
 function whoFromOwner(owner){
   if(!owner || owner==='我') return '我';
@@ -1018,19 +747,7 @@ function applyOwnerToTask(t, owner){
   else t.who='你';
   return t;
 }
-function openPromptDlg(taskId){
-  const g=cur();
-  const t=g.tasks.find(x=>x.id===taskId);
-  if(!t || !t.module || !PROMPT_BY_ID[t.module]){toast('这个任务没有绑定提示词模块');return;}
-  const mod=PROMPT_BY_ID[t.module];
-  const dlg=$('#promptDlg');
-  $('#promptTitle').textContent='提示词 · '+t.module;
-  $('#promptSub').textContent=(t.name||mod.name||'')+'（Markdown，可改，只影响这一条任务）';
-  $('#promptMeta').textContent='库版本 '+PROMPT_LIB.version+' · 默认负责人 '+(mod.owners||[]).join('、')+' · '+(mod.minutes||'?')+' 分';
-  $('#promptText').value=promptForTask(t);
-  dlg.dataset.tid=taskId;
-  if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
-}
+
 
 function goalRichness(g){
   if(!g||typeof g!=='object')return -1;
@@ -1256,7 +973,7 @@ function loadRaw(){
   return withBundled(seed());
 }
 
-let state=load(), toastTimer, appView='goal';
+let state=load(), toastTimer;
 // 备份里有、本机还没有的目标，导入后立刻写入本地，避免只停在内存里
 try{
   const raw=JSON.parse(localStorage.getItem(KEY)||'null');
@@ -1294,7 +1011,7 @@ function cloneState(){
 }
 function persistUndo(){
   try{ localStorage.setItem(UNDO_KEY, JSON.stringify(undoStack.slice(0, UNDO_MAX))); }catch(e){}
-  const btn=$('#undoBtn');
+  const btn=$('#undoBtnHead');
   if(btn){
     btn.disabled = !undoStack.length;
     btn.textContent = undoStack.length ? ('撤销 ('+undoStack.length+')') : '撤销';
@@ -1321,24 +1038,8 @@ function doUndo(){
   return true;
 }
 
-// 若第六期事项已被标准流程覆盖，自动塞一条可撤销的备份（只做一次）
-(function seedSixthRecovery(){
-  try{
-    const g = (state.goals||[]).find(x=>x&&x.id==='lpf6lxvb');
-    const pack = (BUNDLED_GOALS||[]).find(x=>x&&x.id==='lpf6lxvb');
-    if(!g || !pack || !Array.isArray(g.tasks) || !Array.isArray(pack.tasks)) return;
-    const looksStd = g.tasks.length===STANDARD_FLOW.length && STANDARD_FLOW.every((s,i)=>g.tasks[i] && g.tasks[i].module===s.module && (g.tasks[i].name||'')===s.name);
-    const packDiffers = pack.tasks.length !== g.tasks.length || pack.tasks.some((t,i)=>!g.tasks[i] || t.id!==g.tasks[i].id);
-    if(!looksStd || !packDiffers) return;
-    if(undoStack.some(u=>u && u.label==='恢复第六期备份事项')) return;
-    const snap = cloneState();
-    const gg = (snap.goals||[]).find(x=>x&&x.id==='lpf6lxvb');
-    if(!gg) return;
-    gg.tasks = JSON.parse(JSON.stringify(pack.tasks));
-    undoStack.unshift({at:Date.now(), label:'恢复第六期备份事项', snap});
-    persistUndo();
-  }catch(e){}
-})();
+// 撤销栈初始化
+(function seedSixthRecovery(){})();
 
 // 页面关闭、切后台、隐藏时强制执行一次持久化保存
 window.addEventListener('beforeunload', ()=>{ try{saveNow();}catch(e){} });
@@ -1596,13 +1297,9 @@ function taskCard(g,t,i){
   }).join('');
   const tags=owners.map(o=>ownerTagHTML(o)).join('') || '<span class="owner-empty-chip">负责人</span>';
   const timeChips=TIME_PRESETS.map(p=>'<button type="button" class="time-chip'+(estVal===p?' active':'')+'" data-set-est="'+p+'">'+p+'分</button>').join('');
-  const hasModule=!!(t.module && PROMPT_BY_ID[t.module]);
-  const running=isTimerRunning(t);
-  const elapsed=fmtElapsed(taskElapsedMs(t));
-  const hasActual=taskElapsedMs(t)>0 || num(t.actual)>0;
-  return '<div class="task'+(t.done?' is-done':'')+(running?' is-timing':'')+'" data-tid="'+t.id+'">'
+  return '<div class="task'+(t.done?' is-done':'')+'" data-tid="'+t.id+'">'
     +'<div class="task-top">'
-    +'<label class="done-box" title="完成（勾选会自动停表）"><input type="checkbox" data-t="done"'+(t.done?' checked':'')+' aria-label="完成"></label>'
+    +'<label class="done-box" title="完成"><input type="checkbox" data-t="done"'+(t.done?' checked':'')+' aria-label="完成"></label>'
     +'<textarea rows="1" class="task-name" data-t="name" placeholder="要做什么？" aria-label="事项">'+esc(t.name)+'</textarea>'
     +'<button class="icon-btn" data-del-task="'+t.id+'" aria-label="删除这件事">×</button>'
     +'</div>'
@@ -1612,13 +1309,6 @@ function taskCard(g,t,i){
     +(t.ownerNote?'<span class="muted small">'+esc(t.ownerNote)+'</span>':'')
     +'<span class="meta-dot">·</span>'
     +'<button type="button" class="meta-link" data-toggle-time="'+t.id+'">'+(estVal?estVal+' 分':(t.est!==''?esc(t.est)+' 分':'预估'))+'</button>'
-    +'<span class="meta-dot">·</span>'
-    +'<button type="button" class="timer-btn'+(running?' is-on':'')+'" data-toggle-timer="'+t.id+'" aria-label="'+(running?'暂停计时':'开始计时')+'">'
-    +(running?'暂停 ':'开始 ')
-    +'<span class="timer-display" data-timer-display="'+t.id+'">'+(hasActual||running?elapsed:'0:00')+'</span>'
-    +'</button>'
-    +(hasModule?'<span class="meta-dot">·</span><button type="button" class="meta-link" data-open-prompt="'+t.id+'">提示词</button>':'')
-    +(t.module?'<span class="meta-dot">·</span><span class="muted small">'+esc(t.module)+'</span>':'')
     +'</div>'
     +(ownerOpen?('<div class="owner-expand">'+ownerPills+'</div>'):'')
     +(timeOpen?('<div class="time-expand">'+timeChips
@@ -1830,12 +1520,6 @@ function parseBatchTasks(text){
     }
     line=line.replace(/^([0-9]+[.\u3001]|\([-0-9]+\)|[-*•]\s*(\[[ xX]\])?)\s*/,'');
     line=line.replace(/✅/g,'').trim();
-    let module='';
-    const modMatch=line.match(/\[(M0[1-8])\]\s*$/i);
-    if(modMatch){
-      module=modMatch[1].toUpperCase();
-      line=line.replace(/\[(M0[1-8])\]\s*$/i,'').trim();
-    }
     let who='我', est='', owner='';
     owner = matchOwnerFromText(line);
     const parenMatch=line.match(/[(（]([^)）]+)[)）]/);
@@ -1856,11 +1540,8 @@ function parseBatchTasks(text){
       if(tm)est=tm[1];
     }
     if(!owner) owner = matchOwnerFromText(line);
-    let owners;
-    if(module && PROMPT_BY_ID[module]) owners = (PROMPT_BY_ID[module].owners||[]).slice();
-    else if(owner) owners = normalizeOwners(owner, who);
-    else owners = normalizeOwners('', who);
-    const t=mkTask(line||'未命名事项','',false,who,est,owners,module||undefined);
+    const owners = normalizeOwners(owner, who);
+    const t=mkTask(line||'未命名事项','',false,who,est,owners);
     if(isDone) t.done=true;
     tasks.push(t);
   }
@@ -2003,10 +1684,8 @@ function renderPanel(){
   if(s===2){
     h+='<div class="summary" id="taskSummary">'+taskSummary(g)+'</div>'
       +'<div class="toolbar">'
-      +'<span class="muted small">点负责人或时间即可修改<span class="version-tag">提示词库 '+esc(PROMPT_LIB.version||'?')+'</span></span>'
+      +'<span class="muted small">点负责人或预估时间即可修改</span>'
       +'<div class="toolbar-actions">'
-      +'<button class="btn" data-load-flow>载入标准流程</button>'
-      +'<button class="btn ghost" data-browse-prompts>提示词库</button>'
       +'<button class="btn ghost" data-batch-tasks>📋 批量粘贴清单</button>'
       +'<button class="btn ghost" data-copy-tasks title="一键复制所有要做的事为文本清单">📄 复制清单</button>'
       +'</div>'
@@ -2035,105 +1714,8 @@ function renderNav(){
   $('#panelNav').innerHTML=(s>0?'<button class="btn ghost" data-goto="'+(s-1)+'">← '+STEPS[s-1].label+'</button>':'<span></span>')
     +(s<3?'<button class="btn primary" data-goto="'+(s+1)+'">下一步：'+STEPS[s+1].label+' →</button>':'<button class="btn primary" data-export>导出为文本</button>');
 }
-function currentRouteStep(g){
-  if(!g.routeChecks) g.routeChecks={};
-  return TODAY_ROUTE.steps.find(s=>!g.routeChecks[s.id])||null;
-}
-function ownerDotHTML(owner){
-  const cls=OWNER_CLASS[owner]||'';
-  return '<i class="owner-dot '+cls+'" aria-hidden="true"></i>';
-}
-function todayRowsHTML(g){
-  if(!g.routeChecks) g.routeChecks={};
-  const n=episodeNumFromGoal(g);
-  const current=currentRouteStep(g);
-  return '<ol class="timeline">'+TODAY_ROUTE.steps.map(s=>{
-    const done=!!g.routeChecks[s.id];
-    const isNow=current&&current.id===s.id;
-    const phrase=fillEpisodePhrase(s.phrase, n);
-    const action=fillEpisodePhrase(s.action||'', n);
-    const whoCls=OWNER_CLASS[s.owner]||'';
-    return '<li class="tl'+(done?' is-done':'')+(isNow?' is-now':'')+'">'
-      +'<label class="tl-mark" title="完成此步"><input type="checkbox" data-route-check="'+s.id+'"'+(done?' checked':'')+' aria-label="完成此步">'+ownerDotHTML(s.owner)+'</label>'
-      +'<div class="tl-body">'
-      +'<div class="tl-who '+whoCls+'">'+esc(s.owner)+'</div>'
-      +'<div class="tl-phrase">'+esc(phrase)+(action?' <span class="action">'+esc(action)+'</span>':'')+'</div>'
-      +(isNow?'<button type="button" class="btn primary" data-copy-phrase="'+esc(phrase)+'">复制这句话</button>':'')
-      +'</div></li>';
-  }).join('')+'</ol>';
-}
 
-function renderTodayStrip(){
-  // 目标页里的「下一步」条已去掉；完整路线仍在「今天跟谁干什么」页
-  const el=$('#todayStrip'); if(!el) return;
-  el.hidden=true;
-  el.innerHTML='';
-}
-
-function renderToday(){
-  const g=cur();
-  const C=TODAY_ROUTE;
-  const built='<div class="today-wrap">'
-    +'<div class="today-hero"><h1>'+esc(C.title)+'</h1><p>'+esc(C.subtitle)+'</p>'
-    +'<p class="muted small">当前目标：'+esc(g.title||'未命名')+' · 第 '+esc(episodeNumFromGoal(g))+' 期</p></div>'
-    +'<div class="today-list">'+todayRowsHTML(g,false)+'</div>'
-    +'<div class="howto-actions">'
-    +'<button class="btn primary" data-view="goal">回到这一期</button>'
-    +'<button class="btn" data-new-goal>+ 新建目标</button>'
-    +'</div></div>';
-  const el=$('#todayPanel');
-  if(el){el.innerHTML=built;el.hidden=appView!=='today';}
-}
-
-function renderHowto(){
-  const C=HOWTO_CONTENT;
-  const team=C.team.map(m=>'<article class="howto-card tone-'+esc(m.role)+'"><div class="howto-card-top">'+ownerTagHTML(m.role)+'</div><p>'+esc(m.desc)+'</p></article>').join('');
-  const steps=C.pipeline.map((s,i)=>'<div class="howto-step"><div class="howto-step-num">'+(i+1)+'</div><div><h3>'+esc(s.title)+'</h3><p>'+esc(s.detail)+'</p></div></div>').join('');
-  const built='<div class="howto-wrap">'
-    +'<div class="howto-hero"><h1>'+esc(C.title)+'</h1><p>'+esc(C.subtitle)+'</p></div>'
-    +'<section class="howto-section"><h2>'+esc(C.teamTitle)+'</h2><div class="howto-team">'+team+'</div></section>'
-    +'<section class="howto-section"><h2>'+esc(C.pipelineTitle)+'</h2><div class="howto-steps">'+steps+'</div></section>'
-    +'<div class="howto-note">'+esc(C.fileNote).replace('/workspace/redu/第N期/','<code>/workspace/redu/第N期/</code>')+'</div>'
-    +'<div class="howto-actions">'
-    +'<button class="btn primary" data-new-goal>+ 新建目标</button>'
-    +'<button class="btn" data-view="goal">回到目标</button>'
-    +'</div></div>';
-  const el=$('#howtoPanel');
-  if(el){el.innerHTML=built;el.hidden=appView!=='howto';}
-}
-function setAppView(view){
-  if(view==='howto'||view==='today'||view==='goal') appView=view;
-  else appView='goal';
-  const root=document.querySelector('.app');
-  if(root){
-    root.classList.toggle('view-howto', appView==='howto');
-    root.classList.toggle('view-today', appView==='today');
-    root.classList.toggle('view-goal', appView==='goal');
-  }
-  const hp=$('#howtoPanel'); if(hp) hp.hidden=appView!=='howto';
-  const tp=$('#todayPanel'); if(tp) tp.hidden=appView!=='today';
-  const gw=$('#goalWorkspace'); if(gw) gw.style.display=appView==='goal'?'':'none';
-  document.querySelectorAll('.goal-only').forEach(el=>{
-    if(appView==='goal') el.style.removeProperty('display');
-    else el.style.display='none';
-  });
-  document.querySelectorAll('.howto-only').forEach(el=>{
-    el.style.display=appView==='howto'?'':'none';
-  });
-  document.querySelectorAll('.today-only').forEach(el=>{
-    el.style.display=appView==='today'?'':'none';
-  });
-  // 共用「回目标」按钮
-  document.querySelectorAll('.howto-only.today-only, button.howto-only.today-only').forEach(el=>{
-    el.style.display=(appView==='howto'||appView==='today')?'':'none';
-  });
-  const navH=$('#navHowto'); if(navH) navH.setAttribute('aria-current', appView==='howto'?'true':'false');
-  const navT=$('#navToday'); if(navT) navT.setAttribute('aria-current', appView==='today'?'true':'false');
-  if(appView==='howto') renderHowto();
-  if(appView==='today') renderToday();
-  if(appView==='goal') renderTodayStrip();
-}
-function renderAll(){const vv=$('#libVersion'); if(vv) vv.textContent='· 提示词 '+ (PROMPT_LIB.version||'?'); renderSidebar();renderHead();renderStepper();renderPanel();renderNav();setAppView(appView);persistUndo();}
+function renderAll(){renderSidebar();renderHead();renderStepper();renderPanel();renderNav();persistUndo();}
 function updateComputed(){
   const g=cur();renderStepper();renderSidebar();
   const ts=$('#taskSummary');if(ts)ts.innerHTML=taskSummary(g);
@@ -2158,12 +1740,11 @@ function toText(g){
     if(t.owner)b.push('负责人 '+t.owner);
     if(num(t.est))b.push(t.est+' 分钟');
     if(t.done)b.push('已完成');
-    if(num(t.actual))b.push('实际 '+fmt(num(t.actual)));
     if(t.urgent)b.push('有时效');
     L.push((i+1)+'. '+(t.done?'✅ ':'')+t.name+' ('+b.join(', ')+')');
   });
-  const est=ts.reduce((a,t)=>a+num(t.est),0),act=ts.reduce((a,t)=>a+num(t.actual),0);
-  L.push('','- 预估合计：'+fmt(est)+'；实际合计：'+(act?fmt(act):'（未填）'),'','## 复盘');
+  const est=ts.reduce((a,t)=>a+num(t.est),0);
+  L.push('','- 预估合计：'+fmt(est),'','## 复盘');
   REVIEW_Q.forEach(([k,l])=>{if(k==='feeling'&&!g.review[k])return;L.push('- '+l.replace(/？|（可选）/g,'')+'：'+(g.review[k]||'（未填）'));});
   return L.join('\n');
 }
@@ -2265,13 +1846,7 @@ document.addEventListener('click',e=>{
     if(pop){pop.hidden=!pop.hidden; b.setAttribute('aria-expanded', pop.hidden?'false':'true');}
     return;
   }
-  if('routeDone' in ds){
-    if(!g.routeChecks) g.routeChecks={};
-    g.routeChecks[ds.routeDone]=true;
-    save();
-    if(appView==='today') renderToday(); else renderTodayStrip();
-    return;
-  }
+
   if('setRmode' in ds){
     const rk=ds.rk, mode=ds.setRmode;
     reviewModes[rk]=mode;
@@ -2317,7 +1892,7 @@ document.addEventListener('click',e=>{
     }
     return;
   }
-  if(ds.goal){state.currentId=ds.goal;appView='goal';save();renderAll();return;}
+  if(ds.goal){state.currentId=ds.goal;save();renderAll();return;}
   if(ds.step!==undefined){goStep(+ds.step);return;}
   if(ds.goto!==undefined){goStep(+ds.goto);window.scrollTo({top:0,behavior:'smooth'});return;}
   if('addDir' in ds){if(g.dirs.length<10){g.dirs.push({id:uid(),name:'',goal:''});save();renderPanel();focusLast('.dir-name');}return;}
@@ -2326,10 +1901,9 @@ document.addEventListener('click',e=>{
   if(ds.delTask){pushUndo('删除事项');g.tasks=g.tasks.filter(t=>t.id!==ds.delTask);save();renderPanel();updateComputed();persistUndo();return;}
   if('sort' in ds){g.tasks.sort((a,b)=>(b.urgent?1:0)-(a.urgent?1:0));save();renderPanel();toast('有时效的已排到前面');return;}
   if('export' in ds){openExport();return;}
-  if('newGoal' in ds || 'newBlank' in ds || 'newVideo' in ds || 'newVideoFromHowto' in ds){
+  if('newGoal' in ds || 'newBlank' in ds || 'newVideo' in ds){
     pushUndo('新建目标');
     const ng=blankGoal();
-    appView='goal';
     state.goals.unshift(ng);
     state.currentId=ng.id;
     save();
@@ -2340,7 +1914,6 @@ document.addEventListener('click',e=>{
     toast('已新建空白目标 · 可直接填写');
     return;
   }
-  if('view' in ds){setAppView(ds.view); if(ds.view==='goal') window.scrollTo({top:0,behavior:'smooth'}); return;}
   if('delGoal' in ds){
     if(!confirm('删除「'+(g.title||'未命名目标')+'」？可在撤销里找回。'))return;
     pushUndo('删除目标');
@@ -2386,111 +1959,7 @@ document.addEventListener('click',e=>{
     }
     return;
   }
-  if('openPrompt' in ds){ openPromptDlg(ds.openPrompt); return; }
-  if('closePrompt' in ds){ const d=$('#promptDlg'); if(d) d.close(); return; }
-  if('copyPrompt' in ds){
-    const ta=$('#promptText'); const text=ta?ta.value:'';
-    (async()=>{
-      try{await navigator.clipboard.writeText(text);toast('提示词已复制');}
-      catch(err){
-        if(ta){ta.focus();ta.select();try{document.execCommand('copy');toast('提示词已复制');}catch(_){toast('复制失败');}}
-      }
-    })();
-    return;
-  }
-  if('savePrompt' in ds){
-    const tid=$('#promptDlg').dataset.tid;
-    if(!tid){toast('这是库默认提示词；请先「载入标准流程」或给任务绑定模块后再保存');return;}
-    const t=g.tasks.find(x=>x.id===tid);
-    if(t){
-      t.promptOverride=$('#promptText').value;
-      save();toast('已保存到本条任务');
-    }
-    return;
-  }
-  if('resetPrompt' in ds){
-    const tid=$('#promptDlg').dataset.tid;
-    if(!tid){
-      const title=$('#promptTitle').textContent||'';
-      const mid=(title.match(/M0[1-8]/)||[])[0];
-      if(mid && PROMPT_BY_ID[mid]){ $('#promptText').value=PROMPT_BY_ID[mid].prompt||''; toast('已恢复库默认'); }
-      return;
-    }
-    const t=g.tasks.find(x=>x.id===tid);
-    if(t){
-      delete t.promptOverride;
-      $('#promptText').value=promptForTask(t);
-      save();toast('已恢复默认提示词');
-    }
-    return;
-  }
   if('undo' in ds){ doUndo(); return; }
-  if('loadFlow' in ds){
-    const has=g.tasks.some(t=>(t.name||'').trim());
-    let mode='append'; // append | replace | cancel
-    if(has){
-      const ok = confirm('载入标准 8 步流程会先追加到现有事项后面。\n\n确定=追加（可撤销）\n取消=不改动');
-      if(!ok){ toast('已取消'); return; }
-      const overwrite = confirm('还要覆盖掉现有事项吗？\n\n确定=覆盖（危险，但可点撤销找回）\n取消=只追加，保留你现在的事项');
-      mode = overwrite ? 'replace' : 'append';
-    }
-    pushUndo(mode==='replace'?'载入标准流程（覆盖）':'载入标准流程（追加）');
-    const neu=STANDARD_FLOW.map(s=>mkTask(s.name,'',false,'我',s.est,s.owners.slice(),s.module));
-    if(mode==='replace') g.tasks=neu; else g.tasks=g.tasks.concat(neu);
-    save();updateComputed();renderPanel();persistUndo();
-    toast((mode==='replace'?'已覆盖为':'已追加')+'标准流程 '+neu.length+' 步 · 右上角「撤销」可恢复');
-    return;
-  }
-
-  if('browsePrompts' in ds){
-    const box=$('#promptLibList');
-    box.innerHTML=(PROMPT_LIB.modules||[]).map(mod=>{
-      return '<div class="prompt-lib-item" style="padding:10px 0;border-bottom:1px solid var(--border)">'
-        +'<div style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">'
-        +'<div><strong>'+esc(mod.id)+'</strong> '+esc(mod.name)
-        +'<div class="muted small">默认 '+(mod.owners||[]).join('、')+' · '+(mod.minutes||'?')+' 分 · '+(String(mod.prompt||'').length)+' 字</div></div>'
-        +'<div style="display:flex;gap:6px">'
-        +'<button class="btn ghost" data-open-lib-mod="'+esc(mod.id)+'">打开</button>'
-        +'<button class="btn ghost" data-copy-lib-mod="'+esc(mod.id)+'">复制</button>'
-        +'</div></div></div>';
-    }).join('') || '<p class="muted">提示词库未加载</p>';
-    const d=$('#promptLibDlg'); if(d.showModal)d.showModal(); else d.setAttribute('open','');
-    return;
-  }
-  if('closePromptLib' in ds){ const d=$('#promptLibDlg'); if(d) d.close(); return; }
-  if('openLibMod' in ds){
-    const mod=PROMPT_BY_ID[ds.openLibMod];
-    if(!mod){toast('找不到模块');return;}
-    const dlg=$('#promptDlg');
-    $('#promptTitle').textContent='提示词 · '+mod.id;
-    $('#promptSub').textContent=mod.name+'（库默认，复制后可自行改；要绑定到任务请用「载入标准流程」或批量粘贴 [M0x]）';
-    $('#promptMeta').textContent='库版本 '+PROMPT_LIB.version+' · 默认 '+(mod.owners||[]).join('、')+' · '+(mod.minutes||'?')+' 分';
-    $('#promptText').value=mod.prompt||'';
-    dlg.dataset.tid=''; // library browse mode
-    if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
-    return;
-  }
-  if('copyLibMod' in ds){
-    const mod=PROMPT_BY_ID[ds.copyLibMod];
-    const text=mod? (mod.prompt||'') : '';
-    (async()=>{
-      try{await navigator.clipboard.writeText(text);toast('已复制 '+ds.copyLibMod);}
-      catch(e){toast('复制失败');}
-    })();
-    return;
-  }
-
-  if('exportData' in ds){
-    const data=JSON.stringify({app:'goal-method',version:2,promptLib:PROMPT_LIB.version,exportedAt:new Date().toISOString(),state:state,localStorageDump:{
-      [KEY]: (()=>{try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}})(),
-      [KEY+'_backup']: (()=>{try{return JSON.parse(localStorage.getItem(KEY+'_backup')||'null');}catch(e){return null;}})(),
-      [OLD_KEY]: (()=>{try{return JSON.parse(localStorage.getItem(OLD_KEY)||'null');}catch(e){return null;}})()
-    }},null,2);
-    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='目标数据导出-'+dayKey()+'.json';
-    document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);
-    toast('已导出全部本地数据');
-    return;
-  }
   if('setEst' in ds){
     const taskEl=b.closest('[data-tid]');
     if(taskEl){
@@ -2513,16 +1982,7 @@ document.addEventListener('click',e=>{
     }
     return;
   }
-  if('toggleTimer' in ds){
-    const t=g.tasks.find(x=>x.id===ds.toggleTimer);
-    if(t){
-      if(t.done){ toast('已完成的事项不用再计时'); return; }
-      if(isTimerRunning(t)){ pauseTimer(t); toast('已暂停 · 实计 '+fmt(num(t.actual)||Math.round(taskElapsedMs(t)/60000))); }
-      else { startTimer(t); toast('开始计时'); }
-      save();updateComputed();renderPanel();
-    }
-    return;
-  }
+
   if('toggleTime' in ds){
     const t=g.tasks.find(x=>x.id===ds.toggleTime);
     if(t){
@@ -2538,18 +1998,7 @@ document.addEventListener('click',e=>{
     if(t){t._more=!t._more;renderPanel();}
     return;
   }
-  if('copyPhrase' in ds){
-    const text=ds.copyPhrase||'';
-    (async()=>{
-      try{await navigator.clipboard.writeText(text);toast('已复制：'+text);}
-      catch(err){
-        const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
-        try{document.execCommand('copy');toast('已复制：'+text);}catch(_){toast('复制失败，请手动选中');}
-        ta.remove();
-      }
-    })();
-    return;
-  }
+
   if('batchResult' in ds){
     $('#batchResultText').value='';
     const d=$('#batchResultDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');
@@ -2739,23 +2188,12 @@ document.addEventListener('change',e=>{
     r.readAsText(f);return;
   }
   if('enough' in el.dataset){g.enough=el.checked;save();return;}
-  if('routeCheck' in el.dataset){
-    if(!g.routeChecks) g.routeChecks={};
-    g.routeChecks[el.dataset.routeCheck]=el.checked;
-    save();
-    if(appView==='today') renderToday();
-    else renderTodayStrip();
-    return;
-  }
   const tEl=el.closest('[data-tid]');
   if(tEl&&el.dataset.t&&(el.type==='checkbox'||el.tagName==='SELECT')){
     const t=g.tasks.find(x=>x.id===tEl.dataset.tid);if(!t)return;
     if(el.dataset.t==='done'){
       t.done = !!el.checked;
-      if(t.done){
-        flushTimer(t); // 勾选完成 = 停表并写入实际分钟
-        toast(num(t.actual)?'完成 · 实计 '+fmt(num(t.actual)):'已完成');
-      }
+      toast(t.done?'已完成':'已取消完成');
       tEl.classList.toggle('is-done',t.done);
       save();updateComputed();renderPanel();
       return;
@@ -2828,27 +2266,7 @@ function updateBackupInfo(){
 document.addEventListener('toggle',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('done-group'))state.showDone=t.open;},true);
 window.addEventListener('resize',()=>document.querySelectorAll('#panel textarea').forEach(autosize));
 
-// 计时中每秒刷新显示（不全页重绘）
-setInterval(function tickTimers(){
-  try{
-    if(appView!=='goal') return;
-    let dirty=false;
-    Object.keys(timerMap).forEach(id=>{
-      const st=timerMap[id];
-      if(!st || !st.startedAt) return;
-      const el=document.querySelector('[data-timer-display="'+id+'"]');
-      if(el){
-        const ms=(st.accumMs||0)+(Date.now()-st.startedAt);
-        el.textContent=fmtElapsed(ms);
-      }
-      dirty=true;
-    });
-    if(dirty && (!tickTimers._lastSave || Date.now()-tickTimers._lastSave>15000)){
-      persistTimers();
-      tickTimers._lastSave=Date.now();
-    }
-  }catch(e){}
-}, 1000);
+
 
 renderAll();
 })();
