@@ -616,6 +616,21 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   </div>
   <div class="dlg-foot"><button class="btn" data-close-backup>关闭</button></div>
 </dialog>
+<dialog id="batchResultDlg" aria-labelledby="batchResultTitle">
+  <div class="dlg-head">
+    <div id="batchResultTitle">📋 批量粘贴结果四问</div>
+    <p>直接粘贴 AI 输出或整理好的终点四问，自动识别并填入要达到什么、到什么程度、什么时候、为什么：</p>
+  </div>
+  <div class="dlg-body">
+    <textarea id="batchResultText" placeholder="直接粘贴结果内容，例如：&#10;1. 要达到什么：找出旧版动画中最影响视觉质感的3个问题。&#10;2. 到什么程度：确认正式使用的旧版素材，完整看一遍视频，记录3个具体问题，并确定优先级。&#10;3. 什么时候：本轮R1结束前，建议控制在60分钟以内。&#10;4. 为什么：先找到真正需要改善的地方，避免后续21轮盲目修改，让每次迭代都有明确依据。&#10;&#10;（也支持无序号、冒号、换行分隔或 Markdown 格式）"></textarea>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn" data-close-batch-result>取消</button>
+    <button class="btn ghost" data-paste-clipboard-result title="直接读取系统剪贴板">📋 粘贴剪贴板</button>
+    <button class="btn ghost" data-copy-cur-result-in-dlg title="将当前已填写的四问填入上方文本框方便查看与复制">载入当前结果</button>
+    <button class="btn primary" data-do-batch-result>一键填充结果</button>
+  </div>
+</dialog>
 <dialog id="batchDirDlg" aria-labelledby="batchDirTitle">
   <div class="dlg-head"><div id="batchDirTitle">📋 批量粘贴方向清单</div><p>直接粘贴 AI 输出或整理好的方向列表，自动识别方向名称与小目标说明：</p></div>
   <div class="dlg-body">
@@ -623,6 +638,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   </div>
   <div class="dlg-foot">
     <button class="btn" data-close-batch-dir>取消</button>
+    <button class="btn ghost" data-paste-clipboard-dir title="直接读取系统剪贴板">📋 粘贴剪贴板</button>
     <button class="btn primary" data-do-batch-dir>一键添加方向</button>
   </div>
 </dialog>
@@ -633,6 +649,7 @@ dialog::backdrop{background:rgba(15,15,15,.45)}
   </div>
   <div class="dlg-foot">
     <button class="btn" data-close-batch>取消</button>
+    <button class="btn ghost" data-paste-clipboard-task title="直接读取系统剪贴板">📋 粘贴剪贴板</button>
     <button class="btn primary" data-do-batch>一键添加事项</button>
   </div>
 </dialog>
@@ -1654,6 +1671,162 @@ function taskCard(g,t,i){
     +'</div>';
 }
 
+function parseBatchResult(text){
+  const res = { what: '', level: '', when: '', why: '' };
+  if(!text || !text.trim()) return res;
+
+  const raw = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = raw.split('\n');
+
+  const patterns = [
+    {
+      key: 'what',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:1[.\u3001]\s*)?(?:要达到什么|做完后看得见的结果|最终结果|预期结果|目标|交付物|结果|产出|what)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:1[.\u3001]\s*)?(?:要达到什么|做完后看得见的结果|最终结果|预期结果|目标|交付物|结果|产出|what)[？?]?(?:\s*做完后看得见的结果)?(?:\*\*)?$/i
+    },
+    {
+      key: 'level',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:2[.\u3001]\s*)?(?:到什么程度|做到什么程度|做到什么样算完成|验收标准|衡量标准|完成标准|质量要求|交付标准|标准|程度|level)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:2[.\u3001]\s*)?(?:到什么程度|做到什么程度|做到什么样算完成|验收标准|衡量标准|完成标准|质量要求|交付标准|标准|程度|level)[？?]?(?:\s*做到什么样算完成)?(?:\*\*)?$/i
+    },
+    {
+      key: 'when',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:3[.\u3001]\s*)?(?:什么时候|截止时间|完成时间|时间节点|时间期限|截止|期限|时间|时效|deadline|when)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:3[.\u3001]\s*)?(?:什么时候|截止时间|完成时间|时间节点|时间期限|截止|期限|时间|时效|deadline|when)[？?]?(?:\s*截止时间，越具体越好)?(?:\*\*)?$/i
+    },
+    {
+      key: 'why',
+      regex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:4[.\u3001]\s*)?(?:为什么要做|为什么|做成了有什么用|价值与目的|动机|原因|目的|收益|意义|why)(?:\*\*)?[？?]?[:：\s—–-]/i,
+      pureLabelRegex: /^(?:(?:[0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*)?(?:\*\*)?(?:4[.\u3001]\s*)?(?:为什么要做|为什么|做成了有什么用|价值与目的|动机|原因|目的|收益|意义|why)[？?]?(?:\s*为什么要做，做成了有什么用)?(?:\*\*)?$/i
+    }
+  ];
+
+  let currentKey = null;
+  let matchedAny = false;
+
+  for(let i = 0; i < lines.length; i++){
+    let line = lines[i].trim();
+    if(!line){
+      if(currentKey && res[currentKey] && !res[currentKey].endsWith('\n')) res[currentKey] += '\n';
+      continue;
+    }
+
+    let foundPure = null;
+    for(const p of patterns){
+      if(p.pureLabelRegex.test(line)){
+        foundPure = p.key;
+        break;
+      }
+    }
+    if(foundPure){
+      currentKey = foundPure;
+      matchedAny = true;
+      continue;
+    }
+
+    let foundKey = null;
+    let content = '';
+    for(const p of patterns){
+      if(p.regex.test(line)){
+        foundKey = p.key;
+        content = line.replace(p.regex, '').replace(/^[:：\s—–-]+/, '').trim();
+        break;
+      }
+    }
+
+    if(foundKey){
+      currentKey = foundKey;
+      matchedAny = true;
+      res[currentKey] = content;
+    } else if(currentKey){
+      res[currentKey] = res[currentKey] ? (res[currentKey].trimEnd() + '\n' + line) : line;
+    }
+  }
+
+  for(const k in res){
+    res[k] = res[k].trim();
+  }
+
+  if(!matchedAny){
+    const nonEmpties = lines.map(l => l.trim().replace(/^([0-9]+[.\u3001]|\([0-9]+\)|[-*•#]+)\s*/, '').trim()).filter(Boolean);
+    if(nonEmpties.length >= 1){
+      const keys = ['what', 'level', 'when', 'why'];
+      for(let i = 0; i < Math.min(nonEmpties.length, 4); i++){
+        res[keys[i]] = nonEmpties[i];
+      }
+    }
+  }
+
+  return res;
+}
+
+function formatResultText(g){
+  const r = g.result || {};
+  return RESULT_Q.map(([k,l])=>{
+    const title = l.replace(/[？?]/g, '');
+    const val = (r[k] || '').trim();
+    return '- **' + title + '**：' + (val || '（未填）');
+  }).join('\n');
+}
+
+async function copyTextToClipboard(text, successToast){
+  try{
+    await navigator.clipboard.writeText(text);
+    toast(successToast);
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try{
+      document.execCommand('copy');
+      toast(successToast);
+    }catch(_){
+      toast('复制失败，请手动选择复制');
+    }
+    ta.remove();
+  }
+}
+
+function copyResult(g){
+  const hasVal = RESULT_Q.some(([k])=>(g.result[k]||'').trim());
+  if(!hasVal){ toast('当前结果四问尚未填写'); return; }
+  copyTextToClipboard(formatResultText(g), '✅ 已复制结果四问到剪贴板！');
+}
+
+function formatDirsText(g){
+  const ds = namedDirs(g);
+  if(!ds.length) return '';
+  return ds.map((d,i)=>(i+1)+'. '+d.name+(d.goal?' — 小目标：'+d.goal:'')).join('\n');
+}
+
+function copyDirs(g){
+  const txt = formatDirsText(g);
+  if(!txt){ toast('暂无已填写的方向'); return; }
+  copyTextToClipboard(txt, '✅ 已复制所有方向到剪贴板！');
+}
+
+function formatTasksText(g){
+  const ts = named(g);
+  if(!ts.length) return '';
+  return ts.map((t,i)=>{
+    const meta = [];
+    if(t.who) meta.push(t.who);
+    if(num(t.est)) meta.push(t.est+' 分钟');
+    if(t.done) meta.push('已完成');
+    const metaStr = meta.length ? ' ('+meta.join(', ')+')' : '';
+    return (i+1)+'. '+t.name+metaStr;
+  }).join('\n');
+}
+
+function copyTasks(g){
+  const txt = formatTasksText(g);
+  if(!txt){ toast('暂无已填写的事项'); return; }
+  copyTextToClipboard(txt, '✅ 已复制所有要做的事到剪贴板！');
+}
+
 function parseBatchDirs(text){
   const lines=text.split('\n');
   const dirs=[];
@@ -1773,7 +1946,17 @@ function autosize(el){el.style.height='auto';el.style.height=(el.scrollHeight+2)
 function renderPanel(){
   const g=cur(),s=g.step,P=$('#panel');
   let h='<div class="step-intro"><h2>'+(s+1)+'. '+STEPS[s].label+'</h2><p>'+STEPS[s].intro+'</p></div>';
-  if(s===0)h+='<div class="fields">'+RESULT_Q.map(([k,l,hint,ph])=>field('result',k,l,hint,g.result[k],ph)).join('')+'</div>';
+  if(s===0){
+    const rFilled=RESULT_Q.filter(([k])=>(g.result[k]||'').trim()).length;
+    h+='<div class="toolbar" style="margin-bottom:14px">'
+      +'<span class="muted small">清晰终点四问 · '+(rFilled===4?'<span style="color:var(--ok);font-weight:600">4/4 已填 ✓</span>':(rFilled+'/4 已填'))+'</span>'
+      +'<div class="toolbar-actions">'
+      +'<button class="btn ghost" data-batch-result>📋 批量粘贴结果</button>'
+      +'<button class="btn ghost" data-copy-result title="一键复制结果四问文本">📄 复制结果</button>'
+      +'</div>'
+      +'</div>'
+      +'<div class="fields">'+RESULT_Q.map(([k,l,hint,ph])=>field('result',k,l,hint,g.result[k],ph)).join('')+'</div>';
+  }
   if(s===1){
     h+=reminder(g)+'<div class="list">'+g.dirs.map((d,i)=>'<div class="dir" data-did="'+d.id+'"><span class="badge">'+(i+1)+'</span>'
       +'<input class="input dir-name" data-d="name" value="'+esc(d.name)+'" placeholder="方向名称" aria-label="方向 '+(i+1)+' 名称">'
@@ -1783,6 +1966,7 @@ function renderPanel(){
       +'<div class="toolbar-actions">'
       +'<button class="btn" data-add-dir'+(g.dirs.length>=10?' disabled':'')+'>+ 添加方向</button>'
       +'<button class="btn ghost" data-batch-dirs>📋 批量粘贴方向清单</button>'
+      +'<button class="btn ghost" data-copy-dirs title="一键复制所有方向为文本清单">📄 复制方向</button>'
       +'</div>'
       +'<span id="dirCount" class="pill '+(dirOk(g)?'ok':'warn')+'">'+dirCountText(g)+'</span>'
       +'</div>'
@@ -1796,6 +1980,7 @@ function renderPanel(){
       +'<button class="btn" data-load-flow>载入标准流程</button>'
       +'<button class="btn ghost" data-browse-prompts>提示词库</button>'
       +'<button class="btn ghost" data-batch-tasks>📋 批量粘贴清单</button>'
+      +'<button class="btn ghost" data-copy-tasks title="一键复制所有要做的事为文本清单">📄 复制清单</button>'
       +'</div>'
       +'</div>'
       +'<div class="list">'+g.tasks.map((t,i)=>taskCard(g,t,i)).join('')+'</div>'
@@ -2345,12 +2530,68 @@ document.addEventListener('click',e=>{
     })();
     return;
   }
+  if('batchResult' in ds){
+    $('#batchResultText').value='';
+    const d=$('#batchResultDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');
+    return;
+  }
+  if('closeBatchResult' in ds){$('#batchResultDlg').close();return;}
+  if('pasteClipboardResult' in ds){
+    if(navigator.clipboard && navigator.clipboard.readText){
+      navigator.clipboard.readText().then(text=>{
+        if(text){$('#batchResultText').value=text;toast('已从剪贴板粘贴');}
+        else{toast('剪贴板中没有文本内容');}
+      }).catch(()=>{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');});
+    }else{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');}
+    return;
+  }
+  if('copyCurResultInDlg' in ds){
+    const curTxt=formatResultText(g);
+    $('#batchResultText').value=curTxt;
+    toast('已载入当前结果，可直接编辑或全选复制');
+    return;
+  }
+  if('doBatchResult' in ds){
+    const txt=$('#batchResultText').value;
+    const parsed=parseBatchResult(txt);
+    const hasAny=Boolean(parsed.what||parsed.level||parsed.when||parsed.why);
+    if(!hasAny){toast('未能识别到结果内容，请粘贴包含四问的文字');return;}
+    const hasExisting=RESULT_Q.some(([k])=>(g.result[k]||'').trim());
+    let replace=true;
+    if(hasExisting){
+      replace=confirm('当前已有填写过的结果，是否覆盖替换？\n点「确定」覆盖替换，点「取消」仅填补未填项');
+    }
+    pushUndo(replace?'批量粘贴结果（覆盖）':'批量粘贴结果（填补）');
+    let filledCount=0;
+    RESULT_Q.forEach(([k])=>{
+      if(replace){
+        if(parsed[k] !== undefined && parsed[k] !== '') { g.result[k]=parsed[k]; filledCount++; }
+      }else{
+        if(!g.result[k].trim() && parsed[k]){ g.result[k]=parsed[k]; filledCount++; }
+      }
+    });
+    save();updateComputed();renderPanel();persistUndo();$('#batchResultDlg').close();
+    toast('已成功填入 '+filledCount+' 项结果内容 · 可撤销');
+    return;
+  }
+  if('copyResult' in ds){copyResult(g);return;}
+  if('copyDirs' in ds){copyDirs(g);return;}
+  if('copyTasks' in ds){copyTasks(g);return;}
   if('batchDirs' in ds){
     $('#batchDirText').value='';
     const d=$('#batchDirDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');
     return;
   }
   if('closeBatchDir' in ds){$('#batchDirDlg').close();return;}
+  if('pasteClipboardDir' in ds){
+    if(navigator.clipboard && navigator.clipboard.readText){
+      navigator.clipboard.readText().then(text=>{
+        if(text){$('#batchDirText').value=text;toast('已从剪贴板粘贴');}
+        else{toast('剪贴板中没有文本内容');}
+      }).catch(()=>{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');});
+    }else{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');}
+    return;
+  }
   if('doBatchDir' in ds){
     const txt=$('#batchDirText').value;
     const parsed=parseBatchDirs(txt);
@@ -2375,6 +2616,15 @@ document.addEventListener('click',e=>{
     return;
   }
   if('closeBatch' in ds){$('#batchDlg').close();return;}
+  if('pasteClipboardTask' in ds){
+    if(navigator.clipboard && navigator.clipboard.readText){
+      navigator.clipboard.readText().then(text=>{
+        if(text){$('#batchText').value=text;toast('已从剪贴板粘贴');}
+        else{toast('剪贴板中没有文本内容');}
+      }).catch(()=>{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');});
+    }else{toast('请在输入框按 Cmd+V / Ctrl+V 粘贴');}
+    return;
+  }
   if('doBatch' in ds){
     const txt=$('#batchText').value;
     const newTasks=parseBatchTasks(txt);
