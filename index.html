@@ -1667,15 +1667,19 @@ function renderPanel(){
       +'<div class="fields">'+RESULT_Q.map(([k,l,hint,ph])=>field('result',k,l,hint,g.result[k],ph)).join('')+'</div>';
   }
   if(s===1){
-    h+=reminder(g)+'<div class="list">'+g.dirs.map((d,i)=>'<div class="dir" data-did="'+d.id+'"><span class="badge">'+(i+1)+'</span>'
+    h+=reminder(g)+'<div class="toolbar">'
+      +'<span class="muted small">为每个方向填写名称和小目标</span>'
+      +'<div class="toolbar-actions">'
+      +'<button class="btn ghost" data-batch-dirs>📋 批量粘贴方向清单</button>'
+      +'<button class="btn ghost" data-copy-dirs title="一键复制所有方向为文本清单">📄 复制方向</button>'
+      +'</div></div>'
+      +'<div class="list">'+g.dirs.map((d,i)=>'<div class="dir" data-did="'+d.id+'"><span class="badge">'+(i+1)+'</span>'
       +'<input class="input dir-name" data-d="name" value="'+esc(d.name)+'" placeholder="方向名称" aria-label="方向 '+(i+1)+' 名称">'
       +'<textarea rows="1" class="dir-goal" data-d="goal" placeholder="小目标：这个方向做到什么程度" aria-label="方向 '+(i+1)+' 小目标">'+esc(d.goal)+'</textarea>'
       +'<button class="icon-btn" data-del-dir="'+d.id+'" aria-label="删除方向 '+(i+1)+'">×</button></div>').join('')+'</div>'
       +'<div class="row-between">'
       +'<div class="toolbar-actions">'
       +'<button class="btn" data-add-dir'+(g.dirs.length>=10?' disabled':'')+'>+ 添加方向</button>'
-      +'<button class="btn ghost" data-batch-dirs>📋 批量粘贴方向清单</button>'
-      +'<button class="btn ghost" data-copy-dirs title="一键复制所有方向为文本清单">📄 复制方向</button>'
       +'</div>'
       +'<span id="dirCount" class="pill '+(dirOk(g)?'ok':'warn')+'">'+dirCountText(g)+'</span>'
       +'</div>'
