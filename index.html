@@ -1691,7 +1691,7 @@ function renderPanel(){
       +'<span class="muted small">点负责人或预估时间即可修改</span>'
       +'<div class="toolbar-actions">'
       +'<button class="btn ghost" data-batch-tasks>📋 批量粘贴清单</button>'
-      +'<button class="btn ghost" data-copy-tasks title="一键复制所有要做的事为文本清单">📄 复制清单</button>'
+      +'<button class="btn ghost" data-copy-goal title="复制完整目标：结果、方向、要做的事及复盘">📄 一键复制完整目标</button>'
       +'</div>'
       +'</div>'
       +'<div class="list">'+g.tasks.map((t,i)=>taskCard(g,t,i)).join('')+'</div>'
@@ -1751,6 +1751,22 @@ function toText(g){
   L.push('','- 预估合计：'+fmt(est),'','## 复盘');
   REVIEW_Q.forEach(([k,l])=>{if(k==='feeling'&&!g.review[k])return;L.push('- '+l.replace(/？|（可选）/g,'')+'：'+(g.review[k]||'（未填）'));});
   return L.join('\n');
+}
+async function copyFullGoal(g){
+  const text=toText(g);
+  try{
+    await navigator.clipboard.writeText(text);
+    toast('已复制完整目标，可以直接粘贴');
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    let copied=false;
+    try{copied=document.execCommand('copy');}catch(_){}
+    ta.remove();
+    if(copied) toast('已复制完整目标，可以直接粘贴');
+    else {openExport();toast('无法自动复制，请在窗口中手动复制');}
+  }
 }
 function openExport(){$('#exportText').value=toText(cur());const d=$('#exportDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');}
 async function copyExport(){
@@ -2049,7 +2065,7 @@ document.addEventListener('click',e=>{
   }
   if('copyResult' in ds){copyResult(g);return;}
   if('copyDirs' in ds){copyDirs(g);return;}
-  if('copyTasks' in ds){copyTasks(g);return;}
+  if('copyGoal' in ds){copyFullGoal(g);return;}
   if('batchDirs' in ds){
     $('#batchDirText').value='';
     const d=$('#batchDirDlg');if(d.showModal)d.showModal();else d.setAttribute('open','');
